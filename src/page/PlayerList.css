@@ -1,0 +1,281 @@
+.SearchWidget {
+    position: relative;
+    display: grid;
+    width: min(20rem, 100% - 4rem);
+    margin: 0 auto 3rem;
+    background: white;
+    border-radius: .25rem;
+}
+
+.SearchWidget::before {
+    position: absolute;
+    top: 50%;
+    left: 1.5rem;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: url('../style/image/search.svg') no-repeat center / contain;
+    content: '';
+    pointer-events: none;
+}
+
+.SearchWidget__input {
+    appearance: none;
+    padding: 1rem 1rem 1rem 3rem;
+    font-weight: 600;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    transition: all .2s;
+    border-radius: inherit;
+}
+
+.SearchWidget__input:focus-visible {
+    outline-offset: .25em;
+    outline: solid var(--outlineColor, var(--sun)) 2px;
+}
+
+.PlayerList {
+    display: grid;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.PlayerList h2 {
+    color: var(--white-87);
+    font-size: 2rem;
+    text-align: center;
+}
+
+.PlayerList div[role="table"] > *:first-child {
+    border-radius: .5rem .5rem 0 0;
+    overflow: hidden;
+}
+
+.PlayerList div[role="table"] > *:last-child {
+    border-radius: 0 0 .5rem .5rem;
+    overflow: hidden;
+}
+
+.PlayerList .TBody .Loader {
+    background: var(--mine-shaft);
+    border-radius: 0;
+}
+
+.PlayerList .TBody .Loader .Loader__message {
+    color: var(--white-87);
+}
+
+.TBody .Row,
+.THead .Row {
+    position: relative;
+    display: grid;
+    grid-template:
+            'order discord avatar rank rating kgs ogs' min-content
+            / 3rem 1fr 2rem 7rem 7rem 7rem 7rem;
+    gap: 1rem;
+    padding: 0.75rem;
+}
+
+.THead {
+    position: sticky;
+    top: 5.75rem;
+    z-index: 10;
+    color: black;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: var(--sun);
+}
+
+@media only screen and (max-width: 980px) {
+    .THead {
+        font-size: 1.25rem;
+    }
+}
+
+.TBody .Row {
+    background: var(--mine-shaft);
+    cursor: pointer;
+}
+
+.TBody .Row:nth-of-type(even) {
+    background: var(--tundora);
+}
+
+.TBody .Row a {
+    padding: .5em;
+    color: var(--white-87);
+}
+
+.TBody .Row a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    content: '';
+}
+
+.TBody .Row:hover,
+.TBody .Row:focus-within {
+    background: var(--brown-tumbleweed);
+}
+
+.THead {
+    color: black;
+    text-align: center;
+}
+
+.THead .Row .Rank,
+.THead .Row .Rating {
+    color: black;
+}
+
+div[role="gridcell"] {
+    display: grid;
+    align-content: center;
+}
+
+.TBody  {
+    color: var(--white-87);
+    text-align: center; 
+}
+
+.TBody .Row .Rank {
+    color: var(--sun);
+    text-align: center;
+    font-size: 1.75rem;
+    font-family: var(--accent-font);
+}
+
+.Order {
+    grid-area: order;
+}
+
+.Discord {
+    grid-area: discord;
+}
+
+.Discord a {
+    text-decoration: none;
+}
+
+.Avatar {
+    grid-area: avatar;
+}
+
+.Rank {
+    grid-area: rank;
+}
+
+.Rating {
+    grid-area: rating;
+}
+
+.KGS {
+    grid-area: kgs;
+}
+
+.OGS {
+    grid-area: ogs;
+}
+
+.Avatar img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-position: center;
+    object-fit: cover;
+}
+
+.KGS a,
+.OGS a{
+    position: relative;
+    z-index: 1;
+}
+
+.KGS a:hover,
+.KGS a:focus-visible,
+.OGS a:hover,
+.OGS a:focus-visible{
+    color: var(--sun);
+}
+
+@media only screen and (max-width: 980px) {
+    .TBody .Row,
+    .THead .Row {
+        gap: .5rem;
+        grid-template:
+                'order avatar discord discord' min-content
+                'rank rank rating rating' min-content
+                'kgs kgs ogs ogs' min-content
+                / 2rem 2rem 5rem 1fr;
+    }
+
+    .THead {
+        top: 4.5rem;
+    }
+
+    .Discord {
+        text-align: left;
+    }
+}
+
+.toggle-control {
+    display: grid;
+    grid-template-columns: 1fr 3rem 1fr;
+    gap: .5em;
+    align-items: center;
+    width: max-content;
+    margin: 2rem auto;
+    color: var(--white-87);
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 720px) {
+    .toggle-control {
+        width: auto;
+        font-size: .875rem;
+    }
+}
+
+.toggle-control span:first-of-type {
+    justify-self: end;
+}
+
+.toggle-control .control {
+    place-self: center;
+    position: relative;
+    display: block;
+    margin-top: .25rem;
+    height: 20px;
+    width: 40px;
+    border-radius: 10px;
+    background-color: var(--white-87);
+    font-size: 0;
+}
+
+.toggle-control .control:after {
+    content: "";
+    position: absolute;
+    left: 2.5px;
+    top: 2.5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+    background: var(--cod-gray);
+    transition: left 0.15s ease-in;
+}
+
+.toggle-container input:focus-visible + label .control {
+    outline-offset: .25rem;
+    outline: solid var(--white-87) 1px;
+}
+
+.toggle-container input:checked + label .control:after {
+    left: 22.5px;
+}

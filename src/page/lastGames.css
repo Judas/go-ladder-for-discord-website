@@ -1,0 +1,159 @@
+.LastGames {
+
+}
+
+.LastGames__title {
+    margin-bottom: 2em;
+    color: var(--white-87);
+    text-align: center;
+}
+
+.LastGames__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 3rem;
+    width: min(80rem, 100%);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.GameCard {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template: 'vs' min-content 'black' min-content 'goban' 1fr 'white' min-content / 100%;
+    gap: .25rem;
+    background: var(--mine-shaft);
+    border-radius: .5rem;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px var(--sun);
+}
+
+.GameCard a {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.GameCard__title {
+    grid-area: vs;
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: calc(.75rem + 40px) 1fr;
+    place-items: center;
+    gap: .75rem;
+    padding: .5rem 0;
+    margin: 0 0 .5rem;
+    color: var(--white-87);
+    font-weight: 400;
+    font-size: 1rem;
+    background: var(--tundora);
+}
+
+.GameCard__mainPlayer,
+.GameCard__opponent {
+    display: grid;
+    grid-row: 1 / -1;
+    place-items: center;
+    text-align: center;
+}
+
+.GameCard__mainPlayer.winner .GameCard__avatar,
+.GameCard__opponent.winner .GameCard__avatar {
+    border: 3px solid var(--sun);
+}
+
+.GameCard__mainPlayer.winner,
+.GameCard__opponent.winner {
+    color: var(--sun);
+}
+
+.GameCard__mainPlayer span,
+.GameCard__opponent span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 10ch;
+}
+
+.GameCard__vs {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.GameCard__name {
+    grid-area: black;
+    display: grid;
+    justify-content: start;
+    gap: 1ch;
+    grid-template-columns: .75rem auto max-content;
+    padding: 0 1rem;
+    margin: 0;
+    color: var(--white-87);
+    align-items: center;
+    text-align: center;
+    font-size: .875rem;
+}
+
+.GameCard__name::after {
+    order: -1;
+    display: block;
+    width: .75rem;
+    height: .75rem;
+    background: black;
+    border-radius: 50%;
+    content: '';
+}
+
+.GameCard__name span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.GameCard__name.white::after {
+    display: block;
+    order: initial;
+    width: .75rem;
+    height: .75rem;
+    background: white;
+    border-radius: 50%;
+    content: '';
+}
+
+.GameCard__name.white {
+    grid-area: white;
+    grid-template-columns: auto max-content .75rem;
+    justify-content: end;
+    margin-bottom: .5rem;
+}
+
+.GameCard__rank {
+    place-self: center;
+    font-size: 1.5rem;
+    font-family: var(--accent-font);
+    color: var(--sun);
+}
+
+.GameCard__title img {
+    border-radius: 50%;
+}
+
+.GameCard__board {
+    grid-area: goban;
+    min-height: 14rem;
+}
+
+.GameCard .wgo-player-main {
+    margin-top: auto;
+    position: relative;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.GameCard .wgo-player-bottom,
+.GameCard .wgo-player-right,
+.GameCard .wgo-player-top {
+    display: none !important;
+}

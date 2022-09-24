@@ -1,0 +1,15 @@
+{
+    "short_name": "Go Ladder Website",
+    "name": "Go Ladder Website",
+    "start_url": ".",
+    "icons": [
+        {
+            "src": "/android-chrome-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#2c2c2c",
+    "background_color": "#2c2c2c",
+    "display": "standalone"
+}
