@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/go-ladder-for-discord-website/static/css/main.b9ac9546.css",
+    "main.js": "/go-ladder-for-discord-website/static/js/main.18ac2f36.js",
+    "static/js/787.6cf120cf.chunk.js": "/go-ladder-for-discord-website/static/js/787.6cf120cf.chunk.js",
+    "index.html": "/go-ladder-for-discord-website/index.html",
+    "static/media/search.svg": "/go-ladder-for-discord-website/static/media/search.8138d818f84c363687a9.svg",
+    "static/media/trending_up.svg": "/go-ladder-for-discord-website/static/media/trending_up.ca64d04767b5a4239f23.svg",
+    "static/media/trending_down.svg": "/go-ladder-for-discord-website/static/media/trending_down.e9453e7c2a19ef7fb883.svg",
+    "static/media/close.svg": "/go-ladder-for-discord-website/static/media/close.08233535a9321b39bf5f.svg",
+    "main.b9ac9546.css.map": "/go-ladder-for-discord-website/static/css/main.b9ac9546.css.map",
+    "main.18ac2f36.js.map": "/go-ladder-for-discord-website/static/js/main.18ac2f36.js.map",
+    "787.6cf120cf.chunk.js.map": "/go-ladder-for-discord-website/static/js/787.6cf120cf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b9ac9546.css",
+    "static/js/main.18ac2f36.js"
+  ]
+}
