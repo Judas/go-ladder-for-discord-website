@@ -1,5 +1,6 @@
 {
   "name": "gold-webapp",
+  "homepage": "https://judas.github.io/go-ladder-for-discord-website",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -18,8 +19,10 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "proxy":"http://localhost:8080",
+  "proxy": "http://localhost:8080",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "devreact": "react-scripts start",
     "devapiproxy": "node justApiProxy.js",
     "devstart": "concurrently \"npm:devreact\" \"npm:devapiproxy\"",
@@ -29,7 +32,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "concurrently": "^7.3.0"
+    "concurrently": "^7.3.0",
+    "gh-pages": "^4.0.0"
   },
   "eslintConfig": {
     "extends": [
