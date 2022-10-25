@@ -1,5 +1,4 @@
-FROM node:14-alpine AS development
-ENV NODE_ENV development
+FROM node:14-alpine
 # Add a work directory
 WORKDIR /app
 # Cache and Install dependencies
@@ -8,7 +7,9 @@ COPY yarn.lock .
 RUN yarn install
 # Copy app files
 COPY . .
+RUN yarn build
+
 # Expose port
 EXPOSE 3000
 # Start the app
-CMD [ "yarn", "devstart" ]
+CMD [ "yarn", "start" ]
