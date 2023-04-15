@@ -1,13 +1,13 @@
 import './PlayerList.css'
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import TableElement from "../Components/CustomTableElements/TableElement";
-import RowGroupElement from "../Components/CustomTableElements/RowGroupElement";
-import RowElement from "../Components/CustomTableElements/RowElement";
-import ColHeaderElement from "../Components/CustomTableElements/ColHeaderElement";
-import CellElement from "../Components/CustomTableElements/CellElement";
+import TableElement from "../Components/Table/TableElement";
+import RowGroupElement from "../Components/Table/RowGroupElement";
+import RowElement from "../Components/Table/RowElement";
+import ColHeaderElement from "../Components/Table/ColHeaderElement";
+import CellElement from "../Components/Table/CellElement";
 import Loader from "../Components/Loader";
-import Avatar from "../Components/avatar";
+import Avatar from "../Components/Avatar";
 
 function PlayerLine({player, index}) {
     return (

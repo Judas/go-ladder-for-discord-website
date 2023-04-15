@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import Loader from "../Components/Loader";
-import Avatar from "../Components/avatar";
+import Avatar from "../Components/Avatar";
 import './GamePage.css';
-import GameDisplayer from "../Components/gameDisplayer";
+import GameDisplayer from "../Components/GameViewer/GameDisplayer";
 
 export default function Game() {
     const params = useParams();

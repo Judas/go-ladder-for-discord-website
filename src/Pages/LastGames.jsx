@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import GameDisplayer from "../Components/gameDisplayer";
-import './lastGames.css';
+import GameDisplayer from "../Components/GameViewer/GameDisplayer";
+import './LastGames.css';
 import Loader from "../Components/Loader";
-import Avatar from "../Components/avatar";
+import Avatar from "../Components/Avatar";
 import {Link} from "react-router-dom";
 
 export default function LastGames() {

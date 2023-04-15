@@ -1,10 +1,10 @@
 import './App.css';
-import PlayerList from './page/PlayerList.jsx'
-import PlayerPage from './page/PlayerPage.jsx'
-import About from './page/About.jsx'
+import PlayerList from './Pages/PlayerList.jsx'
+import PlayerPage from './Pages/PlayerPage.jsx'
+import About from './Pages/About.jsx'
 import {Link, Route, Routes} from 'react-router-dom';
-import Game from "./page/game";
-import LastGames from "./page/lastGames";
+import Game from "./Pages/Game";
+import LastGames from "./Pages/LastGames";
 import {useState} from "react";
 
 function App() {

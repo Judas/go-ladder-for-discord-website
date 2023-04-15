@@ -2,14 +2,14 @@ import './PlayerPage.css'
 import React, {useEffect, useState} from 'react';
 import 'chart.js/auto'; // To avoid canvas problems
 import {Link, Outlet, useMatch, useParams} from "react-router-dom";
-import TableElement from "../Components/CustomTableElements/TableElement";
-import RowGroupElement from "../Components/CustomTableElements/RowGroupElement";
-import RowElement from "../Components/CustomTableElements/RowElement";
-import ColHeaderElement from "../Components/CustomTableElements/ColHeaderElement";
-import CellElement from "../Components/CustomTableElements/CellElement";
+import TableElement from "../Components/Table/TableElement";
+import RowGroupElement from "../Components/Table/RowGroupElement";
+import RowElement from "../Components/Table/RowElement";
+import ColHeaderElement from "../Components/Table/ColHeaderElement";
+import CellElement from "../Components/Table/CellElement";
 import Loader from "../Components/Loader";
-import HistoryChart, {historyToChartData} from "../Components/historyChart";
-import Avatar from "../Components/avatar";
+import HistoryChart, {historyToChartData} from "../Components/HistoryChart";
+import Avatar from "../Components/Avatar";
 
 const api_host = "/api/gold/api/v4";
 
