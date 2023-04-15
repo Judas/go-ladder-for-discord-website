@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
-import './GamePage.css';
+import './Game.css';
 import GameDisplayer from "../Components/GameViewer/GameDisplayer";
 
 export default function Game() {

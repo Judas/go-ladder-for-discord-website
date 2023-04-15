@@ -31,10 +31,10 @@ function App() {
                         <Link to={'/'} className={'CallToAction HomeLink'} onClick={() => setIsNavOpen(false)}>
                             Accueil
                         </Link>
-                        <Link to={'/dernieres-parties'} className={'CallToAction'} onClick={() => setIsNavOpen(false)}>
+                        <Link to={'/parties-recentes'} className={'CallToAction'} onClick={() => setIsNavOpen(false)}>
                             Parties récentes
                         </Link>
-                        <Link to={'/about'} className={'CallToAction'} onClick={() => setIsNavOpen(false)}>
+                        <Link to={'/a-propos'} className={'CallToAction'} onClick={() => setIsNavOpen(false)}>
                             À propos
                         </Link>
                     </div>
@@ -45,11 +45,11 @@ function App() {
             <main>
                 <Routes>
                     <Route path="/" element={<PlayerList/>}/>
-                    <Route path="/players/:playerId" element={<PlayerPage/>}>
+                    <Route path="/player/:playerId" element={<PlayerPage/>}>
                         <Route path="game/:gameId" element={<Game/>}/>
                     </Route>
-                    <Route path="/dernieres-parties" element={<LastGames/>}/>
-                    <Route path="/about" element={<About/>}/>
+                    <Route path="/parties-recentes" element={<LastGames/>}/>
+                    <Route path="/a-propos" element={<About/>}/>
                 </Routes>
             </main>
 
