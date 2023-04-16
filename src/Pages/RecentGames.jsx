@@ -68,7 +68,7 @@ function GameCard({game}) {
             </p>
 
             <div className={'GameCard__board'}>
-                <GameDisplayer game={game} move={100}/>
+                <GameDisplayer game={game} move={42}/>
             </div>
             <Link to={`/game/${game.id}`}><span className={'ReaderOnly'}>Voir la partie</span></Link>
         </article>

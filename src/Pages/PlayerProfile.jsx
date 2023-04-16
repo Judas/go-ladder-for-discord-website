@@ -1,4 +1,4 @@
-import './PlayerPage.css'
+import './PlayerProfile.css'
 import React, {useEffect, useState} from 'react';
 import 'chart.js/auto'; // To avoid canvas problems
 import {Link, Outlet, useMatch, useParams} from "react-router-dom";
@@ -13,7 +13,7 @@ import Avatar from "../Components/Avatar";
 
 const api_host = "/api/gold/api/v4";
 
-export default function PlayerPage() {
+export default function PlayerProfile() {
     const {playerId, gameId} = useParams()
     const [player, setPlayer] = useState(undefined)
     const [games, setGames] = useState([])

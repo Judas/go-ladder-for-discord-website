@@ -1,38 +1,36 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams, useSearchParams} from "react-router-dom";
+
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
+import GameViewer from "../Components/Goban/GameViewer";
+
 import './Game.css';
-import GameDisplayer from "../Components/Goban/GameViewer";
 
 export default function Game() {
     const params = useParams();
+
     const [game, setGame] = useState();
-    const [gameStatus, setGameStatus] = useState('pending');
+    const [gameFetchStatus, setGameFetchStatus] = useState('pending');
     const [gameMoveURL, setGameMoveURL] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        const api_host = "/api/gold/api/v4";
+        setGameFetchStatus('pending');
 
-        const fetchGameUrl = `${api_host}/game/${params.gameId}`;
-        setGameStatus('pending');
-
-        fetch(fetchGameUrl)
+        fetch(`/api/game/${params.gameId}`)
             .then(res => {
-                if (!res.ok) {
-                    throw res.statusText;
-                }
+                if (!res.ok) { throw res.statusText; }
                 return res;
             })
             .then(res => res.json())
             .then(res => {
                 setGame(res);
-                setGameStatus('success');
+                setGameFetchStatus('success');
             })
-            .catch(() => setGameStatus('error'));
+            .catch(() => setGameFetchStatus('error'));
     }, [params.gameId]);
 
     function sharePosition() {
@@ -45,46 +43,27 @@ export default function Game() {
     }
 
     return (
-        <div className={'GamePage'}>
-            {gameStatus === 'pending' && <Loader/>}
-            {gameStatus === 'error' && <p className={'Error'}>Marche pas</p>}
-            {gameStatus === 'success' && <>
-                <div className={'GamePage__header'}>
-                    <h3 className={'GamePage__title'}>
-                        Partie contre :
-                        <span><Avatar src={game.opponent.avatar} size={40} hidden={true}/>{game.opponent.name} </span>
-                    </h3>
+        <div className={'Game'}>
+            {gameFetchStatus === 'pending' && <Loader/>}
+            {gameFetchStatus === 'error' && <p className={'Error'}>Erreur lors de la récupération de la partie</p>}
+            {gameFetchStatus === 'success' && <>
+                <div className={'Game__header'}>
+                    <PlayerHeader player={game.black} />
 
-                    <div className={'GamePage__infos'}>
-                        <p>Handicap : {game.handicap}</p>
-                        <p>Komi : {game.komi}</p>
-                        {game.mainPlayer.ratingGain && (
-                            <p>Rating : <span className={game.mainPlayer.ratingGain.includes('+') ? 'up' : 'down'}>
-                                {game.mainPlayer.ratingGain}
-                            </span></p>
-                        )}
+                    <div className={'Game__actions'}>
+                        <button onClick={sharePosition} className={'Game__share CallToAction'}>Partager la position</button>
+                        <a href={game.gameLink} target="_blank" rel={'noreferrer'} className={'CallToAction'}>Ouvrir cette partie</a>
                     </div>
 
-                    <div className={'GamePage__actions'}>
-                        <button onClick={sharePosition} className={'GamePage__share CallToAction'}>
-                            Partager la position
-                        </button>
-                        <a href={game.gameLink} target="_blank" rel={'noreferrer'} className={'CallToAction'}>
-                            Ouvrir cette partie
-                        </a>
-
-                        <Link to={`/players/${game.mainPlayer.discordId}`} className={'GamePage__back CallToAction'}>
-                            Retour au profil
-                        </Link>
-                    </div>
-
+                    <PlayerHeader player={game.white} />
                 </div>
-                <div className={'GamePage__goban'}>
-                    <GameDisplayer game={game} move={searchParams.get('move')}/>
+
+                <div className={'Game__goban'}>
+                    <GameViewer game={game} move={searchParams.get('move')}/>
                 </div>
 
                 {modalVisible && (
-                    <div className={'GamePage__modal'}>
+                    <div className={'Game__modal'}>
                         <button className={'CallToAction'} onClick={() => setModalVisible(false)}>
                             <span className={'ReaderOnly'}>Fermer</span>
                         </button>
@@ -97,6 +76,28 @@ export default function Game() {
                     </div>
                 )}
             </>}
+        </div>
+    );
+}
+
+function PlayerHeader({player}) {
+    return (
+        <div className={'Game__player'}>
+            <h2 className={'Game__playerTier'}>
+                <span>
+                    <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
+                </span>
+            </h2>
+            
+            <h2 className={'Game__playerName'}>
+                <span><Avatar src={player.avatar} size={40} hidden={true}/>{player.name}</span>
+            </h2>
+
+            <h2 className={'Game__playerRating'}>
+                <span>
+                    {player.historicalRating.rating} <span className={player.ratingGain.includes('+') ? 'up' : 'down'}> {player.ratingGain}</span>
+                </span>
+            </h2>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Link, Route, Routes} from 'react-router-dom';
 
 import PlayerList from './Pages/PlayerList.jsx';
-import PlayerPage from './Pages/PlayerPage.jsx';
+import PlayerProfile from './Pages/PlayerProfile.jsx';
 import RecentGames from "./Pages/RecentGames.jsx";
 import Game from "./Pages/Game";
 import About from './Pages/About.jsx';
@@ -52,7 +52,7 @@ function App() {
                     <Route path="/recent-games" element={<RecentGames/>}/>
                     <Route path="/about" element={<About/>}/>
 
-                    <Route path="/player/:playerId" element={<PlayerPage/>}/>
+                    <Route path="/player/:playerId" element={<PlayerProfile/>}/>
                     <Route path="/game/:gameId" element={<Game/>}/>
                 </Routes>
             </main>
