@@ -13,7 +13,7 @@ import Avatar from "../Components/Avatar";
 
 const api_host = "/api/gold/api/v4";
 
-function PlayerPage() {
+export default function PlayerPage() {
     const {playerId, gameId} = useParams()
     const [player, setPlayer] = useState(undefined)
     const [games, setGames] = useState([])
@@ -189,5 +189,3 @@ function PlayerPage() {
         </article>
     )
 }
-
-export default PlayerPage;

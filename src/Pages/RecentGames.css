@@ -1,14 +1,14 @@
-.LastGames {
+.RecentGames {
 
 }
 
-.LastGames__title {
+.RecentGames__title {
     margin-bottom: 2em;
     color: var(--white-87);
     text-align: center;
 }
 
-.LastGames__list {
+.RecentGames__list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
     gap: 3rem;
@@ -23,7 +23,7 @@
     display: grid;
     grid-template: 'vs' min-content 'black' min-content 'goban' 1fr 'white' min-content / 100%;
     gap: .25rem;
-    background: var(--mine-shaft);
+    background: var(--tundora);
     border-radius: .5rem;
     overflow: hidden;
     box-shadow: 0 0 0 2px var(--sun);
@@ -47,29 +47,25 @@
     color: var(--white-87);
     font-weight: 400;
     font-size: 1rem;
-    background: var(--tundora);
+    background: var(--mine-shaft);
 }
 
-.GameCard__mainPlayer,
-.GameCard__opponent {
+.GameCard__player {
     display: grid;
     grid-row: 1 / -1;
     place-items: center;
     text-align: center;
 }
 
-.GameCard__mainPlayer.winner .GameCard__avatar,
-.GameCard__opponent.winner .GameCard__avatar {
+.GameCard__player.winner .GameCard__avatar {
     border: 3px solid var(--sun);
 }
 
-.GameCard__mainPlayer.winner,
-.GameCard__opponent.winner {
+.GameCard__player.winner {
     color: var(--sun);
 }
 
-.GameCard__mainPlayer span,
-.GameCard__opponent span {
+.GameCard__player span {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -84,7 +80,7 @@
 .GameCard__name {
     grid-area: black;
     display: grid;
-    justify-content: start;
+    justify-content: center;
     gap: 1ch;
     grid-template-columns: .75rem auto max-content;
     padding: 0 1rem;
@@ -113,8 +109,8 @@
 }
 
 .GameCard__name.white::after {
+    order: -1;
     display: block;
-    order: initial;
     width: .75rem;
     height: .75rem;
     background: white;
@@ -124,8 +120,6 @@
 
 .GameCard__name.white {
     grid-area: white;
-    grid-template-columns: auto max-content .75rem;
-    justify-content: end;
     margin-bottom: .5rem;
 }
 

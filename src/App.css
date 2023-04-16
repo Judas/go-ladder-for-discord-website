@@ -289,34 +289,6 @@
     content: '';
 }
 
-.Explanation {
-    display: grid;
-    align-content: center;
-    grid-template-columns: 2rem 1fr;
-    gap: 2rem 1rem;
-    height: 100%;
-    color: var(--white-87);
-    font-size: 1.25rem;
-    line-height: 1.4;
-}
-
-.Explanation__title {
-    grid-column: 1 / -1;
-    text-align: center;
-}
-
-.Explanation__text a {
-    color: var(--sun);
-}
-
-.Explanation__text {
-    margin: 0;
-}
-
-.Explanation__flag {
-    margin-top: .5rem;
-}
-
 .Footer {
     padding: 2rem;
 }

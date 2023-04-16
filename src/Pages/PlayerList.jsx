@@ -11,15 +11,16 @@ import Avatar from "../Components/Avatar";
 
 import './PlayerList.css'
 
-function PlayerList() {
+export default function PlayerList() {
     const [players, setPlayers] = useState([])
+    const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
+
     const [searchString, setSearchString] = useState('')
     const [searchedPlayers, setSearchedPlayers] = useState(null)
-    const [playerDataStatus, setPlayerDataStatus] = useState('pending');
 
     // Search filter
     function filterPlayers() {
-        if (playerDataStatus === 'success' && searchString) {
+        if (playerFetchStatus === 'success' && searchString) {
             setSearchedPlayers(players.filter(
                 player => (
                     player.name.toLowerCase().includes(searchString.toLowerCase())
@@ -45,9 +46,9 @@ function PlayerList() {
             .then(res => res.json())
             .then(res => {
                 setPlayers(res);
-                setPlayerDataStatus('success');
+                setPlayerFetchStatus('success');
             })
-            .catch(() => setPlayerDataStatus('error'));
+            .catch(() => setPlayerFetchStatus('error'));
     }, [])
 
     return (
@@ -58,7 +59,7 @@ function PlayerList() {
                 <input
                     id={'search'}
                     type="search"
-                    placeholder='Recherchez un joueur'
+                    placeholder='Rechercher un joueur'
                     onChange={(event) => setSearchString(event.target.value)}
                     className={'SearchWidget__input'}/>
             </div>
@@ -68,15 +69,15 @@ function PlayerList() {
                         <RowElement>
                             <ColHeaderElement className={'Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
                             <ColHeaderElement className={'Discord'}>Discord</ColHeaderElement>
-                            <ColHeaderElement className={'Tier'}>Tier</ColHeaderElement>
-                            <ColHeaderElement className={'Rating'}>Rating</ColHeaderElement>
+                            <ColHeaderElement className={'Tier'}>Division</ColHeaderElement>
+                            <ColHeaderElement className={'Rating'}>Classement</ColHeaderElement>
                             <ColHeaderElement className={'Stability'}>FGC</ColHeaderElement>
                         </RowElement>
                     </RowGroupElement>
                     <RowGroupElement className={'TBody'}>
-                        {playerDataStatus === 'pending' && <Loader/>}
-                        {playerDataStatus === 'error' && <p className={'Error'}>Erreur lors de la récupération des joueurs</p>}
-                        {playerDataStatus === 'success' && (
+                        {playerFetchStatus === 'pending' && <Loader/>}
+                        {playerFetchStatus === 'error' && <p className={'Error'}>Erreur lors de la récupération des joueurs</p>}
+                        {playerFetchStatus === 'success' && (
                             <>
                                 {searchedPlayers ? <>
                                     {searchedPlayers.length ? searchedPlayers.map(player => <PlayerRow key={player.discordId} player={player} />) : <p className={'Error'}>Aucun résultat</p>}
@@ -101,19 +102,12 @@ function PlayerRow({player}) {
             <CellElement colIndex={2} className={'Discord'}>
                 <Link to={`/player/${player.discordId}`}>{player.name}</Link>
             </CellElement>
-            <CellElement colIndex={3} className={'Tier'}><TierChip player={player} /></CellElement>
-            <CellElement colIndex={4} className={'Rating'}>{player.rating}</CellElement>
-            <CellElement colIndex={5} className={'Stability'}><span className={player.stable ? 'stable' : 'unstable'} /></CellElement>
+            <CellElement colIndex={4} className={'Tier'}>
+                <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                <p>{player.tierName}</p>
+            </CellElement>
+            <CellElement colIndex={5} className={'Rating'}>{player.rating}</CellElement>
+            <CellElement colIndex={6} className={'Stability'}><span className={player.stable ? 'stable' : 'unstable'} /></CellElement>
         </RowElement>
     );
 }
-
-function TierChip({player}) {
-    const chipStyle = {
-        backgroundColor: player.tierBgColor,
-        color: player.tierFgColor
-    }
-    return (<p className={'TierChip'} style={ chipStyle }>{player.tierName}</p>);
-}
-
-export default PlayerList;

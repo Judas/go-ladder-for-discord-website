@@ -3,7 +3,7 @@ import {Link, useParams, useSearchParams} from "react-router-dom";
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
 import './Game.css';
-import GameDisplayer from "../Components/GameViewer/GameDisplayer";
+import GameDisplayer from "../Components/Goban/GameViewer";
 
 export default function Game() {
     const params = useParams();

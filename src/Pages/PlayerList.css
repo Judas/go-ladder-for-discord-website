@@ -38,7 +38,7 @@
 
 .PlayerList {
     display: grid;
-    max-width: 60rem;
+    max-width: 48rem;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -74,7 +74,7 @@
     display: grid;
     grid-template:
             'avatar discord tier rating stability' min-content
-            / 5rem 1fr 10rem 7rem 4rem;
+            / 5rem 1fr 7rem 7rem 4rem;
     gap: 1rem;
     padding: 0.75rem;
 }
@@ -184,10 +184,9 @@ div[role="gridcell"] {
     text-decoration: none;
 }
 
-.TierChip {
-    padding: 0.5rem 1rem 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.8rem;
+.Tier p {
+    color: var(--sun);
+    margin: 0;
 }
 
 .Stability .stable::after,
@@ -208,9 +207,9 @@ div[role="gridcell"] {
     .THead .Row {
         gap: .5rem;
         grid-template:
-            'avatar discord discord discord' min-content
+            'avatar avatar discord discord' min-content
             'tier tier rating stability' min-content
-            / 2rem 1fr 5rem 3rem;
+            / 5rem 5rem 1fr 5rem;
     }
 
     .THead {
