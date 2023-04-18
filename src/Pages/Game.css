@@ -63,8 +63,20 @@
 }
 
 .Game__playerTier {
-    color: var(--sun);
+    margin: 0 1rem 0 1rem;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.Game__playerTier p {
     margin: 0;
+    color: var(--sun);
+    font-size: 1rem;
+    font-family: var(--accent-font);
 }
 
 .Game__playerRating {
@@ -74,18 +86,22 @@
 }
 
 .Game__playerRating span .up,
-.Game__playerRating span.down {
+.Game__playerRating span .down {
     display: inline-flex;
     align-items: center;
     gap: .5ch;
 }
 
 .Game__playerRating span .up {
-    color: #28a745;
+    color: var(--eucalyptus);
 }
 
 .Game__playerRating span .down {
-    color: #dc3545;
+    color: var(--punch);
+}
+
+.Game__playerRating span .equal {
+    color: var(--sun);
 }
 
 .Game__playerRating span .up::after,

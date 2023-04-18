@@ -84,9 +84,8 @@ function PlayerHeader({player}) {
     return (
         <div className={'Game__player'}>
             <h2 className={'Game__playerTier'}>
-                <span>
-                    <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
-                </span>
+            <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
+                <p>{player.historicalRating.tierName}</p>
             </h2>
             
             <h2 className={'Game__playerName'}>
@@ -95,7 +94,7 @@ function PlayerHeader({player}) {
 
             <h2 className={'Game__playerRating'}>
                 <span>
-                    {player.historicalRating.rating} <span className={player.ratingGain.includes('+') ? 'up' : 'down'}> {player.ratingGain}</span>
+                    {player.historicalRating.rating} <span className={player.ratingGain.includes('+') ? 'up' : player.ratingGain.includes('-') ? 'down' : 'equal'}> {player.ratingGain}</span>
                 </span>
             </h2>
         </div>

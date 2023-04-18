@@ -1,11 +1,8 @@
-.RecentGames {
-
-}
-
 .RecentGames__title {
-    margin-bottom: 2em;
-    color: var(--white-87);
+    color: var(--sun);
     text-align: center;
+    font-family: var(--accent-font);
+    font-size: 3rem;
 }
 
 .RecentGames__list {
@@ -50,6 +47,10 @@
     background: var(--mine-shaft);
 }
 
+.GameCard__title img {
+    border-radius: 50%;
+}
+
 .GameCard__player {
     display: grid;
     grid-row: 1 / -1;
@@ -91,6 +92,18 @@
     font-size: .875rem;
 }
 
+.GameCard__name span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.GameCard__name.white {
+    grid-area: white;
+    margin-bottom: .5rem;
+}
+
 .GameCard__name::after {
     order: -1;
     display: block;
@@ -99,13 +112,6 @@
     background: black;
     border-radius: 50%;
     content: '';
-}
-
-.GameCard__name span {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 100%;
 }
 
 .GameCard__name.white::after {
@@ -118,20 +124,11 @@
     content: '';
 }
 
-.GameCard__name.white {
-    grid-area: white;
-    margin-bottom: .5rem;
-}
-
-.GameCard__rank {
-    place-self: center;
-    font-size: 1.5rem;
+.GameCard__tier {
+    font-size: 1rem;
     font-family: var(--accent-font);
     color: var(--sun);
-}
-
-.GameCard__title img {
-    border-radius: 50%;
+    padding-top: 0.2rem;
 }
 
 .GameCard__board {

@@ -129,11 +129,6 @@
     text-align: center;
 }
 
-.THead .Row .Rank,
-.THead .Row .Rating {
-    color: black;
-}
-
 div[role="gridcell"] {
     display: grid;
     align-content: center;
@@ -143,13 +138,6 @@ div[role="gridcell"] {
 .TBody  {
     color: var(--white-87);
     text-align: center; 
-}
-
-.TBody .Row .Rank {
-    color: var(--sun);
-    text-align: center;
-    font-size: 1.75rem;
-    font-family: var(--accent-font);
 }
 
 .Avatar {
@@ -185,6 +173,8 @@ div[role="gridcell"] {
 }
 
 .Tier p {
+    font-size: 1.2rem;
+    font-family: var(--accent-font);
     color: var(--sun);
     margin: 0;
 }

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
-import GameDisplayer from "../Components/Goban/GameViewer";
+import GameViewer from "../Components/Goban/GameViewer";
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
 
@@ -61,15 +61,17 @@ function GameCard({game}) {
             </h3>
 
             <p className={`GameCard__name black`}>
-                <span>{game.black.name}</span> <span>({game.black.historicalRating.tierName})</span>
-            </p>
-            <p className={`GameCard__name white`}>
-                <span>{game.white.name}</span> <span>({game.white.historicalRating.tierName})</span>
+                <span>{game.black.name}</span> <span className={`GameCard__tier`}>{game.black.historicalRating.tierName}</span>
             </p>
 
             <div className={'GameCard__board'}>
-                <GameDisplayer game={game} move={42}/>
+                <GameViewer game={game} move={42}/>
             </div>
+
+            <p className={`GameCard__name white`}>
+                <span>{game.white.name}</span> <span className={`GameCard__tier`}>{game.white.historicalRating.tierName}</span>
+            </p>
+
             <Link to={`/game/${game.id}`}><span className={'ReaderOnly'}>Voir la partie</span></Link>
         </article>
     );
