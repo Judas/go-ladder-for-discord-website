@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
@@ -84,7 +84,7 @@ function PlayerHeader({player}) {
     return (
         <div className={'Game__player'}>
             <h2 className={'Game__playerTier'}>
-            <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
+                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
                 <p>{player.historicalRating.tierName}</p>
             </h2>
             
