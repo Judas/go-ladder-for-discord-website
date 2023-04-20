@@ -1,191 +1,210 @@
-import './PlayerProfile.css'
 import React, {useEffect, useState} from 'react';
-import 'chart.js/auto'; // To avoid canvas problems
-import {Link, Outlet, useMatch, useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+
 import TableElement from "../Components/Table/TableElement";
 import RowGroupElement from "../Components/Table/RowGroupElement";
 import RowElement from "../Components/Table/RowElement";
 import ColHeaderElement from "../Components/Table/ColHeaderElement";
 import CellElement from "../Components/Table/CellElement";
 import Loader from "../Components/Loader";
-import HistoryChart, {historyToChartData} from "../Components/HistoryChart";
 import Avatar from "../Components/Avatar";
 
-const api_host = "/api/gold/api/v4";
+import './PlayerProfile.css'
 
 export default function PlayerProfile() {
-    const {playerId, gameId} = useParams()
+    const {playerId} = useParams()
+
     const [player, setPlayer] = useState(undefined)
-    const [games, setGames] = useState([])
-    const [data, setData] = useState(historyToChartData([]))
-    const [currentGame, setCurrentGame] = useState(undefined);
+    const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
+    const [refStability, setRefStability] = useState(undefined)
+    const [refStabilityFetchStatus, setRefStabilityFetchStatus] = useState('pending');
 
-    const [playerDataStatus, setPlayerDataStatus] = useState('pending');
-    const [playerGamesStatus, setPlayerGamesStatus] = useState('pending');
-    const [playerHistoryStatus, setPlayerHistoryStatus] = useState('pending');
-
-    const isPlayerPage = useMatch('/players/:playerId');
-
+    // Fetch player
     useEffect(() => {
-        // get Player infos
-        setPlayerGamesStatus('pending');
-        setCurrentGame(undefined);
-        const fetchPlayer = `${api_host}/${playerId}/profile`
-        fetch(fetchPlayer)
+        fetch(`/api/player/${playerId}`)
             .then(res => {
-                if (!res.ok) {
-                    throw res.statusText;
-                }
+                if (!res.ok) { throw res.statusText; }
                 return res;
             })
             .then(res => res.json())
             .then(res => {
                 setPlayer(res);
-                setPlayerDataStatus('success');
+                setPlayerFetchStatus('success');
             })
-            .catch(() => setPlayerDataStatus('error'));
+            .catch(() => setPlayerFetchStatus('error'));
     }, [playerId])
 
+    // Fetch stability ref values
     useEffect(() => {
-        if (playerDataStatus === 'success') {
-            const fetchPlayerGames = `${api_host}/${playerId}/games`
-            fetch(fetchPlayerGames)
-                .then(res => {
-                    if(!res.ok) {
-                        throw res.statusText;
-                    }
-                    return res;
-                })
-                .then(res => res.json())
-                .then(res => {
-                    setGames(res);
-                    setPlayerGamesStatus('success');
-                })
-                .catch(() => setPlayerGamesStatus('error'));
+        fetch(`/api/stability`)
+            .then(res => {
+                if (!res.ok) { throw res.statusText; }
+                return res;
+            })
+            .then(res => res.json())
+            .then(res => {
+                setRefStability(res);
+                setRefStabilityFetchStatus('success');
+            })
+            .catch(() => setRefStabilityFetchStatus('error'));
+    }, [])
 
-            const fetchPlayerHistory = `${api_host}/${playerId}/ratings`
-            fetch(fetchPlayerHistory)
-                .then(res => {
-                    if(!res.ok) {
-                        throw res.statusText;
-                    }
-                    return res;
-                })
-                .then(res => res.json())
-                .then(res => {
-                    setData(historyToChartData(res))
-                    setPlayerHistoryStatus('success')
-                })
-                .catch(() => setPlayerHistoryStatus('error'));
-        }
-    }, [playerDataStatus, playerId]);
-
-    useEffect(() => {
-        setCurrentGame(gameId);
-    }, [gameId])
-
-    if (playerDataStatus === 'pending') {
-        return <div style={{display: 'grid', height: '100%',}}>
-            <Loader/>
-        </div>
+    if (playerFetchStatus === 'success' && refStabilityFetchStatus === 'success') {
+        return <Profile player={player} refStability={refStability} />;
+    } else if(playerFetchStatus === 'pending' || refStabilityFetchStatus === 'pending') {
+        return <div style={{display: 'grid', height: '100%',}}><Loader/></div>;
+    } else {
+        return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>;
     }
+}
 
-    if (playerDataStatus === 'error') {
-        return <div style={{display: 'grid', height: '100%',}}>
-            <p className={'Error'}>Echec de la récupération des données du joueur.</p>
-        </div>
-    }
-
+function Profile({player, refStability}) {
     return (
-        <article className="PlayerPage">
-            <div className="Card">
-                <h2 className="CardHeader">
-                    <Avatar src={player.avatar} size={60} className={'CardHeader__avatar'} alt={`avatar ${player.name}`} hidden={true}/>
-                    <span>{player.name}</span>
-                </h2>
-                <div className="Card__content">
-                    <section className="headline">
-                        <div className="rank">
-                            <span>{player.rank}</span>
-                            <p>{player.fullRank}</p>
+        <article className={'PlayerProfile'}>
+            <div className={'PlayerProfile__LeftColumn'}>
+                <div className={'PlayerProfile__CardHighlighted'}>
+                    <h2 className={'PlayerProfile__Header'}><span>{player.name}</span></h2>
+                    <Avatar src={player.avatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.name}`} hidden={true}/>
+                    
+                    <div className={'PlayerProfile__CardContent'}>
+                        <div className={'PlayerProfile__Tier'}>
+                            <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                            <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
                         </div>
-                        <div className="rating">
-                            <span>{player.rating}</span>
-                            <p>{player.fullRating}</p>
+
+                        <div className={'PlayerProfile__TierProgression'}>
+                            <TierProgression player={player} />
                         </div>
-                    </section>
-                    <section className="subline">
-                        <h3 className={'PlayerPage__tableTitle'}>Dernières parties</h3>
-                        {playerGamesStatus === 'pending' && <Loader/>}
-                        {playerGamesStatus === 'error' && <p className={'Error'}>Echec de la récupération des parties</p>}
-                        {playerGamesStatus === 'success' && games.length > 0 &&
-                            <TableElement>
-                                <RowGroupElement className={'ReaderOnly'}>
-                                    <RowElement>
-                                        <ColHeaderElement>
-                                            Date
-                                        </ColHeaderElement>
-                                        <ColHeaderElement>
-                                            serveur
-                                        </ColHeaderElement>
-                                        <ColHeaderElement>
-                                            opposant
-                                        </ColHeaderElement>
-                                        <ColHeaderElement>
-                                            opposant avatar
-                                        </ColHeaderElement>
-                                        {/*<ColHeaderElement>*/}
-                                        {/*    opposant rating*/}
-                                        {/*</ColHeaderElement>*/}
-                                    </RowElement>
-                                </RowGroupElement>
-                                <RowGroupElement className={'PlayerTable__body'}>
-                                    {games.map(game => <RowElement
-                                        key={game.id}
-                                        className={String(game.id) === currentGame ? "PlayerTable__row selected" : "PlayerTable__row"}
-                                    >
-                                        <CellElement className="Date">{game.date}</CellElement>
-                                        <CellElement className="Server">{game.server}</CellElement>
-                                        <CellElement className={'Name'}>
-                                            {game.opponent.currentRank !== '?' ? (
-                                                <Link  to={`/players/${game.opponent.discordId}`}>
-                                                    {game.opponent.name}
-                                                </Link>
-                                            ) : <span>{game.opponent.name}</span>}
-                                        </CellElement>
-                                        <CellElement className="Portrait">
-                                            <Avatar src={game.opponent.avatar} alt={`avatar ${game.opponent.name}`} className={'logo'}/>
-                                        </CellElement>
-                                        <CellElement className="Rank">{game.opponent.historicalRank}</CellElement>
-                                        {/*<CellElement className="Rating">{game.opponent.historicalRating}</CellElement>*/}
-                                        <CellElement className={'GameLink'}>
-                                            <Link to={`/players/${playerId}/game/${game.id}`} className={'CallToAction'}>Voir</Link>
-                                        </CellElement>
-                                    </RowElement>)}
-                                </RowGroupElement>
-                            </TableElement>
-                        }
-                    </section>
-                    {playerGamesStatus === 'success' && games.length === 0 &&
-                        <div className="subline">
-                            <p className={'NoGame'}>Aucune partie récente</p>
-                        </div>
-                    }
+                    </div>
+                </div>
+
+                <div className={'PlayerProfile__Card'}>
+                    <h2 className={'PlayerProfile__Header'}><span>Parties récentes</span></h2>
+                    <GameList player={player} />
                 </div>
             </div>
 
-            <section>
-                {isPlayerPage ?
-                    <div className={'sidebar'}>
-                        <h3 className={'ReaderOnly'}>Graphique</h3>
-                        {playerHistoryStatus === 'pending' && <Loader/>}
-                        {playerHistoryStatus === 'error' &&
-                            <p className={'Error'}>Echec de la récupération de l'historique</p>}
-                        {playerHistoryStatus === 'success' && <HistoryChart data={data}/>}
-                    </div> :
-                    <Outlet/>
-                }
-            </section>
+            <div className={'PlayerProfile__RightColumn'}>
+                <div className={'PlayerProfile__Card'}>
+                    <h2 className={'PlayerProfile__Header'}><span>Comptes</span></h2>
+                    <AccountList player={player} />
+                </div>
+
+                <div className={'PlayerProfile__Card'}>
+                    <h2 className={'PlayerProfile__Header'}><span>Validation FGC</span></h2>
+
+                    <div className={'PlayerProfile__Stability'}>
+                        <StabilityItem 
+                            valid={player.stability.gameCount >= refStability.gameCount} 
+                            highlight={`${player.stability.gameCount}`}
+                            text={`parties (min. ${refStability.gameCount})`} 
+                        />
+                        <StabilityItem 
+                            valid={player.stability.ladderGameCount >= refStability.ladderGameCount} 
+                            highlight={`${player.stability.ladderGameCount}`}
+                            text={`parties GOLD (min. ${refStability.ladderGameCount})`} 
+                        />
+                        <StabilityItem 
+                            valid={player.stability.deviation <= refStability.deviation} 
+                            highlight={`${player.stability.deviation}`}
+                            text={`de déviation (max ${refStability.deviation})`} 
+                        />
+                    </div>
+                </div>
+            </div>
         </article>
-    )
+    );
+}
+
+function TierProgression({player}) {
+    return (
+        <div>
+
+        </div>
+    );
+}
+
+function AccountList({player}) {
+    if (player.accounts.length === 0) {
+        return <p className={'NoAccount'}>Aucun compte lié</p>;
+    }
+
+    return (
+        <TableElement className={'PlayerProfile__AccountList'}>
+            <RowGroupElement className={'ReaderOnly'}>
+                <RowElement>
+                    <ColHeaderElement>Serveur</ColHeaderElement>
+                    <ColHeaderElement>Pseudo</ColHeaderElement>
+                    <ColHeaderElement>Rang</ColHeaderElement>
+                </RowElement>
+            </RowGroupElement>
+            <RowGroupElement className={'PlayerProfile__AccountListContent'}>
+                {player.accounts.map(account => <AccountRow account={account} />)}
+            </RowGroupElement>
+        </TableElement>
+    );
+}
+
+function AccountRow({account}) {
+    return (
+        <RowElement key={account.name} className={'PlayerProfile__AccountItem'}>
+            <CellElement className={'PlayerProfile__AccountServer'}>{account.name}</CellElement>
+            <CellElement className={'PlayerProfile__AccountPseudo'}>{account.pseudo}</CellElement>
+            <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
+            <a href={account.link ?? "#"} target='__blank' />
+        </RowElement>
+    );
+}
+
+
+function GameList({player}) {
+    if (player.games.length === 0) {
+        return <p className={'NoGame'}>Aucune partie récente</p>;
+    }
+
+    return (
+        <TableElement className={'PlayerProfile__GameList'}>
+            <RowGroupElement className={'ReaderOnly'}>
+                <RowElement>
+                    <ColHeaderElement>Date</ColHeaderElement>
+                    <ColHeaderElement>Avatar adversaire</ColHeaderElement>
+                    <ColHeaderElement>Nom adversaire</ColHeaderElement>
+                    <ColHeaderElement>Division adversaire</ColHeaderElement>
+                    <ColHeaderElement>Résultat</ColHeaderElement>
+                </RowElement>
+            </RowGroupElement>
+            <RowGroupElement className={'PlayerProfile__GameListContent'}>
+                {player.games.map(game => <GameRow player={player} game={game} />)}
+            </RowGroupElement>
+        </TableElement>
+    );
+}
+
+function GameRow({player, game}) {
+    const main = game.black.discordId === player.discordId ? game.black : game.white;
+    const opponent = game.black.discordId === player.discordId ? game.white : game.black;
+    const result = main.winner ? 'victory' : opponent.winner ? 'defeat' : 'draw';
+
+    return (
+        <RowElement key={game.id} className={'PlayerProfile__GameItem'}>
+            <CellElement className={'PlayerProfile__GameDate'}>{game.date}</CellElement>
+            <CellElement className={'PlayerProfile__GameResult'}><span className={result} /></CellElement>
+            <CellElement className={'PlayerProfile__GameAvatar'}>
+                <Avatar src={opponent.avatar} alt={`avatar ${opponent.name}`} className={'PlayerProfile__GameAvatarPicture'}/>
+            </CellElement>
+            <CellElement className={'PlayerProfile__GameName'}>{opponent.name}</CellElement>
+            <CellElement className={'PlayerProfile__GameTier'}>{opponent.historicalRating.tierName}</CellElement>
+            <Link to={`/game/${game.id}`} />
+        </RowElement>
+    );
+}
+
+function StabilityItem({valid, highlight, text}) {
+    return (
+        <div className={'PlayerProfile__StabilityItem'}>
+            <span className={valid ? 'valid' : 'invalid'} />
+            <p className={'PlayerProfile__StabilityHighlight'}>{highlight}</p>
+            <p className={'PlayerProfile__StabilityText'}>{text}</p>
+        </div>
+    );
 }

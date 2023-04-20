@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams, useSearchParams} from "react-router-dom";
+import {useParams, useSearchParams, Link} from "react-router-dom";
 
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
@@ -50,27 +50,25 @@ export default function Game() {
                 <div className={'Game__header'}>
                     <PlayerHeader player={game.black} />
 
-                    <div className={'Game__actions'}>
-                        <button onClick={sharePosition} className={'Game__share CallToAction'}>Partager la position</button>
+                    <div className={'Game__Actions'}>
+                        <button onClick={sharePosition} className={'Game__Share CallToAction'}>Partager la position</button>
                         <a href={game.gameLink} target="_blank" rel={'noreferrer'} className={'CallToAction'}>Ouvrir cette partie</a>
                     </div>
 
                     <PlayerHeader player={game.white} />
                 </div>
 
-                <div className={'Game__goban'}>
+                <div className={'Game__Goban'}>
                     <GameViewer game={game} move={searchParams.get('move')}/>
                 </div>
 
                 {modalVisible && (
-                    <div className={'Game__modal'}>
+                    <div className={'Game__Modal'}>
                         <button className={'CallToAction'} onClick={() => setModalVisible(false)}>
                             <span className={'ReaderOnly'}>Fermer</span>
                         </button>
                         <p>
-
                             {copySuccess && <><span>L'URL vers ce coup est dans le presse papier.</span> <br/></>}
-
                             <a href={gameMoveURL}>Lien vers ce coup</a>
                         </p>
                     </div>
@@ -82,17 +80,19 @@ export default function Game() {
 
 function PlayerHeader({player}) {
     return (
-        <div className={'Game__player'}>
-            <h2 className={'Game__playerTier'}>
+        <div className={'Game__Player'}>
+            <h2 className={'Game__PlayerTier'}>
                 <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
                 <p>{player.historicalRating.tierName}</p>
             </h2>
             
-            <h2 className={'Game__playerName'}>
-                <span><Avatar src={player.avatar} size={40} hidden={true}/>{player.name}</span>
+            <h2 className={'Game__PlayerName'}>
+                <Avatar src={player.avatar} size={40} hidden={true}/>
+                <span><Link to={`/player/${player.discordId}`}>{player.name}</Link></span>
+                
             </h2>
 
-            <h2 className={'Game__playerRating'}>
+            <h2 className={'Game__PlayerRating'}>
                 <span>
                     {player.historicalRating.rating} <span className={player.ratingGain.includes('+') ? 'up' : player.ratingGain.includes('-') ? 'down' : 'equal'}> {player.ratingGain}</span>
                 </span>

@@ -321,7 +321,18 @@ a:focus-visible {
     font-size: .875rem;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
-    border-radius: .5rem
+    border-radius: 0.5rem;
+}
+
+.ErrorRow {
+    place-self: center;
+    padding: 1em 1.5em;
+    color: #721c24;
+    font-size: .875rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 0 0 0.5rem 0.5rem;
+    margin-top: 0;
 }
 
 .Loader {

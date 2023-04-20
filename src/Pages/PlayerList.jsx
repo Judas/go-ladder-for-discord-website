@@ -76,11 +76,11 @@ export default function PlayerList() {
                     </RowGroupElement>
                     <RowGroupElement className={'TBody'}>
                         {playerFetchStatus === 'pending' && <Loader/>}
-                        {playerFetchStatus === 'error' && <p className={'Error'}>Erreur lors de la récupération des joueurs</p>}
+                        {playerFetchStatus === 'error' && <p className={'ErrorRow'}>Erreur lors de la récupération des joueurs</p>}
                         {playerFetchStatus === 'success' && (
                             <>
                                 {searchedPlayers ? <>
-                                    {searchedPlayers.length ? searchedPlayers.map(player => <PlayerRow key={player.discordId} player={player} />) : <p className={'Error'}>Aucun résultat</p>}
+                                    {searchedPlayers.length ? searchedPlayers.map(player => <PlayerRow key={player.discordId} player={player} />) : <p className={'ErrorRow'}>Aucun résultat</p>}
                                 </> : players.map(
                                     player => <PlayerRow key={player.discordId} player={player} />
                                 )}
@@ -99,15 +99,14 @@ function PlayerRow({player}) {
             <CellElement colIndex={1} className={'Avatar'}>
                 <Avatar size={40} src={player.avatar} alt={`avatar ${player.name}`} className={'logo'}/>
             </CellElement>
-            <CellElement colIndex={2} className={'Discord'}>
-                <Link to={`/player/${player.discordId}`}>{player.name}</Link>
-            </CellElement>
+            <CellElement colIndex={2} className={'Discord'}>{player.name}</CellElement>
             <CellElement colIndex={4} className={'Tier'}>
                 <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                 <p>{player.tierName}</p>
             </CellElement>
             <CellElement colIndex={5} className={'Rating'}>{player.rating}</CellElement>
             <CellElement colIndex={6} className={'Stability'}><span className={player.stable ? 'stable' : 'unstable'} /></CellElement>
+            <Link to={`/player/${player.discordId}`} />
         </RowElement>
     );
 }

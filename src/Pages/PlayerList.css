@@ -74,7 +74,7 @@
     display: grid;
     grid-template:
             'avatar discord tier rating stability' min-content
-            / 5rem 1fr 7rem 7rem 4rem;
+            / 5rem 1fr 7rem 7rem 4rem 0px;
     gap: 1rem;
     padding: 0.75rem;
 }
@@ -104,11 +104,6 @@
     background: var(--tundora);
 }
 
-.TBody .Row a {
-    padding: .5em;
-    color: var(--white-87);
-}
-
 .TBody .Row a::before {
     position: absolute;
     top: 0;
@@ -119,8 +114,7 @@
     content: '';
 }
 
-.TBody .Row:hover,
-.TBody .Row:focus-within {
+.TBody .Row:hover {
     background: var(--brown-tumbleweed);
 }
 
@@ -185,11 +179,11 @@ div[role="gridcell"] {
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
-    background: url('../style/image/stable.svg') no-repeat center/contain;
+    background: url('../style/image/valid.svg') no-repeat center/contain;
 }
 
 .Stability .unstable::after {
-    background-image: url('../style/image/unstable.svg');
+    background-image: url('../style/image/invalid.svg');
 }
 
 @media only screen and (max-width: 980px) {

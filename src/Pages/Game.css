@@ -39,30 +39,41 @@
     }
 }
 
-.Game__player {
+.Game__Player {
     display: flex;
     margin: 0;
     justify-content: center;
     align-items: center;
 }
 
-.Game__player img {
+.Game__Player img {
     border-radius: 50%;
 }
 
-.Game__player span {
+.Game__Player span {
     display: grid;
     grid-template-columns: min-content 1fr;
     gap: .5ch;
     align-items: center;
 }
 
-.Game__playerName {
+.Game__PlayerName {
     color: var(--white-87);
     margin: 0;
+    display: flex;
+    align-items: center;
 }
 
-.Game__playerTier {
+.Game__PlayerName span {
+    margin: 0 0 0 1rem;
+}
+
+.Game__PlayerName a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.Game__PlayerTier {
     margin: 0 1rem 0 1rem;
     display: grid;
     grid-template-rows: min-content 1fr;
@@ -72,40 +83,44 @@
     align-content: center;
 }
 
-.Game__playerTier p {
+.Game__PlayerTier p {
     margin: 0;
     color: var(--sun);
     font-size: 1rem;
     font-family: var(--accent-font);
 }
 
-.Game__playerRating {
+.Game__PlayerRating {
     color: var(--white-87);
-    margin: 0.2rem 0 0 1rem;
+    margin: 0.2rem 0 0 .5rem;
     font-size: medium;
+    border: 2px solid var(--sun);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
 }
 
-.Game__playerRating span .up,
-.Game__playerRating span .down {
+.Game__PlayerRating span .up,
+.Game__PlayerRating span .down,
+.Game__PlayerRating span .equal {
     display: inline-flex;
     align-items: center;
-    gap: .5ch;
+    margin-left: .2rem;
 }
 
-.Game__playerRating span .up {
+.Game__PlayerRating span .up {
     color: var(--eucalyptus);
 }
 
-.Game__playerRating span .down {
+.Game__PlayerRating span .down {
     color: var(--punch);
 }
 
-.Game__playerRating span .equal {
+.Game__PlayerRating span .equal {
     color: var(--sun);
 }
 
-.Game__playerRating span .up::after,
-.Game__playerRating span .down::after {
+.Game__PlayerRating span .up::after,
+.Game__PlayerRating span .down::after {
     content: '';
     display: inline-block;
     width: 2ch;
@@ -113,11 +128,11 @@
     background: url('../style/image/trending_up.svg') no-repeat center/contain;
 }
 
-.Game__playerRating span .down::after {
+.Game__PlayerRating span .down::after {
     background-image: url('../style/image/trending_down.svg');
 }
 
-.Game__actions {
+.Game__Actions {
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -126,7 +141,7 @@
 }
 
 @media only screen and (max-width: 650px) {
-    .Game__actions {
+    .Game__Actions {
         grid-column: 1/-1;
         display: flex;
         flex-wrap: wrap;
@@ -137,28 +152,28 @@
     }
 }
 
-.Game__actions p {
+.Game__Actions p {
     margin: 0;
 }
 
-.Game__actions button,
-.Game__actions a {
+.Game__Actions button,
+.Game__Actions a {
     margin-top: .5rem;
     font-size: .75rem;
 }
 
-.Game__share {
+.Game__Share {
     background: var(--white-87);
     cursor: pointer;
 }
 
-.Game__goban {
+.Game__Goban {
     position: relative;
     z-index: 1;
     margin: 0 1rem 0 1rem;
 }
 
-.Game__modal {
+.Game__Modal {
     position: absolute;
     top: 1rem;
     left: 50%;
@@ -174,7 +189,7 @@
     animation: slide-in .3s forwards;
 }
 
-.Game__modal button {
+.Game__Modal button {
     position: absolute;
     top: .5rem;
     right: .5rem;
@@ -182,11 +197,11 @@
     background: var(--sun) url('../style/image/close.svg') no-repeat center/70%;
 }
 
-.Game__modal p {
+.Game__Modal p {
     margin: 0;
 }
 
-.Game__modal a {
+.Game__Modal a {
     color: var(--brown-tumbleweed);
 }
 
