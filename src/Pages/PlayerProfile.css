@@ -81,17 +81,56 @@
     width: 100%;
 }
 
-.PlayerProfile__TierProgression {
-    width: 100%;
-    height: 100px;
-    background-color: indigo;
-}
-
 .PlayerProfile__TierName {
     font-size: 2rem;
     font-family: var(--accent-font);
     color: var(--sun);    
     margin: 1rem 0 0 0;
+}
+
+.PlayerProfile__TierProgression {
+    width: 100%;
+    padding: 0 2rem 1rem 2rem;
+}
+
+.PlayerProfile__Rating {
+    margin: 0;
+    padding: 0 1rem .5rem 1rem;
+    font-size: 1.5rem;
+    color: var(--white-87);
+}
+
+.PlayerProfile__TierContainer {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    align-items: center;
+}
+
+.PlayerProfile__ProgressBarContainer {
+    position: relative;
+    width: 100%;
+    height: 32px;
+    border: 2px solid var(--sun);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.PlayerProfile__ProgressBar {
+    position: absolute;
+    left: 0;
+    top: 0px;
+    height: 100%;
+    background-color: var(--sun);
+    border-radius: 16px;
+    z-index: 2;
+}
+
+.PlayerProfile__ProgressBarLabel {
+    z-index: 2;
+    color: var(--white-87);
 }
 
 .NoGame {
@@ -161,12 +200,6 @@
     place-self: center;
 }
 
-
-
-
-
-
-
 .PlayerProfile__GameList {
     width: 100%;
 }
@@ -191,9 +224,9 @@
     display: grid;
     grid-template:
             'date result avatar name tier' min-content
-            / 3rem 3rem 4rem 1fr 8rem 0px;
+            / 3rem 3rem 4rem 1fr 10rem 0px;
     gap: .5rem;
-    padding: 1rem;
+    padding: .5rem;
     box-shadow: 0 0 0 0 var(--sun);
     transition: all .2s;
     color: var(--white-87);
@@ -213,6 +246,7 @@
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
+    border: 2px solid var(--sun);
 }
 
 .PlayerProfile__GameItem:last-child {
@@ -265,7 +299,15 @@
 
 .PlayerProfile__GameTier {
     grid-area: tier;
+    grid-template-columns: min-content max-content;
+    align-items: center;
+    justify-content: start;
+}
+
+.PlayerProfile__GameTier p {
+    margin: 0 0 0 .5rem;
     font-size: 1.2rem;
+    width: 100%;
     font-family: var(--accent-font);
     color: var(--sun);
 }
@@ -321,3 +363,12 @@
     margin: 0 0 0 1rem;
 }
 
+.PlayerProfile__StabilityPeriod {
+    color: var(--sun);
+    font-size: 1rem;
+    margin: 0;
+    padding: .5rem 0 0 0;
+    text-align: center;
+    margin: auto;
+    font-style: italic;
+}

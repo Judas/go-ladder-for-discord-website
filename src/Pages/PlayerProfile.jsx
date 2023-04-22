@@ -18,6 +18,8 @@ export default function PlayerProfile() {
     const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
     const [refStability, setRefStability] = useState(undefined)
     const [refStabilityFetchStatus, setRefStabilityFetchStatus] = useState('pending');
+    const [tiers, setTiers] = useState(undefined)
+    const [tiersFetchStatus, setTiersFetchStatus] = useState('pending');
 
     // Fetch player
     useEffect(() => {
@@ -32,7 +34,7 @@ export default function PlayerProfile() {
                 setPlayerFetchStatus('success');
             })
             .catch(() => setPlayerFetchStatus('error'));
-    }, [playerId])
+    }, [playerId]);
 
     // Fetch stability ref values
     useEffect(() => {
@@ -47,18 +49,33 @@ export default function PlayerProfile() {
                 setRefStabilityFetchStatus('success');
             })
             .catch(() => setRefStabilityFetchStatus('error'));
-    }, [])
+    }, []);
 
-    if (playerFetchStatus === 'success' && refStabilityFetchStatus === 'success') {
-        return <Profile player={player} refStability={refStability} />;
-    } else if(playerFetchStatus === 'pending' || refStabilityFetchStatus === 'pending') {
+    // Fetch tiers
+    useEffect(() => {
+        fetch(`/api/tiers`)
+            .then(res => {
+                if (!res.ok) { throw res.statusText; }
+                return res;
+            })
+            .then(res => res.json())
+            .then(res => {
+                setTiers(res);
+                setTiersFetchStatus('success');
+            })
+            .catch(() => setTiersFetchStatus('error'));
+    }, []);
+
+    if (playerFetchStatus === 'success' && refStabilityFetchStatus === 'success' && tiersFetchStatus === 'success') {
+        return <Profile player={player} refStability={refStability} tiers={tiers} />;
+    } else if (playerFetchStatus === 'pending' || refStabilityFetchStatus === 'pending' || tiersFetchStatus === 'pending') {
         return <div style={{display: 'grid', height: '100%',}}><Loader/></div>;
     } else {
         return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>;
     }
 }
 
-function Profile({player, refStability}) {
+function Profile({player, refStability, tiers}) {
     return (
         <article className={'PlayerProfile'}>
             <div className={'PlayerProfile__LeftColumn'}>
@@ -73,7 +90,8 @@ function Profile({player, refStability}) {
                         </div>
 
                         <div className={'PlayerProfile__TierProgression'}>
-                            <TierProgression player={player} />
+                            <h2 className={'PlayerProfile__Rating'}>{player.rating} ± {player.deviation}</h2>
+                            <TierProgression player={player} tiers={tiers} />
                         </div>
                     </div>
                 </div>
@@ -92,34 +110,36 @@ function Profile({player, refStability}) {
 
                 <div className={'PlayerProfile__Card'}>
                     <h2 className={'PlayerProfile__Header'}><span>Validation FGC</span></h2>
-
-                    <div className={'PlayerProfile__Stability'}>
-                        <StabilityItem 
-                            valid={player.stability.gameCount >= refStability.gameCount} 
-                            highlight={`${player.stability.gameCount}`}
-                            text={`parties (min. ${refStability.gameCount})`} 
-                        />
-                        <StabilityItem 
-                            valid={player.stability.ladderGameCount >= refStability.ladderGameCount} 
-                            highlight={`${player.stability.ladderGameCount}`}
-                            text={`parties GOLD (min. ${refStability.ladderGameCount})`} 
-                        />
-                        <StabilityItem 
-                            valid={player.stability.deviation <= refStability.deviation} 
-                            highlight={`${player.stability.deviation}`}
-                            text={`de déviation (max ${refStability.deviation})`} 
-                        />
-                    </div>
+                    <Stability player={player} refStability={refStability} />
                 </div>
             </div>
         </article>
     );
 }
 
-function TierProgression({player}) {
-    return (
-        <div>
+function TierProgression({player, tiers}) {
+    const currentTier = tiers.filter(tier => tier.rank == player.tierRank)[0];
+    const lastTierRank = Math.max.apply(null, tiers.map(tier => tier.rank));
 
+    // If last tier, do not display the progress bar
+    if (currentTier.rank === lastTierRank) {
+        return null;
+    }
+
+    const total = currentTier.max - currentTier.min;
+    const progress = player.rating - currentTier.min;
+    const ratio = 100 * progress / total;
+
+    return (
+        <div className={'PlayerProfile__TierContainer'}>
+            <img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }}
+                src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank}.svg`} />
+            <div className={'PlayerProfile__ProgressBarContainer'}>
+                <div className={'PlayerProfile__ProgressBar'} style={{width: `${ratio}%`}} />
+                <span className={'PlayerProfile__ProgressBarLabel'}>{progress} / {total}</span>
+            </div>
+            <img width="64" height="64" style={{ margin: "0 0 0 0.5rem" }}
+                src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank + 1}.svg`} />
         </div>
     );
 }
@@ -151,11 +171,10 @@ function AccountRow({account}) {
             <CellElement className={'PlayerProfile__AccountServer'}>{account.name}</CellElement>
             <CellElement className={'PlayerProfile__AccountPseudo'}>{account.pseudo}</CellElement>
             <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
-            <a href={account.link ?? "#"} target='__blank' />
+            <a href={account.link ?? "#"} />
         </RowElement>
     );
 }
-
 
 function GameList({player}) {
     if (player.games.length === 0) {
@@ -193,9 +212,35 @@ function GameRow({player, game}) {
                 <Avatar src={opponent.avatar} alt={`avatar ${opponent.name}`} className={'PlayerProfile__GameAvatarPicture'}/>
             </CellElement>
             <CellElement className={'PlayerProfile__GameName'}>{opponent.name}</CellElement>
-            <CellElement className={'PlayerProfile__GameTier'}>{opponent.historicalRating.tierName}</CellElement>
+            <CellElement className={'PlayerProfile__GameTier'}>
+                <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${opponent.historicalRating.tierRank}.svg`} alt={opponent.historicalRating.tierName}/>
+                <p>{opponent.historicalRating.tierName}</p>
+            </CellElement>
             <Link to={`/game/${game.id}`} />
         </RowElement>
+    );
+}
+
+function Stability({player, refStability}) {
+    return (
+        <div className={'PlayerProfile__Stability'}>
+            <StabilityItem 
+                valid={player.stability.gameCount >= refStability.gameCount} 
+                highlight={`${player.stability.gameCount}`}
+                text={`parties (min. ${refStability.gameCount})`} 
+            />
+            <StabilityItem 
+                valid={player.stability.ladderGameCount >= refStability.ladderGameCount} 
+                highlight={`${player.stability.ladderGameCount}`}
+                text={`parties GOLD (min. ${refStability.ladderGameCount})`} 
+            />
+            <StabilityItem 
+                valid={player.stability.deviation <= refStability.deviation} 
+                highlight={`${player.stability.deviation}`}
+                text={`de déviation (max ${refStability.deviation})`} 
+            />
+            <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>;
+        </div>
     );
 }
 
