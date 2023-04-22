@@ -224,20 +224,20 @@ function GameRow({player, game}) {
 function Stability({player, refStability}) {
     return (
         <div className={'PlayerProfile__Stability'}>
-            <StabilityItem 
+            <StabilityItem
                 valid={player.stability.gameCount >= refStability.gameCount} 
                 highlight={`${player.stability.gameCount}`}
-                text={`parties (min. ${refStability.gameCount})`} 
+                text={`parties (min. ${refStability.gameCount})`}
             />
-            <StabilityItem 
-                valid={player.stability.ladderGameCount >= refStability.ladderGameCount} 
+            <StabilityItem
+                valid={player.stability.ladderGameCount >= refStability.ladderGameCount}
                 highlight={`${player.stability.ladderGameCount}`}
-                text={`parties GOLD (min. ${refStability.ladderGameCount})`} 
+                text={`parties GOLD (min. ${refStability.ladderGameCount})`}
             />
-            <StabilityItem 
-                valid={player.stability.deviation <= refStability.deviation} 
+            <StabilityItem
+                valid={player.stability.deviation <= refStability.deviation}
                 highlight={`${player.stability.deviation}`}
-                text={`de déviation (max ${refStability.deviation})`} 
+                text={`de déviation (max ${refStability.deviation})`}
             />
             <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>;
         </div>

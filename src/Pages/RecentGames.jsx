@@ -16,7 +16,7 @@ export default function RecentGames() {
 
         fetch("/api/games")
             .then(res => {
-                if (!res.ok) { throw res.statusText;  }
+                if (!res.ok) { throw res.statusText; }
                 return res;
             })
             .then(res => res.json())
@@ -39,7 +39,7 @@ export default function RecentGames() {
             </div>
         );
         case 'pending': return <Loader/>;
-        case 'error': 
+        case 'error':
         default :
             return <p className={'Error'}>Erreur lors de la récupération des parties</p>;
     }

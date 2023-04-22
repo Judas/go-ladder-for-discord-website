@@ -85,7 +85,7 @@ function PlayerHeader({player}) {
                 <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
                 <p>{player.historicalRating.tierName}</p>
             </h2>
-            
+
             <h2 className={'Game__PlayerName'}>
                 <Avatar src={player.avatar} size={40} hidden={true}/>
                 <span><Link to={`/player/${player.discordId}`}>{player.name}</Link></span>
