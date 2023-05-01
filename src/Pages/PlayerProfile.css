@@ -1,0 +1,374 @@
+.PlayerProfile {
+    margin: auto;
+    text-align: center;
+    max-width: 72rem;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 1em;
+}
+
+@media only screen and (max-width: 980px) {
+    .PlayerProfile {
+        gap: .5rem;
+        grid-template-columns: 1fr;
+    }
+
+    .THead {
+        top: 4.5rem;
+    }
+
+    .Discord {
+        text-align: left;
+    }
+}
+
+.PlayerProfile__Card,
+.PlayerProfile__CardHighlighted {
+    background: var(--tundora);
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+    align-items: start;
+    box-shadow: 0 0 0 2px var(--sun);
+}
+
+.PlayerProfile__CardHighlighted {
+    box-shadow: 0 0 0 0 #000000;
+    background: var(--mine-shaft);
+}
+
+.PlayerProfile__Card .PlayerProfile__Header,
+.PlayerProfile__CardHighlighted .PlayerProfile__Header {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    background: var(--mine-shaft);
+    border-radius: .5rem .5rem 0 0;
+}
+
+.PlayerProfile__CardHighlighted .PlayerProfile__Header {
+    background: var(--sun);
+}
+
+.PlayerProfile__Card .PlayerProfile__Header > span,
+.PlayerProfile__CardHighlighted .PlayerProfile__Header > span {
+    padding: 1.5rem 0 .5rem 0;
+    margin: auto;
+    text-align: center;
+    color: var(--white-87);
+    font-size: 2rem;
+    font-family: var(--accent-font);
+}
+
+.PlayerProfile__CardHighlighted .PlayerProfile__Header > span {
+    color: var(--cod-gray);
+}
+
+.PlayerProfile__Avatar {
+    border-radius: 50%;
+    object-position: center;
+    position: relative;
+    bottom: 48px;
+    left: 48px;
+    object-fit: cover;
+    border: 4px solid var(--sun);
+}
+
+.PlayerProfile__CardContent {
+    margin-top: -96px;
+    width: 100%;
+}
+
+.PlayerProfile__TierName {
+    font-size: 2rem;
+    font-family: var(--accent-font);
+    color: var(--sun);    
+    margin: 1rem 0 0 0;
+}
+
+.PlayerProfile__TierProgression {
+    width: 100%;
+    padding: 0 2rem 1rem 2rem;
+}
+
+.PlayerProfile__Rating {
+    margin: 0;
+    padding: 0 1rem .5rem 1rem;
+    font-size: 1.5rem;
+    color: var(--white-87);
+}
+
+.PlayerProfile__TierContainer {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    align-items: center;
+}
+
+.PlayerProfile__ProgressBarContainer {
+    position: relative;
+    width: 100%;
+    height: 32px;
+    border: 2px solid var(--sun);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.PlayerProfile__ProgressBar {
+    position: absolute;
+    left: 0;
+    top: 0px;
+    height: 100%;
+    background-color: var(--sun);
+    border-radius: 16px;
+    z-index: 2;
+}
+
+.PlayerProfile__ProgressBarLabel {
+    z-index: 2;
+    color: var(--white-87);
+}
+
+.NoGame {
+    color: var(--white-87);
+    margin: 0;
+    padding: 1.25rem;
+    text-align: center;
+    margin: auto;
+    font-style: italic;
+}
+
+.PlayerProfile__AccountList {
+    width: 100%;
+}
+
+.PlayerProfile__AccountListContent .Row:hover,
+.PlayerProfile__AccountListContent .Row:focus-within {
+    background: var(--brown-tumbleweed);
+}
+
+.PlayerProfile__AccountListContent .Row a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    content: '';
+}
+
+.PlayerProfile__AccountItem {
+    position: relative;
+    display: grid;
+    grid-template:
+            'server pseudo rank' min-content
+            / 4rem 1fr 4rem 0px;
+    gap: .5rem;
+    padding: 1rem;
+    box-shadow: 0 0 0 0 var(--sun);
+    transition: all .2s;
+    color: var(--white-87);
+}
+
+.PlayerProfile__AccountItem:nth-child(even) {
+    background: var(--tundora);
+}
+
+.PlayerProfile__AccountItem:nth-child(odd) {
+    background: var(--emperor);
+}
+
+.PlayerProfile__AccountItem:last-child {
+    border-radius: 0 0 .5rem .5rem;
+}
+
+.PlayerProfile__AccountServer {
+    grid-area: server;
+    font-size: 1em;
+}
+
+.PlayerProfile__AccountPseudo {
+    grid-area: pseudo;
+}
+
+.PlayerProfile__AccountRank {
+    grid-area: rank;
+    place-self: center;
+}
+
+.PlayerProfile__GameList {
+    width: 100%;
+}
+
+.PlayerProfile__GameListContent .Row:hover,
+.PlayerProfile__GameListContent .Row:focus-within {
+    background: var(--brown-tumbleweed);
+}
+
+.PlayerProfile__GameListContent .Row a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    content: '';
+}
+
+.PlayerProfile__GameItem {
+    position: relative;
+    display: grid;
+    grid-template:
+            'date result avatar name tier' min-content
+            / 3rem 3rem 4rem 1fr 10rem 0px;
+    gap: .5rem;
+    padding: .5rem;
+    box-shadow: 0 0 0 0 var(--sun);
+    transition: all .2s;
+    color: var(--white-87);
+}
+
+.PlayerProfile__GameItem:nth-child(even) {
+    background: var(--tundora);
+}
+
+.PlayerProfile__GameItem:nth-child(odd) {
+    background: var(--emperor);
+}
+
+.PlayerProfile__GameAvatarPicture {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 2px solid var(--sun);
+}
+
+.PlayerProfile__GameItem:last-child {
+    border-radius: 0 0 .5rem .5rem;
+}
+
+.PlayerProfile__GameDate {
+    grid-area: date;
+    font-size: 1em;
+}
+
+.PlayerProfile__GameResult {
+    grid-area: result;
+}
+
+.PlayerProfile__GameResult .victory::after,
+.PlayerProfile__GameResult .defeat::after,
+.PlayerProfile__GameResult .draw::after {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url('../style/image/valid.svg') no-repeat center/contain;
+}
+
+.PlayerProfile__GameResult .defeat::after {
+    background-image: url('../style/image/invalid.svg');
+}
+
+.PlayerProfile__GameResult .draw::after {
+    background-image: url('../style/image/equal.svg');
+}
+
+.PlayerProfile__GameAvatar {
+    grid-area: avatar;
+    place-self: center;
+}
+
+.PlayerProfile__GameName {
+    position: relative;
+    grid-area: name;
+    justify-content: start;
+    font-size: 1em;
+}
+
+.PlayerProfile__GameName a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.PlayerProfile__GameTier {
+    grid-area: tier;
+    grid-template-columns: min-content max-content;
+    align-items: center;
+    justify-content: start;
+}
+
+.PlayerProfile__GameTier p {
+    margin: 0 0 0 .5rem;
+    font-size: 1.2rem;
+    width: 100%;
+    font-family: var(--accent-font);
+    color: var(--sun);
+}
+
+.NoGame {
+    color: var(--white-87);
+    margin: 0;
+    padding: 1.25rem;
+    text-align: center;
+    margin: auto;
+    font-style: italic;
+}
+
+.PlayerProfile__Stability {
+    padding: 1em;
+    text-align: center;
+    margin: auto;
+}
+
+.PlayerProfile__StabilityItem {
+    margin: 0.5em 0 0.5em 0;
+    display: grid;
+    grid-template-columns: min-content min-content 1fr;
+    align-items: center;
+    text-align: start;
+}
+
+.PlayerProfile__StabilityItem .valid::after,
+.PlayerProfile__StabilityItem .invalid::after {
+    content: '';
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background: url('../style/image/valid.svg') no-repeat center/contain;
+}
+
+.PlayerProfile__StabilityItem .invalid::after {
+    background-image: url('../style/image/invalid.svg');
+}
+
+.PlayerProfile__StabilityHighlight {
+    width: 48px;
+    margin: 0 0 0 1rem;
+    font-size: 2.5rem;
+    font-family: var(--accent-font);
+    color: var(--white-87);
+    text-align: center;
+}
+
+.PlayerProfile__StabilityText {
+    font-size: 1rem;
+    color: var(--white-87);
+    margin: 0 0 0 1rem;
+}
+
+.PlayerProfile__StabilityPeriod {
+    color: var(--sun);
+    font-size: 1rem;
+    margin: 0;
+    padding: .5rem 0 0 0;
+    text-align: center;
+    margin: auto;
+    font-style: italic;
+}

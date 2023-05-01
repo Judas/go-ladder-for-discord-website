@@ -1,0 +1,222 @@
+.Game {
+    position: sticky;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    gap: 1rem;
+    height: calc(80vh - 0rem);
+}
+
+@media only screen and (max-width: 1000px) {
+    .Game {
+        all: initial;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        display: grid;
+        grid-template-rows: min-content 1fr;
+        gap: 1rem;
+        padding: .5rem;
+        background: rgba(0,0,0, .8);
+    }
+}
+
+.Game__header {
+    background: var(--tundora);
+    border-radius: 1rem;
+    margin: 1rem 1rem 0 1rem;
+    padding: .5rem;
+
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+@media only screen and (max-width: 650px) {
+    .Game__header {
+        display: block;
+        padding: 0;
+    }
+}
+
+.Game__Player {
+    display: flex;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.Game__Player img {
+    border-radius: 50%;
+}
+
+.Game__Player span {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    gap: .5ch;
+    align-items: center;
+}
+
+.Game__PlayerName {
+    color: var(--white-87);
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.Game__PlayerName span {
+    margin: 0 0 0 1rem;
+}
+
+.Game__PlayerName a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.Game__PlayerTier {
+    margin: 0 1rem 0 1rem;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.Game__PlayerTier p {
+    margin: 0;
+    color: var(--sun);
+    font-size: 1rem;
+    font-family: var(--accent-font);
+}
+
+.Game__PlayerRating {
+    color: var(--white-87);
+    margin: 0.2rem 0 0 .5rem;
+    font-size: medium;
+    border: 2px solid var(--sun);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.Game__PlayerRating span .up,
+.Game__PlayerRating span .down,
+.Game__PlayerRating span .equal {
+    display: inline-flex;
+    align-items: center;
+    margin-left: .2rem;
+}
+
+.Game__PlayerRating span .up {
+    color: var(--eucalyptus);
+}
+
+.Game__PlayerRating span .down {
+    color: var(--punch);
+}
+
+.Game__PlayerRating span .equal {
+    color: var(--sun);
+}
+
+.Game__PlayerRating span .up::after,
+.Game__PlayerRating span .down::after {
+    content: '';
+    display: inline-block;
+    width: 2ch;
+    height: 1.3em;
+    background: url('../style/image/trending_up.svg') no-repeat center/contain;
+}
+
+.Game__PlayerRating span .down::after {
+    background-image: url('../style/image/trending_down.svg');
+}
+
+.Game__Actions {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    color: var(--white-87);
+}
+
+@media only screen and (max-width: 650px) {
+    .Game__Actions {
+        grid-column: 1/-1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+}
+
+.Game__Actions p {
+    margin: 0;
+}
+
+.Game__Actions button,
+.Game__Actions a {
+    margin-top: .5rem;
+    font-size: .75rem;
+}
+
+.Game__Share {
+    background: var(--white-87);
+    cursor: pointer;
+}
+
+.Game__Goban {
+    position: relative;
+    z-index: 1;
+    margin: 0 1rem 0 1rem;
+}
+
+.Game__Modal {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1010;
+    width: min(100% - 2rem, 30rem);
+    padding: 2.5rem 1rem 1rem;
+    font-family: var(--accent-font);
+    font-size: 1.125rem;
+    text-align: center;
+    background: white;
+    border-radius: .5rem;
+    animation: slide-in .3s forwards;
+}
+
+.Game__Modal button {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    padding: 1em;
+    background: var(--sun) url('../style/image/close.svg') no-repeat center/70%;
+}
+
+.Game__Modal p {
+    margin: 0;
+}
+
+.Game__Modal a {
+    color: var(--brown-tumbleweed);
+}
+
+@keyframes slide-in {
+    from {
+        margin-top: 2rem;
+        opacity: .25;
+    }
+
+    to {
+        margin-top: 0;
+        opacity: 1;
+    }
+}
+
+.wgo-menu-item-permalink {
+    display: none;
+}

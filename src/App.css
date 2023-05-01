@@ -9,15 +9,18 @@
     --mine-shaft: #2C2C2C;
     --tundora: #383838;
     --emperor: #545454;
+    --white-87: rgba(255, 255, 255, 0.87);
+
     --sun: #FCA311;
     --brown-tumbleweed: #412F11;
-    --white-87: rgba(255, 255, 255, 0.87);
+    --punch: #dc3545;
+    --eucalyptus: #28a745;
 
     --header-height: 5.75rem;
 
     --accent-font: 'Teko', sans-serif;
-
     font-family: 'Lato', sans-serif;
+
     background: var(--cod-gray);
 }
 
@@ -289,34 +292,6 @@
     content: '';
 }
 
-.Explanation {
-    display: grid;
-    align-content: center;
-    grid-template-columns: 2rem 1fr;
-    gap: 2rem 1rem;
-    height: 100%;
-    color: var(--white-87);
-    font-size: 1.25rem;
-    line-height: 1.4;
-}
-
-.Explanation__title {
-    grid-column: 1 / -1;
-    text-align: center;
-}
-
-.Explanation__text a {
-    color: var(--sun);
-}
-
-.Explanation__text {
-    margin: 0;
-}
-
-.Explanation__flag {
-    margin-top: .5rem;
-}
-
 .Footer {
     padding: 2rem;
 }
@@ -346,7 +321,18 @@ a:focus-visible {
     font-size: .875rem;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
-    border-radius: .5rem
+    border-radius: 0.5rem;
+}
+
+.ErrorRow {
+    place-self: center;
+    padding: 1em 1.5em;
+    color: #721c24;
+    font-size: .875rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 0 0 0.5rem 0.5rem;
+    margin-top: 0;
 }
 
 .Loader {

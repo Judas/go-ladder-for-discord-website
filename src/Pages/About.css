@@ -1,0 +1,47 @@
+.About {
+    color: var(--white-87);
+    font-size: 1.25rem;
+    line-height: 1.4;
+}
+
+.About__title {
+    color: var(--sun);
+    text-align: center;
+    font-family: var(--accent-font);
+    font-size: 3rem;
+}
+
+.About__text a {
+    color: var(--sun);
+}
+
+.About__text {
+    text-align: justify;
+    margin: 0;
+}
+
+.About__tiers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.About__tierItem {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.About__tierItem p {
+    margin: 0;
+    color: var(--sun);
+    font-size: 1.1rem;
+    font-family: var(--accent-font);
+}

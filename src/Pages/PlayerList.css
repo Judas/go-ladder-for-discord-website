@@ -38,7 +38,7 @@
 
 .PlayerList {
     display: grid;
-    max-width: 60rem;
+    max-width: 48rem;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -73,8 +73,8 @@
     position: relative;
     display: grid;
     grid-template:
-            'order discord avatar rank rating kgs ogs' min-content
-            / 3rem 1fr 2rem 7rem 7rem 7rem 7rem;
+            'avatar discord tier rating stability' min-content
+            / 5rem 1fr 7rem 7rem 4rem 0px;
     gap: 1rem;
     padding: 0.75rem;
 }
@@ -84,7 +84,7 @@
     top: 5.75rem;
     z-index: 10;
     color: black;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: bold;
     background: var(--sun);
 }
@@ -104,11 +104,6 @@
     background: var(--tundora);
 }
 
-.TBody .Row a {
-    padding: .5em;
-    color: var(--white-87);
-}
-
 .TBody .Row a::before {
     position: absolute;
     top: 0;
@@ -119,8 +114,7 @@
     content: '';
 }
 
-.TBody .Row:hover,
-.TBody .Row:focus-within {
+.TBody .Row:hover {
     background: var(--brown-tumbleweed);
 }
 
@@ -129,14 +123,10 @@
     text-align: center;
 }
 
-.THead .Row .Rank,
-.THead .Row .Rating {
-    color: black;
-}
-
 div[role="gridcell"] {
     display: grid;
     align-content: center;
+    justify-items: center;
 }
 
 .TBody  {
@@ -144,43 +134,24 @@ div[role="gridcell"] {
     text-align: center; 
 }
 
-.TBody .Row .Rank {
-    color: var(--sun);
-    text-align: center;
-    font-size: 1.75rem;
-    font-family: var(--accent-font);
-}
-
-.Order {
-    grid-area: order;
+.Avatar {
+    grid-area: avatar;
 }
 
 .Discord {
     grid-area: discord;
 }
 
-.Discord a {
-    text-decoration: none;
-}
-
-.Avatar {
-    grid-area: avatar;
-}
-
-.Rank {
-    grid-area: rank;
+.Tier {
+    grid-area: tier;
 }
 
 .Rating {
     grid-area: rating;
 }
 
-.KGS {
-    grid-area: kgs;
-}
-
-.OGS {
-    grid-area: ogs;
+.Stability {
+    grid-area: stability;
 }
 
 .Avatar img {
@@ -191,17 +162,28 @@ div[role="gridcell"] {
     object-fit: cover;
 }
 
-.KGS a,
-.OGS a{
-    position: relative;
-    z-index: 1;
+.Discord a {
+    text-decoration: none;
 }
 
-.KGS a:hover,
-.KGS a:focus-visible,
-.OGS a:hover,
-.OGS a:focus-visible{
+.Tier p {
+    font-size: 1.2rem;
+    font-family: var(--accent-font);
     color: var(--sun);
+    margin: 0;
+}
+
+.Stability .stable::after,
+.Stability .unstable::after {
+    content: '';
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    background: url('../style/image/valid.svg') no-repeat center/contain;
+}
+
+.Stability .unstable::after {
+    background-image: url('../style/image/invalid.svg');
 }
 
 @media only screen and (max-width: 980px) {
@@ -209,10 +191,9 @@ div[role="gridcell"] {
     .THead .Row {
         gap: .5rem;
         grid-template:
-                'order avatar discord discord' min-content
-                'rank rank rating rating' min-content
-                'kgs kgs ogs ogs' min-content
-                / 2rem 2rem 5rem 1fr;
+            'avatar avatar discord discord' min-content
+            'tier tier rating stability' min-content
+            / 5rem 5rem 1fr 5rem;
     }
 
     .THead {
@@ -222,60 +203,4 @@ div[role="gridcell"] {
     .Discord {
         text-align: left;
     }
-}
-
-.toggle-control {
-    display: grid;
-    grid-template-columns: 1fr 3rem 1fr;
-    gap: .5em;
-    align-items: center;
-    width: max-content;
-    margin: 2rem auto;
-    color: var(--white-87);
-    font-size: 1.25rem;
-    cursor: pointer;
-}
-
-@media only screen and (max-width: 720px) {
-    .toggle-control {
-        width: auto;
-        font-size: .875rem;
-    }
-}
-
-.toggle-control span:first-of-type {
-    justify-self: end;
-}
-
-.toggle-control .control {
-    place-self: center;
-    position: relative;
-    display: block;
-    margin-top: .25rem;
-    height: 20px;
-    width: 40px;
-    border-radius: 10px;
-    background-color: var(--white-87);
-    font-size: 0;
-}
-
-.toggle-control .control:after {
-    content: "";
-    position: absolute;
-    left: 2.5px;
-    top: 2.5px;
-    width: 15px;
-    height: 15px;
-    border-radius: 10px;
-    background: var(--cod-gray);
-    transition: left 0.15s ease-in;
-}
-
-.toggle-container input:focus-visible + label .control {
-    outline-offset: .25rem;
-    outline: solid var(--white-87) 1px;
-}
-
-.toggle-container input:checked + label .control:after {
-    left: 22.5px;
 }
