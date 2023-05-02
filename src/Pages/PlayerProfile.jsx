@@ -118,7 +118,7 @@ function Profile({player, refStability, tiers}) {
 }
 
 function TierProgression({player, tiers}) {
-    const currentTier = tiers.filter(tier => tier.rank == player.tierRank)[0];
+    const currentTier = tiers.filter(tier => tier.rank === player.tierRank)[0];
     const lastTierRank = Math.max.apply(null, tiers.map(tier => tier.rank));
 
     // If last tier, do not display the progress bar
@@ -132,7 +132,7 @@ function TierProgression({player, tiers}) {
 
     return (
         <div className={'PlayerProfile__TierContainer'}>
-            <img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }}
+            <img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={currentTier.name}
                 src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank}.svg`} />
             <div className={'PlayerProfile__ProgressBarContainer'}>
                 <div className={'PlayerProfile__ProgressBar'} style={{width: `${ratio}%`}} />
