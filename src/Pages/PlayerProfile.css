@@ -74,6 +74,7 @@
     left: 48px;
     object-fit: cover;
     border: 4px solid var(--sun);
+    background: var(--mine-shaft);
 }
 
 .PlayerProfile__CardContent {
