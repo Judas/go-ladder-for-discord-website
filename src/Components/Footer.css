@@ -1,0 +1,11 @@
+.Footer {
+    padding: 2rem;
+}
+
+.Footer p {
+    color: var(--white-87);
+    text-align: center;
+}
+.Footer a {
+    color: var(--sun);
+}
