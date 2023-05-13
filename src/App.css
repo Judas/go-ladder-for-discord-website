@@ -29,7 +29,7 @@
     display: block;
     padding: .75em 1.25em;
     background: var(--sun);
-    color: black;
+    color: var(--cod-gray);
     border: none;
     text-decoration: none;
     text-align: center;
