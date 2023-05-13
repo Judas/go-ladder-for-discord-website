@@ -79,6 +79,13 @@ export default function Game() {
 }
 
 function PlayerHeader({player}) {
+    var rating;
+    if (player.historicalRating.tierRank === 0) {
+        rating = "?"
+    } else {
+        rating = player.historicalRating.rating;
+    }
+
     return (
         <div className={'Game__Player'}>
             <h2 className={'Game__PlayerTier'}>
@@ -94,7 +101,7 @@ function PlayerHeader({player}) {
 
             <h2 className={'Game__PlayerRating'}>
                 <span>
-                    {player.historicalRating.rating} <span className={player.ratingGain.includes('+') ? 'up' : player.ratingGain.includes('-') ? 'down' : 'equal'}> {player.ratingGain}</span>
+                    {rating} <span className={player.ratingGain.includes('+') ? 'up' : player.ratingGain.includes('-') ? 'down' : 'equal'}> {player.ratingGain}</span>
                 </span>
             </h2>
         </div>
