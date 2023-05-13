@@ -31,15 +31,9 @@ function App() {
                     </button>
 
                     <div className={'NavPanel'}>
-                        <Link to={'/'} className={'CallToAction HomeLink'} onClick={() => setNavOpened(false)}>
-                            Accueil
-                        </Link>
-                        <Link to={'/recent-games'} className={'CallToAction'} onClick={() => setNavOpened(false)}>
-                            Parties récentes
-                        </Link>
-                        <Link to={'/about'} className={'CallToAction'} onClick={() => setNavOpened(false)}>
-                            À propos
-                        </Link>
+                        <Link to={'/'} className={'CallToAction HomeLink'} onClick={() => setNavOpened(false)}>Accueil</Link>
+                        <Link to={'/recent-games'} className={'CallToAction'} onClick={() => setNavOpened(false)}>Parties</Link>
+                        <Link to={'/about'} className={'CallToAction'} onClick={() => setNavOpened(false)}>À propos</Link>
                     </div>
 
                     <div className="NavPanel__backdrop" onClick={() => setNavOpened(false)}/>
