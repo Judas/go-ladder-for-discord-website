@@ -239,7 +239,7 @@ function Stability({player, refStability}) {
                 highlight={`${player.stability.deviation}`}
                 text={`de déviation (max ${refStability.deviation})`}
             />
-            <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>;
+            <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>
         </div>
     );
 }
