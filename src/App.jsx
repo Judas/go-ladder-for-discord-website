@@ -1,4 +1,4 @@
-import {Route, Routes} from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import Header from './Components/Header.jsx';
 import Footer from './Components/Footer.jsx';
@@ -10,13 +10,12 @@ import Game from "./Pages/Game";
 import About from './Pages/About.jsx';
 
 import './App.css';
+import './Common.css';
 
 export default function App() {
     return (
         <div className="App">
-
             <Header />
-
             <main>
                 <Routes>
                     <Route path="/" element={<PlayerList/>}/>
@@ -27,9 +26,7 @@ export default function App() {
                     <Route path="/game/:gameId" element={<Game/>}/>
                 </Routes>
             </main>
-
             <Footer />
-
         </div>
     );
 }

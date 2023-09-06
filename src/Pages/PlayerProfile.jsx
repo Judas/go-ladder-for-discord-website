@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
 
 import TableElement from "../Components/Table/TableElement";
 import RowGroupElement from "../Components/Table/RowGroupElement";

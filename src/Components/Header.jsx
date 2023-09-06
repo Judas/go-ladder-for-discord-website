@@ -1,36 +1,39 @@
-import {useState} from "react";
-import {Link} from 'react-router-dom';
+import { FaUsers } from 'react-icons/fa6';
+import { IoMdInformationCircleOutline} from 'react-icons/io';
+import { LuSwords } from 'react-icons/lu';
+import { NavLink  } from 'react-router-dom';
 
 import './Header.css';
 
 export default function Header() {
-    const [navOpened, setNavOpened] = useState(false);
-
     return (
-        <header className={'Header'}>
-            <nav aria-label={'Principale'} className={'Nav'} data-open={navOpened ? 'true' : 'false'}>
-                <h1 className={'Title'}>
-                    <Link to={'/'}>
-                        <span className={'Title--mobile'}>GoLD</span>
-                        <span className={'Title--desktop'}>Go Ladder for Discord</span>
-                    </Link>
-                </h1>
+        <nav className={'Header'}>
+            <img 
+                src='https://cdn.discordapp.com/app-icons/772833152434831381/39981f8231efcd7aebf265764ce80b7c.png'
+                width={48}
+                height={48}
+                alt='FulguroGo' />
 
-                <button className={'NavBtn CallToAction'} onClick={() => setNavOpened(!navOpened)}>
-                    <span className={'NavBtn__line-1'}/>
-                    <span className={'NavBtn__line-2'}/>
-                    <span className={'NavBtn__line-3'}/>
-                    <span className={'ReaderOnly'}>Navigation mobile</span>
-                </button>
+                <NavLink to={'/'} className={'NavLink'}>
+                    <span className={'NavButton'}>
+                        <FaUsers />
+                        <span className={'NavButtonText'}>Joueurs</span>
+                    </span>
+                </NavLink>
 
-                <div className={'NavPanel'}>
-                    <Link to={'/'} className={'CallToAction HomeLink'} onClick={() => setNavOpened(false)}><span className={'HomeAction'}>Accueil</span></Link>
-                    <Link to={'/recent-games'} className={'CallToAction'} onClick={() => setNavOpened(false)}><span className={'GamesAction'}>Parties</span></Link>
-                    <Link to={'/about'} className={'CallToAction'} onClick={() => setNavOpened(false)}><span className={'AboutAction'}>À propos</span></Link>
-                </div>
+                <NavLink to={'/recent-games'} className={'NavLink'}>
+                    <span className={'NavButton'}>
+                        <LuSwords />
+                        <span className={'NavButtonText'}>Parties</span>
+                    </span>
+                </NavLink>
 
-                <div className="NavPanel__backdrop" onClick={() => setNavOpened(false)}/>
-            </nav>
-        </header>
+                <NavLink to={'/about'} className={'NavLink'}>
+                    <span className={'NavButton'}>
+                        <IoMdInformationCircleOutline />
+                        <span className={'NavButtonText'}>À propos</span>
+                    </span>
+                </NavLink>
+        </nav>
     );
 }

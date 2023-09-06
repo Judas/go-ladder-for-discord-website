@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import GameViewer from "../Components/Goban/GameViewer";
 import Loader from "../Components/Loader";

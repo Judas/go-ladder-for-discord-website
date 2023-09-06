@@ -1,216 +1,76 @@
-.Nav {
-    display: grid;
-    grid-template-columns: max-content max-content;
-    justify-content: space-between;
-    gap: 1.5rem;
-    align-items: center;
-    width: min(100%, 80rem);
-    height: var(--header-height);
-    margin: 0 auto;
-    padding: 1rem 2rem;
-}
-
-.NavPanel {
-    display: grid;
-    gap: 1rem;
-    grid-auto-flow: column;
-    justify-content: end;
-}
-
-.NavBtn {
-    display: none;
-}
-
-@media only screen and (max-width: 950px) {
-    .NavBtn {
-        position: absolute;
-        right: 2rem;
-        z-index: 10;
-        display: block;
-        width: 3rem;
-        height: 3rem;
-        margin: 0;
-        padding: 0;
-    }
-}
-
-.NavBtn__line-1,
-.NavBtn__line-2,
-.NavBtn__line-3 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: block;
-    width: 70%;
-    height: .25rem;
-    background: var(--cod-gray);
-    transition: all .2s;
-}
-
-.NavBtn__line-1 {
-    top: .75rem;
-}
-
-.NavBtn__line-2 {
-}
-
-.NavBtn__line-3 {
-    top: auto;
-    bottom: calc(.75rem - .25rem);
-}
-
-.HomeLink {
-    display: none;
-}
-
-@media only screen and (max-width: 950px) {
-    .HomeLink {
-        display: block;
-    }
-}
-
-.NavPanel__backdrop {
-    display: none;
-}
-
-@media only screen and (max-width: 950px) {
-    .NavPanel,
-    .NavPanel__backdrop {
-        transform: translateX(-100%);
-        transition: transform .2s;
-    }
-
-    .Nav[data-open="true"] .NavPanel,
-    .Nav[data-open="true"] .NavPanel__backdrop {
-        transform: translateX(0);
-    }
-
-    .Nav[data-open="true"] .NavBtn__line-1 {
-        top: 50%;
-        transform: translate(-50%, -50%) rotateZ(135deg);
-    }
-
-    .Nav[data-open="true"] .NavBtn__line-2 {
-        width: 0;
-        opacity: 0;
-    }
-
-    .Nav[data-open="true"] .NavBtn__line-3 {
-        bottom: calc(50%);
-        transform: translate(-50%, 50%) rotateZ(225deg);
-    }
-
-    .NavBtn__line-2 {
-    }
-
-    .NavBtn__line-3 {
-        top: auto;
-        bottom: calc(.75rem - .25rem);
-    }
-
-    .NavPanel {
-        position: fixed;
-        top: var(--header-height);
-        left: 0;
-        bottom: 0;
-        align-content: start;
-        z-index: 1;
-        grid-auto-flow: initial;
-        justify-content: initial;
-        width: min(20rem, 100%);
-        padding: 2rem 1rem;
-        background: var(--cod-gray);
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    .NavPanel__backdrop {
-        position: fixed;
-        top: var(--header-height);
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -1;
-        display: block;
-        background: rgba(0,0,0,.6);
-    }
-}
-
 .Header {
     position: sticky;
     top: 0;
     left: 0;
     z-index: 100;
     width: 100%;
+    height: 96px;
+    padding: 2rem;
     background: var(--mine-shaft);
-}
-
-.Title {
-    position: relative;
-    display: grid;
-    gap: 1ch;
-    grid-auto-flow: column;
-    justify-content: center;
-    place-items: center;
-    margin: 0;
-    color: var(--sun);
-    font-family: var(--accent-font);
-    font-size: clamp(2rem, 1.5rem + 3vw, 3.5rem);
-    line-height: 1;
-}
-
-.Title::before {
-    display: block;
-    width: 1em;
-    height: 1em;
-    margin: 0;
-    background: url("https://cdn.discordapp.com/app-icons/772833152434831381/39981f8231efcd7aebf265764ce80b7c.png") no-repeat center/contain;
-    content: '';
-}
-
-.Title span {
-    margin-top: .15em;
-}
-
-.Title--mobile {
-    display: none;
-}
-
-.Title--desktop {
-    text-transform: uppercase;
-}
-
-@media only screen and (max-width: 720px) {
-    .Title--mobile {
-        display: block;
-    }
-    .Title .Title--desktop {
-        position: absolute;
-        font-size: 0;
-    }
-}
-
-.Title a {
-    display: grid;
+    display: flex;
     align-items: center;
-    color: inherit;
+    justify-content: center;
+}
+
+.Header img {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.Header .NavLink {
+    margin-left: 1rem;
+    margin-right: 1rem;
     text-decoration: none;
+    padding: 0.5rem;
 }
 
-.Title a::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    content: '';
+.Header .NavLink:hover {
+    background: var(--brown-tumbleweed);
 }
 
-.GamesAction::before {
-    background: url('../style/image/games.svg') no-repeat center/contain;
-    content: '';
-    display: inline-block;
+.NavLink.active {
+    background: var(--sun);
+}
+
+@media only screen and (max-width: 950px) {
+    .Header .NavLink {
+        margin: auto;
+    }    
+}
+
+.NavButton {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.NavButton svg {
     width: 24px;
     height: 24px;
+    color: var(--sun);
+}
+
+.NavButtonText {
+    font-size: 1.25rem;
+    margin-left: 0.5rem;
+    color: var(--sun);
+}
+
+.NavLink.active .NavButton svg,
+.NavLink.active .NavButton .NavButtonText {
+    color: var(--mine-shaft);
+}
+
+.NavLink.active:hover .NavButton svg,
+.NavLink.active:hover .NavButton .NavButtonText {
+    color: var(--sun);
+}
+
+@media only screen and (max-width: 950px) {
+    .NavButtonText {
+        display: none;
+    }    
 }
