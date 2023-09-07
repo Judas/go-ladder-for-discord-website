@@ -15,6 +15,7 @@ import './Common.css';
 export default function App() {
     return (
         <div className="App">
+            <Header />
             <main>
                 <Routes>
                     <Route path="/" element={<PlayerList/>}/>
