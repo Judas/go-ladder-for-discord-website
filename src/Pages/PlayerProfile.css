@@ -64,6 +64,8 @@
 
 .PlayerProfile__CardHighlighted .PlayerProfile__Header > span {
     color: var(--cod-gray);
+    margin: auto 144px auto 144px;
+    width: 100%;
 }
 
 .PlayerProfile__Avatar {

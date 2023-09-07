@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
 
 import TableElement from "../Components/Table/TableElement";
 import RowGroupElement from "../Components/Table/RowGroupElement";
@@ -239,7 +239,7 @@ function Stability({player, refStability}) {
                 highlight={`${player.stability.deviation}`}
                 text={`de déviation (max ${refStability.deviation})`}
             />
-            <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>;
+            <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>
         </div>
     );
 }

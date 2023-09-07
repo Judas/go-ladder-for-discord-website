@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useParams, useSearchParams, Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 
 import Loader from "../Components/Loader";
 import Avatar from "../Components/Avatar";
