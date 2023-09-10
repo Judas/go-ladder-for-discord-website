@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import GameViewer from "../Components/Goban/GameViewer";
-import Loader from "../Components/Loader";
-import Avatar from "../Components/Avatar";
+import GameViewer from "../Components/Goban/GameViewer.jsx";
+import Loader from "../Components/Loader.jsx";
+import Avatar from "../Components/Avatar.jsx";
 
 import './RecentGames.css';
 
@@ -38,7 +38,7 @@ export default function RecentGames() {
                 </ul>
             </div>
         );
-        case 'pending': return <Loader/>;
+        case 'pending': return <div className={'FlexContainer'}><Loader/></div>;;
         case 'error':
         default :
             return <p className={'Error'}>Erreur lors de la récupération des parties</p>;

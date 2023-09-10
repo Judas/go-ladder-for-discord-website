@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import TableElement from "../Components/Table/TableElement";
-import RowGroupElement from "../Components/Table/RowGroupElement";
-import RowElement from "../Components/Table/RowElement";
-import ColHeaderElement from "../Components/Table/ColHeaderElement";
-import CellElement from "../Components/Table/CellElement";
-import Loader from "../Components/Loader";
-import Avatar from "../Components/Avatar";
+import TableElement from "../Components/Table/TableElement.jsx";
+import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
+import RowElement from "../Components/Table/RowElement.jsx";
+import ColHeaderElement from "../Components/Table/ColHeaderElement.jsx";
+import CellElement from "../Components/Table/CellElement.jsx";
+import Loader from "../Components/Loader.jsx";
+import Avatar from "../Components/Avatar.jsx";
 
 import './PlayerList.css'
 
@@ -97,7 +97,7 @@ function PlayerRow({player}) {
     return (
         <RowElement>
             <CellElement colIndex={1} className={'Avatar'}>
-                <Avatar size={40} src={player.avatar} alt={`avatar ${player.name}`} className={'logo'}/>
+                <Avatar size={40} src={player.avatar} alt={`avatar ${player.name}`} />
             </CellElement>
             <CellElement colIndex={2} className={'Discord'}>{player.name}</CellElement>
             <CellElement colIndex={4} className={'Tier'}>

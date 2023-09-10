@@ -220,3 +220,25 @@
 .wgo-menu-item-permalink {
     display: none;
 }
+
+.wgo-info-value a,
+.CallToAction {
+    display: block;
+    padding: .75em 1.25em;
+    background: var(--sun);
+    color: var(--cod-gray);
+    border: none;
+    text-decoration: none;
+    text-align: center;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.wgo-info-value a {
+    padding: .125em;
+}
+
+.CallToAction:focus {
+    outline-offset: .25em;
+    outline: solid var(--outlineColor, var(--sun)) 1px;
+}

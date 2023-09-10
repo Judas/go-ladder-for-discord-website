@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 
-import Loader from "../Components/Loader";
-import Avatar from "../Components/Avatar";
-import GameViewer from "../Components/Goban/GameViewer";
+import Avatar from "../Components/Avatar.jsx";
+import GameViewer from "../Components/Goban/GameViewer.jsx";
+import Loader from "../Components/Loader.jsx";
 
 import './Game.css';
 
@@ -18,6 +18,8 @@ export default function Game() {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
+        window.scrollTo(0, 0)
+
         setGameFetchStatus('pending');
 
         fetch(`/api/game/${params.gameId}`)

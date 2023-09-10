@@ -59,15 +59,6 @@
     overflow: hidden;
 }
 
-.PlayerList .TBody .Loader {
-    background: var(--mine-shaft);
-    border-radius: 0;
-}
-
-.PlayerList .TBody .Loader .Loader__message {
-    color: var(--white-87);
-}
-
 .TBody .Row,
 .THead .Row {
     position: relative;

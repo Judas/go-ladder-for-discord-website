@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 
-import TableElement from "../Components/Table/TableElement";
-import RowGroupElement from "../Components/Table/RowGroupElement";
-import RowElement from "../Components/Table/RowElement";
-import ColHeaderElement from "../Components/Table/ColHeaderElement";
-import CellElement from "../Components/Table/CellElement";
-import Loader from "../Components/Loader";
-import Avatar from "../Components/Avatar";
+import TableElement from "../Components/Table/TableElement.jsx";
+import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
+import RowElement from "../Components/Table/RowElement.jsx";
+import ColHeaderElement from "../Components/Table/ColHeaderElement.jsx";
+import CellElement from "../Components/Table/CellElement.jsx";
+import Loader from "../Components/Loader.jsx";
+import Avatar from "../Components/Avatar.jsx";
 
 import './PlayerProfile.css'
 
@@ -69,7 +69,7 @@ export default function PlayerProfile() {
     if (playerFetchStatus === 'success' && refStabilityFetchStatus === 'success' && tiersFetchStatus === 'success') {
         return <Profile player={player} refStability={refStability} tiers={tiers} />;
     } else if (playerFetchStatus === 'pending' || refStabilityFetchStatus === 'pending' || tiersFetchStatus === 'pending') {
-        return <div style={{display: 'grid', height: '100%',}}><Loader/></div>;
+        return <div className={'FlexContainer'}><Loader/></div>;
     } else {
         return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>;
     }

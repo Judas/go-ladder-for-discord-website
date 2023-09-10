@@ -25,7 +25,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "devreact": "react-scripts start",
-    "devapiproxy": "node justApiProxy.js",
+    "devapiproxy": "node server-proxy-only.js",
     "devstart": "concurrently \"npm:devreact\" \"npm:devapiproxy\"",
     "start": "node server.js",
     "build": "react-scripts build",
