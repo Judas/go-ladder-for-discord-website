@@ -76,6 +76,10 @@ export default function PlayerProfile() {
 }
 
 function Profile({player, refStability, tiers}) {
+    let playerRating = player.ranked 
+        ? <h2 className={'PlayerProfile__Rating'}>{player.rating} ± {player.deviation}</h2>
+        : <h2 className={'PlayerProfile__Unranked'}>{player.rating} ± {player.deviation} [Non classé]</h2>
+
     return (
         <article className={'PlayerProfile'}>
             <div className={'PlayerProfile__LeftColumn'}>
@@ -90,7 +94,7 @@ function Profile({player, refStability, tiers}) {
                         </div>
 
                         <div className={'PlayerProfile__TierProgression'}>
-                            <h2 className={'PlayerProfile__Rating'}>{player.rating} ± {player.deviation}</h2>
+                            { playerRating }
                             <TierProgression player={player} tiers={tiers} />
                         </div>
                     </div>

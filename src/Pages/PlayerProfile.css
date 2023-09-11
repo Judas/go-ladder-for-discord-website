@@ -96,11 +96,17 @@
     padding: 0 2rem 1rem 2rem;
 }
 
-.PlayerProfile__Rating {
+.PlayerProfile__Rating,
+.PlayerProfile__Unranked {
     margin: 0;
     padding: 0 1rem .5rem 1rem;
     font-size: 1.5rem;
     color: var(--white-87);
+}
+
+.PlayerProfile__Unranked {
+    color: var(--punch);
+    font-style: italic;
 }
 
 .PlayerProfile__TierContainer {
@@ -136,7 +142,8 @@
     color: var(--white-87);
 }
 
-.NoGame {
+.NoGame,
+.NoAccount {
     color: var(--white-87);
     margin: 0;
     padding: 1.25rem;

@@ -44,6 +44,7 @@ export default function PlayerList() {
                 return res;
             })
             .then(res => res.json())
+            .then(res => res.filter((player) => player.ranked))
             .then(res => {
                 setPlayers(res);
                 setPlayerFetchStatus('success');
