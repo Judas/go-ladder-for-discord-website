@@ -1,8 +1,8 @@
 .SearchWidget {
     position: relative;
     display: grid;
-    width: min(20rem, 100% - 4rem);
-    margin: 0 auto 3rem;
+    width: 16rem;
+    margin: 2rem auto 2rem auto;
     background: white;
     border-radius: .25rem;
 }
@@ -27,6 +27,7 @@
     font-size: 1rem;
     background: none;
     border: none;
+    width: 16rem;
     transition: all .2s;
     border-radius: inherit;
 }
@@ -40,7 +41,16 @@
     display: grid;
     max-width: 48rem;
     margin: 0 auto;
-    padding: 2rem;
+}
+
+@media only screen and (max-width: 980px) {
+    .PlayerList {
+        width: min(96%, 60rem);
+        padding: 5px;
+        justify-items: center;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .PlayerList h2 {

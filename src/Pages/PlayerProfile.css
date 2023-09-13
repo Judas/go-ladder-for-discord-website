@@ -12,6 +12,11 @@
     .PlayerProfile {
         gap: .5rem;
         grid-template-columns: 1fr;
+        width: min(96%, 60rem);
+        padding: 5px;
+        justify-items: center;
+        align-items: center;
+        justify-content: center;
     }
 
     .THead {
@@ -20,6 +25,11 @@
 
     .Discord {
         text-align: left;
+    }
+
+    .PlayerProfile__RightColumn,
+    .PlayerProfile__LeftColumn {
+        width: 96%;
     }
 }
 
@@ -77,6 +87,12 @@
     object-fit: cover;
     border: 4px solid var(--sun);
     background: var(--mine-shaft);
+}
+
+@media only screen and (max-width: 980px) {
+    .PlayerProfile__Avatar {
+        left: 12px;
+    }
 }
 
 .PlayerProfile__CardContent {
@@ -240,6 +256,15 @@
     box-shadow: 0 0 0 0 var(--sun);
     transition: all .2s;
     color: var(--white-87);
+}
+
+@media only screen and (max-width: 980px) {
+    .PlayerProfile__GameItem {
+        grid-template:
+                'date result avatar name' min-content
+                'date result tier tier ' min-content
+                / 3rem 3rem 3rem 1fr;
+    }
 }
 
 .PlayerProfile__GameItem:nth-child(even) {
