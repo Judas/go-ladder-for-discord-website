@@ -8,7 +8,7 @@
 
 @media only screen and (max-width: 980px) {
     .Game {
-        width: min(80%, 60rem);
+        width: min(96%, 60rem);
         justify-items: center;
         align-items: center;
         justify-content: center;
@@ -40,7 +40,7 @@
         display: block;
         padding: 0;
         margin: 0 auto;
-        width: 90%;
+        width: 96%;
     }
 }
 
