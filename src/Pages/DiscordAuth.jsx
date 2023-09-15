@@ -19,7 +19,13 @@ export default function DiscordAuth() {
         } else {
             // Send code to backend auth API
             var goldId = JSON.parse(localStorage.getItem('gold_uuid'));
-            fetch('/api/auth?code=' + code + '&goldId=' + goldId)
+            const postOptions = {
+                method: 'POST',
+                headers: { 'Accept': 'application.json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code, goldId: goldId })
+            };
+
+            fetch('/api/auth', postOptions)
             .then(res => {
                 if (!res.ok) { throw res.statusText; }
                 return res;
