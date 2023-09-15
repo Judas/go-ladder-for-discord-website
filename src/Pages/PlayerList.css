@@ -82,7 +82,7 @@
 
 .THead {
     position: sticky;
-    top: 5.75rem;
+    top: 96px;
     z-index: 10;
     color: black;
     font-size: 1.2rem;
@@ -195,10 +195,6 @@ div[role="gridcell"] {
             'avatar avatar discord discord' min-content
             'tier tier rating stability' min-content
             / 5rem 5rem 1fr 5rem;
-    }
-
-    .THead {
-        top: 4.5rem;
     }
 
     .Discord {
