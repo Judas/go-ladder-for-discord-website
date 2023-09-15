@@ -90,12 +90,9 @@ function Profile({player, refStability, tiers}) {
                     <div className={'PlayerProfile__CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
                             <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
-                            <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
-                        </div>
-
-                        <div className={'PlayerProfile__TierProgression'}>
-                            { playerRating }
                             <TierProgression player={player} tiers={tiers} />
+                            <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
+                            { playerRating }
                         </div>
                     </div>
                 </div>
@@ -134,10 +131,17 @@ function TierProgression({player, tiers}) {
     const progress = player.rating - currentTier.min;
     const ratio = 100 * progress / total;
 
+    var previousShield;
+    if (currentTier.rank == 1) {
+        previousShield = (<div width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} />);
+    } else {
+        previousShield = (<img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={currentTier.name}
+        src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank - 1}.svg`} />);
+    }
+
     return (
         <div className={'PlayerProfile__TierContainer'}>
-            <img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={currentTier.name}
-                src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank}.svg`} />
+            {previousShield}
             <div className={'PlayerProfile__ProgressBarContainer'}>
                 <div className={'PlayerProfile__ProgressBar'} style={{width: `${ratio}%`}} />
                 <span className={'PlayerProfile__ProgressBarLabel'}>{progress} / {total}</span>
