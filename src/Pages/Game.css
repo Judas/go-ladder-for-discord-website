@@ -96,6 +96,7 @@
     color: var(--sun);
     font-size: 1rem;
     font-family: var(--accent-font);
+    text-align: center;
 }
 
 .Game__PlayerRating {

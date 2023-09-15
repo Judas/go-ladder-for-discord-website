@@ -1,0 +1,29 @@
+.StatusBanner {
+    width: 100%;
+    height: 24px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.25rem;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    font-style: italic;
+}
+
+.Available {
+    display: none;
+}
+
+.Scanning {
+    display: flex;
+    background: var(--sun);
+    color: var(--mine-shaft);
+}
+
+.Unavailable {
+    display: flex;
+    background: var(--punch);
+    color: #ffffff;
+}

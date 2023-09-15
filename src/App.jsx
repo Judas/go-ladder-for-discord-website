@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import Header from './Components/Header.jsx';
 import Footer from './Components/Footer.jsx';
+import StatusBanner from './Components/StatusBanner.jsx';
 
 import About from './Pages/About.jsx';
 import DiscordAuth from './Pages/DiscordAuth.jsx';
@@ -30,6 +31,7 @@ export default function App() {
                 </Routes>
             </main>
             <Footer />
+            <StatusBanner />
         </div>
     );
 }
