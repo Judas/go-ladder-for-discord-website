@@ -218,7 +218,7 @@
 }
 
 .Game__Modal a {
-    color: var(--brown-tumbleweed);
+    color: var(--sun-20);
 }
 
 @keyframes slide-in {

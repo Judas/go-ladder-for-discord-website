@@ -1,0 +1,95 @@
+.AccountLink__Title {
+    color: var(--sun);
+    text-align: center;
+    font-family: var(--accent-font);
+    font-size: 3rem;
+}
+
+.AccountLinkForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+}
+
+.AccountLinkForm__Select {
+    height: 95%;
+    width: 8rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    background: white;
+    border-radius: 0.25rem;
+    border: none;
+    box-shadow: 0 0 0 2px var(--sun);
+}
+
+.AccountLinkForm__Pseudo {
+    width: 16rem;
+    padding-left: 1rem;
+    margin-left: 1rem;
+    height: 100%;
+    font-weight: 600;
+    font-size: 1rem;
+    background: white;
+    border-radius: .25rem;
+}
+
+.AccountLinkForm__Pseudo:focus-visible {
+    outline-offset: .25em;
+    outline: solid var(--outlineColor, var(--sun)) 2px;
+}
+
+.AccountLinkForm__Submit {
+    width: 8rem;
+    height: 100%;
+    margin-left: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    background: var(--sun);
+    border-radius: .25rem;
+    border-style: none;
+    height: 95%;
+}
+
+@media only screen and (max-width: 980px) {
+    .AccountLinkForm {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .AccountLinkForm__Select {
+        width: 95%;
+        height: 2.5rem;
+        margin: .5rem;
+        text-align: center;
+        font-weight: 600;
+        font-size: 1rem;
+        background: white;
+        border-radius: 0.25rem;
+        border: none;
+        box-shadow: 0 0 0 2px var(--sun);
+    }
+
+    .AccountLinkForm__Pseudo {
+        width: 95%;
+        height: 2.5rem;
+        padding-left: 1rem;
+        font-weight: 600;
+        font-size: 1rem;
+        background: white;
+        border-radius: .25rem;
+        margin: .5rem;
+    }
+
+    .AccountLinkForm__Submit {
+        width: 95%;
+        height: 2.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        background: var(--sun);
+        border-radius: .25rem;
+        border-style: none;
+        margin: .5rem;
+    }
+}

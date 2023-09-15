@@ -12,7 +12,7 @@
     --white-87: rgba(255, 255, 255, 0.87);
 
     --sun: #FCA311;
-    --brown-tumbleweed: #412F11;
+    --sun-20: rgb(252, 163, 17, 0.2);
     --punch: #dc3545;
     --punch-20: rgba(220, 53, 69, 0.2);
     --eucalyptus: #28a745;
@@ -56,20 +56,33 @@ a:focus-visible {
     outline: solid var(--outlineColor, var(--sun)) 2px;
 }
 
-.Error, .Success {
+.Error, .Success, .Info {
     place-self: center;
     padding: 1em 1.5em;
     font-size: .875rem;
+    border-radius: 0.5rem;
+}
+
+.Error {
     color: var(--punch);
     background-color: var(--punch-20);
     border: 1px solid var(--punch);
-    border-radius: 0.5rem;
 }
 
 .Success {
     color: var(--eucalyptus);
     background-color: var(--eucalyptus-20);
     border: 1px solid var(--eucalyptus);
+}
+
+.Info {
+    color: var(--sun);
+    background-color: var(--sun-20);
+    border: 1px solid var(--sun);
+}
+
+.Info a {
+    color: inherit;
 }
 
 .ErrorRow {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 
+import { hasValidProfile, getProfile } from '../AuthProfile.js';
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
 import RowElement from "../Components/Table/RowElement.jsx";
@@ -153,8 +154,22 @@ function TierProgression({player, tiers}) {
 }
 
 function AccountList({player}) {
+    let accountList;
     if (player.accounts.length === 0) {
-        return <p className={'NoAccount'}>Aucun compte lié</p>;
+        accountList = (<p className={'NoAccount'}>Aucun compte lié</p>);
+    } else {
+        accountList = (
+            <RowGroupElement className={'PlayerProfile__AccountListContent'}>
+                {player.accounts.map(account => <AccountRow account={account} />)}
+            </RowGroupElement>
+        );
+    }
+
+    let addAccount;
+    if (hasValidProfile() && getProfile().discordId == player.discordId) {
+        addAccount = (<a href='/link' className={'AddAccount'}>Lier un compte</a>);
+    } else {
+        addAccount = (<></>);
     }
 
     return (
@@ -166,9 +181,8 @@ function AccountList({player}) {
                     <ColHeaderElement>Rang</ColHeaderElement>
                 </RowElement>
             </RowGroupElement>
-            <RowGroupElement className={'PlayerProfile__AccountListContent'}>
-                {player.accounts.map(account => <AccountRow account={account} />)}
-            </RowGroupElement>
+            {accountList}
+            {addAccount}
         </TableElement>
     );
 }
@@ -179,7 +193,7 @@ function AccountRow({account}) {
             <CellElement className={'PlayerProfile__AccountServer'}>{account.name}</CellElement>
             <CellElement className={'PlayerProfile__AccountPseudo'}>{account.pseudo}</CellElement>
             <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
-            <a href={account.link ?? "#"} />
+            <a href={account.link ?? "#"} target='_blank' />
         </RowElement>
     );
 }

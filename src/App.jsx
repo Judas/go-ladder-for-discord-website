@@ -5,6 +5,7 @@ import Footer from './Components/Footer.jsx';
 import StatusBanner from './Components/StatusBanner.jsx';
 
 import About from './Pages/About.jsx';
+import AccountLink from './Pages/AccountLink.jsx';
 import DiscordAuth from './Pages/DiscordAuth.jsx';
 import Game from "./Pages/Game";
 import PlayerList from './Pages/PlayerList.jsx';
@@ -23,11 +24,10 @@ export default function App() {
                     <Route path="/" element={<PlayerList/>}/>
                     <Route path="/recent-games" element={<RecentGames/>}/>
                     <Route path="/about" element={<About/>}/>
-
-                    <Route path="/auth/discord" element={<DiscordAuth/>}/>
-
                     <Route path="/player/:playerId" element={<PlayerProfile/>}/>
                     <Route path="/game/:gameId" element={<Game/>}/>
+                    <Route path="/auth/discord" element={<DiscordAuth/>}/>
+                    <Route path="/link" element={<AccountLink/>}/>
                 </Routes>
             </main>
             <Footer />

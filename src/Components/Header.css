@@ -26,6 +26,7 @@
     margin-right: 1rem;
     text-decoration: none;
     padding: 0.5rem;
+    border: 1px solid var(--mine-shaft);
 }
 
 .Header .DiscordAuth {
@@ -33,7 +34,8 @@
 }
 
 .Header .NavLink:hover {
-    background: var(--brown-tumbleweed);
+    background: var(--sun-20);
+    border: 1px solid var(--sun);
 }
 
 .NavLink.active {

@@ -15,7 +15,6 @@ export default function StatusBanner() {
             })
             .then(res => res.json())
             .then(res => {
-                console.log(res);
                 setServerStatus(res == true ? 'scanning' : 'available');
             })
             .catch(() => setServerStatus('error'));
