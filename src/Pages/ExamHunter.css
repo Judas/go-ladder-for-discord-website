@@ -50,7 +50,6 @@
     font-size: 1.2rem;
     font-weight: bold;
     background: black;
-    border-radius: .5rem .5rem 0 0;
     box-shadow: 0 0 0 2px var(--sun);
 }
 
