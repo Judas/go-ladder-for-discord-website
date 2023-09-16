@@ -84,11 +84,11 @@ function Profile({player, refStability, tiers}) {
     return (
         <article className={'PlayerProfile'}>
             <div className={'PlayerProfile__LeftColumn'}>
-                <div className={'PlayerProfile__CardHighlighted'}>
-                    <h2 className={'PlayerProfile__Header'}><span>{player.name}</span></h2>
+                <div className={'CardHighlighted'}>
+                    <h2 className={'CardHeader'}><span>{player.name}</span></h2>
                     <Avatar src={player.avatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.name}`} hidden={true}/>
                     
-                    <div className={'PlayerProfile__CardContent'}>
+                    <div className={'CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
                             <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                             <TierProgression player={player} tiers={tiers} />
@@ -98,20 +98,20 @@ function Profile({player, refStability, tiers}) {
                     </div>
                 </div>
 
-                <div className={'PlayerProfile__Card'}>
-                    <h2 className={'PlayerProfile__Header'}><span>Parties récentes</span></h2>
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Parties récentes</span></h2>
                     <GameList player={player} />
                 </div>
             </div>
 
             <div className={'PlayerProfile__RightColumn'}>
-                <div className={'PlayerProfile__Card'}>
-                    <h2 className={'PlayerProfile__Header'}><span>Comptes</span></h2>
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Comptes</span></h2>
                     <AccountList player={player} />
                 </div>
 
-                <div className={'PlayerProfile__Card'}>
-                    <h2 className={'PlayerProfile__Header'}><span>Validation FGC</span></h2>
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Validation FGC</span></h2>
                     <Stability player={player} refStability={refStability} />
                 </div>
             </div>

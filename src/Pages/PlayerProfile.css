@@ -29,51 +29,6 @@
     }
 }
 
-.PlayerProfile__Card,
-.PlayerProfile__CardHighlighted {
-    background: var(--tundora);
-    border-radius: .5rem;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1em;
-    align-items: start;
-    box-shadow: 0 0 0 2px var(--sun);
-}
-
-.PlayerProfile__CardHighlighted {
-    box-shadow: 0 0 0 0 #000000;
-    background: var(--mine-shaft);
-}
-
-.PlayerProfile__Card .PlayerProfile__Header,
-.PlayerProfile__CardHighlighted .PlayerProfile__Header {
-    display: flex;
-    width: 100%;
-    margin: 0;
-    background: var(--mine-shaft);
-    border-radius: .5rem .5rem 0 0;
-}
-
-.PlayerProfile__CardHighlighted .PlayerProfile__Header {
-    background: var(--sun);
-}
-
-.PlayerProfile__Card .PlayerProfile__Header > span,
-.PlayerProfile__CardHighlighted .PlayerProfile__Header > span {
-    padding: 1.5rem 0 .5rem 0;
-    margin: auto;
-    text-align: center;
-    color: var(--white-87);
-    font-size: 2rem;
-    font-family: var(--accent-font);
-}
-
-.PlayerProfile__CardHighlighted .PlayerProfile__Header > span {
-    color: var(--cod-gray);
-    margin: auto 144px auto 144px;
-    width: 100%;
-}
-
 .PlayerProfile__Avatar {
     border-radius: 50%;
     object-position: center;
@@ -89,11 +44,6 @@
     .PlayerProfile__Avatar {
         left: 12px;
     }
-}
-
-.PlayerProfile__CardContent {
-    margin-top: -96px;
-    width: 100%;
 }
 
 .PlayerProfile__TierName {
@@ -362,6 +312,10 @@
     text-align: center;
     margin: auto;
     font-style: italic;
+}
+
+.Card:has(.PlayerProfile__Stability) {
+    background: var(--emperor);
 }
 
 .PlayerProfile__Stability {

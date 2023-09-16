@@ -4,8 +4,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import authenticateUser from '../AuthProfile.js';
 import Loader from "../Components/Loader.jsx";
 
-import './DiscordAuth.css';
-
 export default function DiscordAuth() {
     const [queryParams] = useSearchParams();
     const [authStatus, setAuthStatus] = useState('pending');

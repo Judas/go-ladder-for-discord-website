@@ -7,6 +7,7 @@ import StatusBanner from './Components/StatusBanner.jsx';
 import About from './Pages/About.jsx';
 import AccountLink from './Pages/AccountLink.jsx';
 import DiscordAuth from './Pages/DiscordAuth.jsx';
+import ExamHunter from './Pages/ExamHunter.jsx';
 import Game from "./Pages/Game";
 import PlayerList from './Pages/PlayerList.jsx';
 import PlayerProfile from './Pages/PlayerProfile.jsx';
@@ -23,6 +24,7 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<PlayerList/>}/>
                     <Route path="/recent-games" element={<RecentGames/>}/>
+                    <Route path="/hunters" element={<ExamHunter/>}/>
                     <Route path="/about" element={<About/>}/>
                     <Route path="/player/:playerId" element={<PlayerProfile/>}/>
                     <Route path="/game/:gameId" element={<Game/>}/>

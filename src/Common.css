@@ -104,3 +104,53 @@ a:focus-visible {
         opacity: .2;
     }
 }
+
+.Card,
+.CardHighlighted {
+    background: var(--tundora);
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+    align-items: start;
+    box-shadow: 0 0 0 2px var(--sun);
+}
+
+.CardHighlighted {
+    box-shadow: 0 0 0 0 #000000;
+    background: var(--mine-shaft);
+}
+
+.Card .CardHeader,
+.CardHighlighted .CardHeader {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    background: var(--mine-shaft);
+    border-radius: .5rem .5rem 0 0;
+}
+
+.CardHighlighted .CardHeader {
+    background: var(--sun);
+}
+
+.Card .CardHeader > span,
+.CardHighlighted .CardHeader > span {
+    padding: 1.5rem 0 .5rem 0;
+    margin: auto;
+    text-align: center;
+    color: var(--white-87);
+    font-size: 2rem;
+    font-family: var(--accent-font);
+}
+
+.CardHighlighted .CardHeader > span {
+    color: var(--cod-gray);
+    margin: auto 144px auto 144px;
+    width: 100%;
+}
+
+.CardContent {
+    margin-top: -96px;
+    width: 100%;
+}

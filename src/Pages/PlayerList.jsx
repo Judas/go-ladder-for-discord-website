@@ -101,12 +101,12 @@ function PlayerRow({player}) {
                 <Avatar size={40} src={player.avatar} alt={`avatar ${player.name}`} />
             </CellElement>
             <CellElement colIndex={2} className={'Discord'}>{player.name}</CellElement>
-            <CellElement colIndex={4} className={'Tier'}>
+            <CellElement colIndex={3} className={'Tier'}>
                 <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                 <p>{player.tierName}</p>
             </CellElement>
-            <CellElement colIndex={5} className={'Rating'}>{player.rating}</CellElement>
-            <CellElement colIndex={6} className={'Stability'}><span className={player.stable ? 'stable' : 'unstable'} /></CellElement>
+            <CellElement colIndex={4} className={'Rating'}>{player.rating}</CellElement>
+            <CellElement colIndex={5} className={'Stability'}><span className={player.stable ? 'stable' : 'unstable'} /></CellElement>
             <Link to={`/player/${player.discordId}`} />
         </RowElement>
     );

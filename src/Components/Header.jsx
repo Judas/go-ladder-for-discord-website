@@ -2,6 +2,7 @@ import React from "react";
 import { FaUsers, FaDiscord } from 'react-icons/fa6';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { LuSwords } from 'react-icons/lu';
+import { TbGoGame } from 'react-icons/tb';
 import { Link, NavLink } from 'react-router-dom';
 
 import { hasValidProfile, getProfile } from '../AuthProfile.js';
@@ -46,8 +47,15 @@ export default function Header() {
 
                 <NavLink to={'/recent-games'} className={'NavLink'}>
                     <span className={'NavButton'}>
-                        <LuSwords />
+                        <TbGoGame />
                         <span className={'NavButtonText'}>Parties</span>
+                    </span>
+                </NavLink>
+
+                <NavLink to={'/hunters'} className={'NavLink'}>
+                    <span className={'NavButton'}>
+                        <LuSwords />
+                        <span className={'NavButtonText'}>Hunters</span>
                     </span>
                 </NavLink>
 
