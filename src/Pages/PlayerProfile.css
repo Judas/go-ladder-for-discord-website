@@ -314,6 +314,81 @@
     font-style: italic;
 }
 
+.PlayerProfile__HunterExam {
+    background: var(--mine-shaft);
+    border-radius: .5rem;
+    width: 100%;
+}
+
+.PlayerProfile__HunterExam__TBody .Row,
+.PlayerProfile__HunterExam__THead .Row {
+    position: relative;
+    display: grid;
+    grid-template:
+            'avatar hunter pseudo total participation community patience victory refinement performance achievement ratio' min-content
+            / 2rem 2rem 1fr 3rem 2rem 2rem 2rem 2rem 2rem 2rem 2rem 2rem 0px;
+    gap: 1rem;
+    padding: .5rem .75rem .5rem .75rem;
+}
+
+.PlayerProfile__HunterExam__THead {
+    position: sticky;
+    top: 98px;
+    z-index: 10;
+    color: var(--white-87);
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: black;
+}
+
+.PlayerProfile__HunterExam__TBody .Row {
+    background: var(--emperor);
+    cursor: pointer;
+    color: var(--white-87);
+}
+
+.PlayerProfile__HunterExam__TBody .Row:nth-of-type(even) {
+    background: var(--tundora);
+}
+
+.PlayerProfile__HunterExam__TBody .Row:last-child {
+    border-radius: 0 0 .5rem .5rem;
+}
+
+.PlayerProfile__HunterExam__AvatarPicture {
+    border-radius: 50%;
+    border: 2px solid var(--sun);
+}
+
+.PlayerProfile__HunterExam__Hunter {
+    color: var(--sun);
+}
+
+.PlayerProfile__HunterExam__Total {
+    color: var(--sun);
+    font-size: 1.5rem;
+    font-family: var(--accent-font);
+}
+
+.PlayerProfile__HunterExam__TBody .Row a::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    content: '';
+}
+
+.PlayerProfile__HunterExam__TBody .Row:hover,
+.PlayerProfile__HunterExam__TBody .Row:focus-within {
+    background: var(--sun-20);
+}
+
+.PlayerProfile__HunterExam__Ratio {
+    font-style: italic;
+}
+
 .Card:has(.PlayerProfile__Stability) {
     background: var(--emperor);
 }
