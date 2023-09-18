@@ -66,6 +66,7 @@ export default function PlayerList() {
             </div>
             <div>
                 <TableElement>
+                <div className="THead__wrapper">
                     <RowGroupElement className={'THead'}>
                         <RowElement>
                             <ColHeaderElement className={'Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
@@ -75,6 +76,7 @@ export default function PlayerList() {
                             <ColHeaderElement className={'Stability'}>FGC</ColHeaderElement>
                         </RowElement>
                     </RowGroupElement>
+                </div>
                     <RowGroupElement className={'TBody'}>
                         {playerFetchStatus === 'pending' && <Loader/>}
                         {playerFetchStatus === 'error' && <p className={'ErrorRow'}>Erreur lors de la récupération des joueurs</p>}
