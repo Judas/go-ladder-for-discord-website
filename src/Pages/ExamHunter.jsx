@@ -93,22 +93,24 @@ function Ranking({ranking, titles, history, stats}) {
             <div className={'Exam__LeftColumn'}>
                 <div className={'Card'}>
                     <TableElement className={'ExamRanking'}>
-                        <RowGroupElement className={'ExamRanking__THead'}>
-                            <RowElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Hunter</span></ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Pseudo</span></ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Total</span></ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Participation</span>🕵️‍</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Communauté</span>🔍</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Patience</span>🗿</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Victoire</span>💰</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Raffinement</span>🍽️</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Performance</span>🦖</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Prouesse</span>☠️</ColHeaderElement>
-                                <ColHeaderElement><span className={'ReaderOnly'}>Ratio</span>🎯</ColHeaderElement>
-                            </RowElement>
-                        </RowGroupElement>
+                        <div className={'ExamRanking__THeadContainer'}>
+                            <RowGroupElement className={'ExamRanking__THead'}>
+                                <RowElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Hunter</span></ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Pseudo</span></ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Total</span></ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Participation</span>🕵️‍</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Communauté</span>🔍</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Patience</span>🗿</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Victoire</span>💰</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Raffinement</span>🍽️</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Performance</span>🦖</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Prouesse</span>☠️</ColHeaderElement>
+                                    <ColHeaderElement><span className={'ReaderOnly'}>Ratio</span>🎯</ColHeaderElement>
+                                </RowElement>
+                            </RowGroupElement>
+                        </div>
                         <RowGroupElement className={'ExamRanking__TBody'}>
                             {ranking.length === 0  && <p className={'ErrorRow'}>Aucun résultat</p>}
                             {ranking.length > 0  && ranking.map(player => <ExamRow key={player.discordId} player={player} />)}

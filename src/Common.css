@@ -113,11 +113,11 @@ a:focus-visible {
     flex-direction: column;
     margin-bottom: 1em;
     align-items: start;
-    box-shadow: 0 0 0 2px var(--sun);
+    border: 2px solid var(--sun);
 }
 
 .CardHighlighted {
-    box-shadow: 0 0 0 0 #000000;
+    border: none;
     background: var(--mine-shaft);
 }
 
