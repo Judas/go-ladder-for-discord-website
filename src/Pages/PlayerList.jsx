@@ -66,16 +66,18 @@ export default function PlayerList() {
             </div>
             <div>
                 <TableElement>
-                    <RowGroupElement className={'THead'}>
-                        <RowElement>
-                            <ColHeaderElement className={'Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
-                            <ColHeaderElement className={'Discord'}>Discord</ColHeaderElement>
-                            <ColHeaderElement className={'Tier'}>Division</ColHeaderElement>
-                            <ColHeaderElement className={'Rating'}>Classement</ColHeaderElement>
-                            <ColHeaderElement className={'Stability'}>FGC</ColHeaderElement>
-                        </RowElement>
-                    </RowGroupElement>
-                    <RowGroupElement className={'TBody'}>
+                    <div className={'PlayerList__THeadContainer'}>
+                        <RowGroupElement className={'PlayerList__THead'}>
+                            <RowElement>
+                                <ColHeaderElement className={'Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
+                                <ColHeaderElement className={'Discord'}>Discord</ColHeaderElement>
+                                <ColHeaderElement className={'Tier'}>Division</ColHeaderElement>
+                                <ColHeaderElement className={'Rating'}>Classement</ColHeaderElement>
+                                <ColHeaderElement className={'Stability'}>FGC</ColHeaderElement>
+                            </RowElement>
+                        </RowGroupElement>
+                    </div>
+                    <RowGroupElement className={'PlayerList__TBody'}>
                         {playerFetchStatus === 'pending' && <Loader/>}
                         {playerFetchStatus === 'error' && <p className={'ErrorRow'}>Erreur lors de la récupération des joueurs</p>}
                         {playerFetchStatus === 'success' && (

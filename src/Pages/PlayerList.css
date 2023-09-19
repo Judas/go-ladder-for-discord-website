@@ -59,18 +59,13 @@
     text-align: center;
 }
 
-.PlayerList div[role="table"] > *:first-child {
-    border-radius: .5rem .5rem 0 0;
-    overflow: hidden;
-}
-
 .PlayerList div[role="table"] > *:last-child {
     border-radius: 0 0 .5rem .5rem;
     overflow: hidden;
 }
 
-.TBody .Row,
-.THead .Row {
+.PlayerList__TBody .Row,
+.PlayerList__THead .Row {
     position: relative;
     display: grid;
     grid-template:
@@ -80,32 +75,39 @@
     padding: 0.75rem;
 }
 
-.THead {
+.PlayerList__THeadContainer {
     position: sticky;
     top: 96px;
     z-index: 10;
+    background: var(--cod-gray);
+}
+
+.PlayerList__THead {
+    position: relative;
+    z-index: 11;
     color: black;
     font-size: 1.2rem;
     font-weight: bold;
     background: var(--sun);
+    border-radius: .5rem .5rem 0 0;
 }
 
 @media only screen and (max-width: 980px) {
-    .THead {
+    .PlayerList__THead {
         font-size: 1.25rem;
     }
 }
 
-.TBody .Row {
+.PlayerList__TBody .Row {
     background: var(--mine-shaft);
     cursor: pointer;
 }
 
-.TBody .Row:nth-of-type(even) {
+.PlayerList__TBody .Row:nth-of-type(even) {
     background: var(--tundora);
 }
 
-.TBody .Row a::before {
+.PlayerList__TBody .Row a::before {
     position: absolute;
     top: 0;
     left: 0;
@@ -115,11 +117,11 @@
     content: '';
 }
 
-.TBody .Row:hover {
+.PlayerList__TBody .Row:hover {
     background: var(--sun-20);
 }
 
-.THead {
+.PlayerList__THead {
     color: black;
     text-align: center;
 }
@@ -130,7 +132,7 @@ div[role="gridcell"] {
     justify-items: center;
 }
 
-.TBody  {
+.PlayerList__TBody  {
     color: var(--white-87);
     text-align: center; 
 }
@@ -188,8 +190,8 @@ div[role="gridcell"] {
 }
 
 @media only screen and (max-width: 980px) {
-    .TBody .Row,
-    .THead .Row {
+    .PlayerList__TBody .Row,
+    .PlayerList__THead .Row {
         gap: .5rem;
         grid-template:
             'avatar avatar discord discord' min-content
