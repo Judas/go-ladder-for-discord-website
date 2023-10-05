@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import GameViewer from "../Components/Goban/GameViewer.jsx";
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
+import WGOPlayer from "../Components/WGOPlayer.jsx";
 
 import './RecentGames.css';
 
@@ -65,7 +65,7 @@ function GameCard({game}) {
             </p>
 
             <div className={'GameCard__board'}>
-                <GameViewer game={game} move={42}/>
+                <WGOPlayer sgf={game.sgf} gameLink={game.gameLink} move={42} />
             </div>
 
             <p className={`GameCard__name white`}>

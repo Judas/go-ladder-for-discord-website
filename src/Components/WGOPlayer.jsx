@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function WGOPlayer({sgfUrl, move = 0}) {
+export default function WGOPlayer({sgf, move = 0}) {
     const wgoref = useRef(null);
 
     useEffect(() => {
         const elem = wgoref.current;
         new window.WGo.BasicPlayer(elem, {
-            sgfFile: sgfUrl,
+            sgf: sgf,
             move: parseInt(move)
         });
-    }, [sgfUrl])
+    }, [sgf])
 
     return <div ref={wgoref} />
 }

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 
 import Avatar from "../Components/Avatar.jsx";
-import GameViewer from "../Components/Goban/GameViewer.jsx";
 import Loader from "../Components/Loader.jsx";
+import WGOPlayer from "../Components/WGOPlayer.jsx";
 
 import './Game.css';
 
@@ -61,7 +61,7 @@ export default function Game() {
                 </div>
 
                 <div className={'Game__Goban'}>
-                    <GameViewer game={game} move={searchParams.get('move')}/>
+                    <WGOPlayer sgf={game.sgf} gameLink={game.gameLink} move={searchParams.get('move')} />
                 </div>
 
                 {modalVisible && (
