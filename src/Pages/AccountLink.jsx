@@ -6,6 +6,7 @@ import Loader from "../Components/Loader.jsx";
 import './AccountLink.css';
 
 export default function AccountLink() {
+    const [serverStatus, setServerStatus] = useState('pending');
     const [accounts, setAccounts] = useState(undefined)
     const [accountsFetchStatus, setAccountsFetchStatus] = useState('pending');
 
@@ -24,10 +25,28 @@ export default function AccountLink() {
             .catch(() => setAccountsFetchStatus('error'));
     }, []);
 
-    if (accountsFetchStatus === 'error' || !hasValidProfile()) {
-        return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>; 
-    } else if (accountsFetchStatus === 'pending') {
+    useEffect(() => {
+        setServerStatus('pending');
+
+        fetch("/api/scan")
+            .then(res => {
+                if (!res.ok) { throw res.statusText; }
+                return res;
+            })
+            .then(res => res.json())
+            .then(res => {
+                setServerStatus(res == true ? 'scanning' : 'available');
+            })
+            .catch(() => setServerStatus('error'));
+    }, []);
+
+
+    if (serverStatus === 'pending' || accountsFetchStatus === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;
+    } else if (serverStatus === 'scanning') {
+        return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Le lien de nouveaux comptes est bloqué lors de la récupération des parties. Merci de réessayer un peu plus tard.</p></div>; 
+    } else if (accountsFetchStatus === 'error' || !hasValidProfile()) {
+        return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>; 
     } else {
         return ( 
             <section className={'AccountLink Container'}>
