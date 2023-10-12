@@ -159,6 +159,7 @@
 .ExamTitle__Pseudo {
     grid-area: pseudo;
     justify-items: start !important;
+    text-align: start;
 }
 
 .Card:has(.ExamStats) {
