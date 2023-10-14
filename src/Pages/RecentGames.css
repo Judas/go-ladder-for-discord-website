@@ -32,6 +32,11 @@
     z-index: 1;
 }
 
+.GameCard:focus-within {
+	outline-offset: 0.25em;
+	outline: solid var(--outlineColor, var(--sun)) 2px;
+}
+
 .GameCard__title {
     grid-area: vs;
     display: grid;
