@@ -73,11 +73,8 @@ function GameCard({game}) {
             </p>
 
             <Link to={`/game/${game.id}`}>
- 			   <span className={"ReaderOnly"}>
-      			  {" "}
-        		{game.black.name} versus {game.white.name} Voir la partie
-    			</span>
-			</Link>
+                <span className={"ReaderOnly"}>Voir {game.black.name} versus {game.white.name}</span>
+            </Link>
         </article>
     );
 }
