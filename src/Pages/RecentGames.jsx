@@ -72,7 +72,9 @@ function GameCard({game}) {
                 <span>{game.white.name}</span> <span className={`GameCard__tier`}>{game.white.historicalRating.tierName}</span>
             </p>
 
-            <Link to={`/game/${game.id}`}><span className={'ReaderOnly'}>Voir la partie</span></Link>
+            <Link to={`/game/${game.id}`}>
+                <span className={"ReaderOnly"}>Voir {game.black.name} versus {game.white.name}</span>
+            </Link>
         </article>
     );
 }
