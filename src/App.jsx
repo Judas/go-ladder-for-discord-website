@@ -6,6 +6,7 @@ import StatusBanner from './Components/StatusBanner.jsx';
 
 import About from './Pages/About.jsx';
 import AccountLink from './Pages/AccountLink.jsx';
+import AdminFgc from "./Pages/AdminFgc.jsx";
 import DiscordAuth from './Pages/DiscordAuth.jsx';
 import ExamHunter from './Pages/ExamHunter.jsx';
 import Game from "./Pages/Game";
@@ -30,6 +31,7 @@ export default function App() {
                     <Route path="/game/:gameId" element={<Game/>}/>
                     <Route path="/auth/discord" element={<DiscordAuth/>}/>
                     <Route path="/link" element={<AccountLink/>}/>
+                    <Route path="/admin-fgc" element={<AdminFgc/>}/>
                 </Routes>
             </main>
             <Footer />
