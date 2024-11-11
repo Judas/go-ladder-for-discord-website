@@ -216,15 +216,6 @@
     color: var(--white-87);
 }
 
-@media only screen and (max-width: 980px) {
-    .PlayerProfile__GameItem {
-        grid-template:
-                'date result avatar name' min-content
-                'date result tier tier ' min-content
-                / 3rem 3rem 3rem 1fr;
-    }
-}
-
 .PlayerProfile__GameItem:nth-child(even) {
     background: var(--tundora);
 }

@@ -43,6 +43,7 @@ export default function AdminFgc() {
                                 <ColHeaderElement className={'Rating'}>Gold</ColHeaderElement>
                                 <ColHeaderElement className={'KgsRating'}>KGS</ColHeaderElement>
                                 <ColHeaderElement className={'OgsRating'}>OGS</ColHeaderElement>
+                                <ColHeaderElement className={'FfgRating'}>FFG</ColHeaderElement>
                             </RowElement>
                         </RowGroupElement>
                     </div>
@@ -58,24 +59,6 @@ export default function AdminFgc() {
 }
 
 function PlayerRow({player}) {
-    var statusClassNames = ["Valid", "Neutral", "Invalid"];
-
-    // OGS
-    var ogsCell;
-    if (player.ogsRating == null) {
-        ogsCell = (<CellElement colIndex={4} className={'OgsRating'} />);
-    } else {
-        ogsCell = (<CellElement colIndex={4} className={'OgsRating'}>{player.ogsRating}<span className={statusClassNames[player.ogsDiffStatus]}>{player.ogsDiff}</span></CellElement>);
-    }
-
-    // KGS
-    var kgsCell;
-    if (player.kgsRating == null) {
-        kgsCell = (<CellElement colIndex={5} className={'KgsRating'} />);
-    } else {
-        kgsCell = (<CellElement colIndex={5} className={'KgsRating'}>{player.kgsRating}<span className={statusClassNames[player.kgsDiffStatus]}>{player.kgsDiff}</span></CellElement>);
-    }
-
     return (
         <RowElement>
             <CellElement colIndex={1} className={'Avatar'}>
@@ -83,9 +66,19 @@ function PlayerRow({player}) {
             </CellElement>
             <CellElement colIndex={2} className={'Discord'}>{player.name}</CellElement>
             <CellElement colIndex={3} className={'Rating'}>{player.goldRating}</CellElement>
-            {ogsCell}
-            {kgsCell}
+            <ServerCellElement server={player.ogs} className={'OgsRating'} colIndex={4} />
+            <ServerCellElement server={player.kgs} className={'KgsRating'} colIndex={5} />
+            <ServerCellElement server={player.ffg} className={'FfgRating'} colIndex={6} />
             <Link to={`/player/${player.discordId}`} />
         </RowElement>
     );
+}
+
+function ServerCellElement({server, className, colIndex}) {
+    var statusClassNames = ["Valid", "Neutral", "Invalid"];
+    if (server == null || server.rating == null) {
+        return (<CellElement colIndex={colIndex} className={className} />);
+    } else {
+        return (<CellElement colIndex={colIndex} className={className}>{server.rating}<span className={statusClassNames[server.diffStatus]}>{server.diff}</span></CellElement>);
+    }
 }

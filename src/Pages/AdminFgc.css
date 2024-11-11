@@ -34,8 +34,8 @@
     position: relative;
     display: grid;
     grid-template:
-        'avatar discord rating ogs kgs' min-content
-        / 5rem 1fr 7rem 7rem 7rem 0px;
+        'avatar discord rating ogs kgs ffg' min-content
+        / 5rem 1fr 7rem 7rem 7rem 7rem 0px;
     gap: 1rem;
     padding: 0.75rem;
 }
@@ -122,6 +122,10 @@ div[role="gridcell"] {
     grid-area: ogs;
 }
 
+.FfgRating {
+    grid-area: ffg;
+}
+
 .Avatar img {
     width: 2.5rem;
     height: 2.5rem;
@@ -157,8 +161,8 @@ span.Invalid {
     .AdminFgcList__THead .Row {
         gap: .5rem;
         grid-template:
-            'avatar discord rating ogs kgs' min-content
-            / 4rem 4rem 1fr 4rem 4rem;
+            'avatar discord rating ogs kgs ffg' min-content
+            / 4rem 4rem 1fr 4rem 4rem 4rem;
     }
 
     .Discord {
