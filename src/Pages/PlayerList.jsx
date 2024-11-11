@@ -18,10 +18,15 @@ export default function PlayerList() {
     const [searchString, setSearchString] = useState('')
     const [searchedPlayers, setSearchedPlayers] = useState(null)
 
+    const [validOnly, setValidOnly] = useState(false)
+    const [validPlayers, setValidPlayers] = useState([])
+
     // Search filter
-    function filterPlayers() {
+    function searchPlayers() {
         if (playerFetchStatus === 'success' && searchString) {
-            setSearchedPlayers(players.filter(
+            console.log("SEARCH validonLy:", validOnly)
+            var basePlayers = validOnly ? validPlayers : players
+            setSearchedPlayers(basePlayers.filter(
                 player => (
                     player.name.toLowerCase().includes(searchString.toLowerCase())
                     || (player.kgsId && player.kgsId.toLowerCase().includes(searchString.toLowerCase()))
@@ -33,8 +38,17 @@ export default function PlayerList() {
         }
     }
 
+    // Valid filter toggle
+    const toggleValidOnly = () => {
+        console.log("TOGGLE from ", validOnly, " to ", !validOnly)
+        setValidOnly(!validOnly);
+    };
+
     // Search hook
-    useEffect(() => { filterPlayers(); }, [searchString])
+    useEffect(() => { searchPlayers(); }, [searchString])
+
+    // Search hook (when validOnly updates)
+    useEffect(() => { searchPlayers(); }, [validOnly])
 
     // Load hook
     useEffect(() => {
@@ -47,6 +61,7 @@ export default function PlayerList() {
             .then(res => res.filter((player) => player.ranked))
             .then(res => {
                 setPlayers(res);
+                setValidPlayers(res.filter((player) => player.stable));
                 setPlayerFetchStatus('success');
             })
             .catch(() => setPlayerFetchStatus('error'));
@@ -55,7 +70,7 @@ export default function PlayerList() {
     return (
         <section className={'PlayerList'}>
             <h2 className={'ReaderOnly'}>Liste des joueurs</h2>
-            <div className="SearchWidget">
+            <div className={'SearchWidget'}>
                 <label className="ReaderOnly" htmlFor={'search'}>Recherchez un joueur</label>
                 <input
                     id={'search'}
@@ -64,6 +79,13 @@ export default function PlayerList() {
                     onChange={(event) => setSearchString(event.target.value)}
                     className={'SearchWidget__input'}/>
             </div>
+            <div className={'ValidWidget'}>
+                <label>
+                    <input type="checkbox" checked={validOnly} onChange={toggleValidOnly}/>
+                    <span>Joueurs validés uniquement</span>
+                </label>
+            </div>
+
             <div>
                 <TableElement>
                     <div className={'PlayerList__THeadContainer'}>
@@ -84,7 +106,7 @@ export default function PlayerList() {
                             <>
                                 {searchedPlayers ? <>
                                     {searchedPlayers.length ? searchedPlayers.map(player => <PlayerRow key={player.discordId} player={player} />) : <p className={'ErrorRow'}>Aucun résultat</p>}
-                                </> : players.map(
+                                </> : (validOnly ? validPlayers : players).map(
                                     player => <PlayerRow key={player.discordId} player={player} />
                                 )}
                             </>

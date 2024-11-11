@@ -2,7 +2,7 @@
     position: relative;
     display: grid;
     width: 16rem;
-    margin: 2rem auto 2rem auto;
+    margin: 2rem auto 0.5rem auto;
     background: white;
     border-radius: .25rem;
 }
@@ -35,6 +35,24 @@
 .SearchWidget__input:focus-visible {
     outline-offset: .25em;
     outline: solid var(--outlineColor, var(--sun)) 2px;
+}
+
+.ValidWidget {
+    position: relative;
+    display: grid;
+    text-align: center;
+    width: 16rem;
+    margin: 0.5rem auto 2rem auto;
+    color: white;
+    border-radius: .25rem;
+}
+
+.ValidWidget span {
+    margin: 0.5rem;
+}
+
+.ValidWidget input {
+    accent-color: var(--sun);
 }
 
 .PlayerList {
