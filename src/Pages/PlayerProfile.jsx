@@ -18,8 +18,6 @@ export default function PlayerProfile() {
 
     const [player, setPlayer] = useState(undefined)
     const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
-    const [refStability, setRefStability] = useState(undefined)
-    const [refStabilityFetchStatus, setRefStabilityFetchStatus] = useState('pending');
     const [tiers, setTiers] = useState(undefined)
     const [tiersFetchStatus, setTiersFetchStatus] = useState('pending');
 
@@ -38,21 +36,6 @@ export default function PlayerProfile() {
             .catch(() => setPlayerFetchStatus('error'));
     }, [playerId]);
 
-    // Fetch stability ref values
-    useEffect(() => {
-        fetch(`/api/stability`)
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setRefStability(res);
-                setRefStabilityFetchStatus('success');
-            })
-            .catch(() => setRefStabilityFetchStatus('error'));
-    }, []);
-
     // Fetch tiers
     useEffect(() => {
         fetch(`/api/tiers`)
@@ -68,26 +51,26 @@ export default function PlayerProfile() {
             .catch(() => setTiersFetchStatus('error'));
     }, []);
 
-    if (playerFetchStatus === 'success' && refStabilityFetchStatus === 'success' && tiersFetchStatus === 'success') {
-        return <Profile player={player} refStability={refStability} tiers={tiers} />;
-    } else if (playerFetchStatus === 'pending' || refStabilityFetchStatus === 'pending' || tiersFetchStatus === 'pending') {
+    if (playerFetchStatus === 'success' && tiersFetchStatus === 'success') {
+        return <Profile player={player} tiers={tiers} />;
+    } else if (playerFetchStatus === 'pending' || tiersFetchStatus === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;
     } else {
         return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>;
     }
 }
 
-function Profile({player, refStability, tiers}) {
-    let playerRating = player.ranked 
-        ? <h2 className={'PlayerProfile__Rating'}>{player.rating} ± {player.deviation}</h2>
-        : <h2 className={'PlayerProfile__Unranked'}>{player.rating} ± {player.deviation} [Non classé]</h2>
+function Profile({player, tiers}) {
+    let playerRating = player.rating > 0 
+        ? <h2 className={'PlayerProfile__Rating'}>{Math.round(player.rating)}</h2>
+        : <h2 className={'PlayerProfile__Unranked'}>[Non classé]</h2>
 
     return (
         <article className={'PlayerProfile'}>
             <div className={'PlayerProfile__LeftColumn'}>
                 <div className={'CardHighlighted'}>
-                    <h2 className={'CardHeader'}><span>{player.name}</span></h2>
-                    <Avatar src={player.avatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.name}`} hidden={true}/>
+                    <h2 className={'CardHeader'}><span>{player.discordName}</span></h2>
+                    <Avatar src={player.discordAvatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.discordName}`} hidden={true}/>
                     
                     <div className={'CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
@@ -103,11 +86,6 @@ function Profile({player, refStability, tiers}) {
                     <h2 className={'CardHeader'}><span>Parties récentes</span></h2>
                     <GameList player={player} />
                 </div>
-
-                <div className={'Card'}>
-                    <h2 className={'CardHeader'}><span>Examen Hunter</span></h2>
-                    <HunterExam player={player} />
-                </div>
             </div>
 
             <div className={'PlayerProfile__RightColumn'}>
@@ -118,7 +96,7 @@ function Profile({player, refStability, tiers}) {
 
                 <div className={'Card'}>
                     <h2 className={'CardHeader'}><span>Validation FGC</span></h2>
-                    <Stability player={player} refStability={refStability} />
+                    <Stability player={player} />
                 </div>
             </div>
         </article>
@@ -135,7 +113,7 @@ function TierProgression({player, tiers}) {
     }
 
     const total = currentTier.max - currentTier.min;
-    const progress = player.rating - currentTier.min;
+    const progress = Math.round(player.rating) - currentTier.min;
     const ratio = 100 * progress / total;
 
     var previousShield;
@@ -196,8 +174,8 @@ function AccountList({player}) {
 function AccountRow({account}) {
     return (
         <RowElement key={account.name} className={'PlayerProfile__AccountItem'}>
-            <CellElement className={'PlayerProfile__AccountServer'}>{account.name}</CellElement>
-            <CellElement className={'PlayerProfile__AccountPseudo'}>{account.pseudo}</CellElement>
+            <CellElement className={'PlayerProfile__AccountServer'}>{account.server}</CellElement>
+            <CellElement className={'PlayerProfile__AccountPseudo'}>{account.name}</CellElement>
             <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
             <a href={account.link ?? "#"} target='_blank' />
         </RowElement>
@@ -214,10 +192,10 @@ function GameList({player}) {
             <RowGroupElement className={'ReaderOnly'}>
                 <RowElement>
                     <ColHeaderElement>Date</ColHeaderElement>
+                    <ColHeaderElement>Résultat</ColHeaderElement>
                     <ColHeaderElement>Avatar adversaire</ColHeaderElement>
                     <ColHeaderElement>Nom adversaire</ColHeaderElement>
                     <ColHeaderElement>Division adversaire</ColHeaderElement>
-                    <ColHeaderElement>Résultat</ColHeaderElement>
                 </RowElement>
             </RowGroupElement>
             <RowGroupElement className={'PlayerProfile__GameListContent'}>
@@ -228,85 +206,42 @@ function GameList({player}) {
 }
 
 function GameRow({player, game}) {
-    const main = game.black.discordId === player.discordId ? game.black : game.white;
+    const mainIsBlack = game.black.discordId === player.discordId;
     const opponent = game.black.discordId === player.discordId ? game.white : game.black;
-    const result = main.winner ? 'victory' : opponent.winner ? 'defeat' : 'draw';
-
+    const mainResult = game.result == "jigo" ? 'draw' :
+                    (mainIsBlack && game.result == "black") || (!mainIsBlack && game.result == "white") ? 'victory' :
+                    'defeat';
     return (
         <RowElement key={game.id} className={'PlayerProfile__GameItem'}>
             <CellElement className={'PlayerProfile__GameDate'}>{game.date}</CellElement>
-            <CellElement className={'PlayerProfile__GameResult'}><span className={result} /></CellElement>
+            <CellElement className={'PlayerProfile__GameResult'}><span className={mainResult} /></CellElement>
             <CellElement className={'PlayerProfile__GameAvatar'}>
-                <Avatar src={opponent.avatar} alt={`avatar ${opponent.name}`} className={'PlayerProfile__GameAvatarPicture'}/>
+                <Avatar src={opponent.discordAvatar} alt={`avatar ${opponent.discordName}`} className={'PlayerProfile__GameAvatarPicture'}/>
             </CellElement>
-            <CellElement className={'PlayerProfile__GameName'}>{opponent.name}</CellElement>
+            <CellElement className={'PlayerProfile__GameName'}>{opponent.discordName}</CellElement>
             <CellElement className={'PlayerProfile__GameTier'}>
-                <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${opponent.historicalRating.tierRank}.svg`} alt={opponent.historicalRating.tierName}/>
-                <p>{opponent.historicalRating.tierName}</p>
+                <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${opponent.tierRank}.svg`} alt={opponent.tierName}/>
+                <p>{opponent.tierName}</p>
             </CellElement>
-            <Link to={`/game/${game.id}`} />
+            <Link to={`/game/${game.goldId}`} />
         </RowElement>
     );
 }
 
-function HunterExam({player}) {
-    return (
-        <TableElement className={'PlayerProfile__HunterExam'}>
-            <RowGroupElement className={'PlayerProfile__HunterExam__THead'}>
-                <RowElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Hunter</span></ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Pseudo</span></ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Total</span></ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Participation</span>🕵️‍</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Communauté</span>🔍</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Patience</span>🗿</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Victoire</span>💰</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Raffinement</span>🍽️</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Performance</span>🦖</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Prouesse</span>☠️</ColHeaderElement>
-                    <ColHeaderElement><span className={'ReaderOnly'}>Ratio</span>🎯</ColHeaderElement>
-                </RowElement>
-            </RowGroupElement>
-            <RowGroupElement className={'PlayerProfile__HunterExam__TBody'}>
-                <RowElement>
-                    <CellElement colIndex={1} className={'PlayerProfile__HunterExam__Avatar'}><Avatar size={40} src={player.avatar} alt={`avatar ${player.name}`} className={'ExamRanking__AvatarPicture'} /></CellElement>
-                    <CellElement colIndex={2} className={'PlayerProfile__HunterExam__Hunter'}>{player.exam.hunter ? <FaMedal/> : <></>}</CellElement>
-                    <CellElement colIndex={3} className={'PlayerProfile__HunterExam__Pseudo'}>{player.name}</CellElement>
-                    <CellElement colIndex={4} className={'PlayerProfile__HunterExam__Total'}>{player.exam.total}</CellElement>
-                    <CellElement colIndex={5} className={'PlayerProfile__HunterExam__Participation'}>{player.exam.participation}</CellElement>
-                    <CellElement colIndex={6} className={'PlayerProfile__HunterExam__Community'}>{player.exam.community}</CellElement>
-                    <CellElement colIndex={7} className={'PlayerProfile__HunterExam__Patience'}>{player.exam.patience}</CellElement>
-                    <CellElement colIndex={8} className={'PlayerProfile__HunterExam__Victory'}>{player.exam.victory}</CellElement>
-                    <CellElement colIndex={9} className={'PlayerProfile__HunterExam__Refinement'}>{player.exam.refinement}</CellElement>
-                    <CellElement colIndex={10} className={'PlayerProfile__HunterExam__Performance'}>{player.exam.performance}</CellElement>
-                    <CellElement colIndex={11} className={'PlayerProfile__HunterExam__Achievement'}>{player.exam.achievement}</CellElement>
-                    <CellElement colIndex={12} className={'PlayerProfile__HunterExam__Ratio'}>{player.exam.ratio}</CellElement>
-                </RowElement>
-            </RowGroupElement>
-        </TableElement>
-    );
-}
-
-function Stability({player, refStability}) {
+function Stability({player}) {
     return (
         <div className={'PlayerProfile__Stability'}>
             <StabilityItem
-                valid={player.stability.gameCount >= refStability.gameCount} 
-                highlight={`${player.stability.gameCount}`}
-                text={`parties (min. ${refStability.gameCount})`}
+                valid={player.totalRankedGames >= 4} 
+                highlight={`${player.totalRankedGames}/4`}
+                text={`parties (classées)`}
             />
             <StabilityItem
-                valid={player.stability.ladderGameCount >= refStability.ladderGameCount}
-                highlight={`${player.stability.ladderGameCount}`}
-                text={`parties GOLD (min. ${refStability.ladderGameCount})`}
+                valid={player.goldRankedGames >= 2}
+                highlight={`${player.goldRankedGames}/2`}
+                text={`parties GOLD (classées)`}
             />
-            <StabilityItem
-                valid={player.stability.deviation <= refStability.deviation}
-                highlight={`${player.stability.deviation}`}
-                text={`de déviation (max ${refStability.deviation})`}
-            />
-            <p className={'PlayerProfile__StabilityPeriod'}>sur les {refStability.period} derniers jours</p>
+            <p className={'PlayerProfile__StabilityPeriod'}>sur les 30 derniers jours</p>
         </div>
     );
 }

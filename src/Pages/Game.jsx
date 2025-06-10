@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import Avatar from "../Components/Avatar.jsx";
 import Loader from "../Components/Loader.jsx";
@@ -12,10 +12,6 @@ export default function Game() {
 
     const [game, setGame] = useState();
     const [gameFetchStatus, setGameFetchStatus] = useState('pending');
-    const [gameMoveURL, setGameMoveURL] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [copySuccess, setCopySuccess] = useState(false);
-    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -35,77 +31,46 @@ export default function Game() {
             .catch(() => setGameFetchStatus('error'));
     }, [params.gameId]);
 
-    function sharePosition() {
-        const href = window.location.href;
-        const inputValue = document.querySelector('.wgo-player-mn-value').value;
-        setGameMoveURL(`${href}?move=${inputValue}`);
-
-        navigator.clipboard.writeText(gameMoveURL).then(() => setCopySuccess(true)).catch(() => setCopySuccess(false));
-        setModalVisible(true);
-    }
-
     return (
         <div className={'Game'}>
             {gameFetchStatus === 'pending' && <Loader/>}
             {gameFetchStatus === 'error' && <p className={'Error'}>Erreur lors de la récupération de la partie</p>}
             {gameFetchStatus === 'success' && <>
                 <div className={'Game__header'}>
-                    <PlayerHeader player={game.black} />
-
-                    <div className={'Game__Actions'}>
-                        <button onClick={sharePosition} className={'Game__Share CallToAction'}>Partager la position</button>
-                        <a href={game.gameLink} target="_blank" rel={'noreferrer'} className={'CallToAction'}>Ouvrir cette partie</a>
-                    </div>
-
-                    <PlayerHeader player={game.white} />
+                    <div />
+                    <PlayerHeader player={game.black} black={true} />
+                    <div />
+                    <PlayerHeader player={game.white} black={false} />
+                    <div />
                 </div>
 
                 <div className={'Game__Goban'}>
-                    <WGOPlayer sgf={game.sgf} gameLink={game.gameLink} move={searchParams.get('move')} />
+                    <WGOPlayer sgf={game.sgf} gameLink={game.gameLink} />
                 </div>
-
-                {modalVisible && (
-                    <div className={'Game__Modal'}>
-                        <button className={'CallToAction'} onClick={() => setModalVisible(false)}>
-                            <span className={'ReaderOnly'}>Fermer</span>
-                        </button>
-                        <p>
-                            {copySuccess && <><span>L'URL vers ce coup est dans le presse papier.</span> <br/></>}
-                            <a href={gameMoveURL}>Lien vers ce coup</a>
-                        </p>
-                    </div>
-                )}
             </>}
         </div>
     );
 }
 
-function PlayerHeader({player}) {
-    var rating;
-    if (player.historicalRating.tierRank === 0) {
-        rating = "?"
-    } else {
-        rating = player.historicalRating.rating;
-    }
-
+function PlayerHeader({player, black}) {
     return (
         <div className={'Game__Player'}>
-            <h2 className={'Game__PlayerTier'}>
-                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.historicalRating.tierRank}.svg`} alt={player.historicalRating.tierName}/>
-                <p>{player.historicalRating.tierName}</p>
-            </h2>
-
-            <h2 className={'Game__PlayerName'}>
-                <Avatar src={player.avatar} size={40} hidden={true}/>
-                <span><Link to={`/player/${player.discordId}`}>{player.name}</Link></span>
-                
-            </h2>
-
-            <h2 className={'Game__PlayerRating'}>
-                <span>
-                    {rating} <span className={player.ratingGain.includes('+') ? 'up' : player.ratingGain.includes('-') ? 'down' : 'equal'}> {player.ratingGain}</span>
-                </span>
-            </h2>
+                        <Avatar src={player.discordAvatar} size={40} hidden={true}/>
+                <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
+                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                <p className={'Game__PlayerTier'}>{player.tierName}</p>
+            {/* {black && <>
+                <p className={'Game__PlayerTier'}>{player.tierName}</p>
+                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
+                <Avatar src={player.discordAvatar} size={40} hidden={true}/>
+            </>}
+            {!black && <>
+                <Avatar src={player.discordAvatar} size={40} hidden={true}/>
+                <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
+                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                <p className={'Game__PlayerTier'}>{player.tierName}</p>
+            </>} */}
         </div>
     );
 }

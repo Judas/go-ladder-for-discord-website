@@ -49,19 +49,19 @@ function GameCard({game}) {
     return (
         <article className={'GameCard'}>
             <h3 className={'GameCard__title'}>
-                <span className={`GameCard__player ${game.black.winner ? 'winner' : ''}`}>
-                    <Avatar src={game.black.avatar} size={40} alt={game.black.name} className={'GameCard__avatar'}/>
-                    <span>{game.black.name}</span>
+                <span className={`GameCard__player ${game.result == "black" ? 'winner' : ''}`}>
+                    <Avatar src={game.black.discordAvatar} size={40} alt={game.black.discordName} className={'GameCard__avatar'}/>
+                    <span>{game.black.discordName}</span>
                 </span>
                 <span className={'GameCard__vs'}>vs</span>
-                <span className={`GameCard__player ${game.white.winner ? 'winner' : ''}`}>
-                    <Avatar src={game.white.avatar} size={40} alt={game.white.name} className={'GameCard__avatar'}/>
-                    <span>{game.white.name}</span>
+                <span className={`GameCard__player ${game.result == "white" ? 'winner' : ''}`}>
+                    <Avatar src={game.white.discordAvatar} size={40} alt={game.white.discordName} className={'GameCard__avatar'}/>
+                    <span>{game.white.discordName}</span>
                 </span>
             </h3>
 
             <p className={`GameCard__name black`}>
-                <span>{game.black.name}</span> <span className={`GameCard__tier`}>{game.black.historicalRating.tierName}</span>
+                <span>{game.black.discordName}</span> <span className={`GameCard__tier`}>{game.black.tierName}</span>
             </p>
 
             <div className={'GameCard__board'}>
@@ -69,10 +69,10 @@ function GameCard({game}) {
             </div>
 
             <p className={`GameCard__name white`}>
-                <span>{game.white.name}</span> <span className={`GameCard__tier`}>{game.white.historicalRating.tierName}</span>
+                <span>{game.white.discordName}</span> <span className={`GameCard__tier`}>{game.white.tierName}</span>
             </p>
 
-            <Link to={`/game/${game.id}`}><span className={'ReaderOnly'}>Voir la partie</span></Link>
+            <Link to={`/game/${game.goldId}`}><span className={'ReaderOnly'}>Voir la partie</span></Link>
         </article>
     );
 }

@@ -24,13 +24,11 @@ export default function PlayerList() {
     // Search filter
     function searchPlayers() {
         if (playerFetchStatus === 'success' && searchString) {
-            console.log("SEARCH validonLy:", validOnly)
             var basePlayers = validOnly ? validPlayers : players
             setSearchedPlayers(basePlayers.filter(
                 player => (
-                    player.name.toLowerCase().includes(searchString.toLowerCase())
-                    || (player.kgsId && player.kgsId.toLowerCase().includes(searchString.toLowerCase()))
-                    || (player.ogsPseudo && player.ogsPseudo.toLowerCase().includes(searchString.toLowerCase()))
+                    player.discordName.toLowerCase().includes(searchString.toLowerCase()) ||
+                    player.accounts.map((a) => a.name.toLowerCase()).some((a) => a.includes(searchString.toLowerCase()))
                 )
             ));
         } else {
@@ -39,10 +37,7 @@ export default function PlayerList() {
     }
 
     // Valid filter toggle
-    const toggleValidOnly = () => {
-        console.log("TOGGLE from ", validOnly, " to ", !validOnly)
-        setValidOnly(!validOnly);
-    };
+    const toggleValidOnly = () => { setValidOnly(!validOnly); };
 
     // Search hook
     useEffect(() => { searchPlayers(); }, [searchString])
@@ -58,10 +53,10 @@ export default function PlayerList() {
                 return res;
             })
             .then(res => res.json())
-            .then(res => res.filter((player) => player.ranked))
+            .then(res => res.filter((player) => player.rating > 0))
             .then(res => {
                 setPlayers(res);
-                setValidPlayers(res.filter((player) => player.stable));
+                setValidPlayers(res.filter((player) => isValid(player)));
                 setPlayerFetchStatus('success');
             })
             .catch(() => setPlayerFetchStatus('error'));
@@ -94,7 +89,6 @@ export default function PlayerList() {
                                 <ColHeaderElement className={'Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
                                 <ColHeaderElement className={'Discord'}>Discord</ColHeaderElement>
                                 <ColHeaderElement className={'Tier'}>Division</ColHeaderElement>
-                                <ColHeaderElement className={'Rating'}>Classement</ColHeaderElement>
                                 <ColHeaderElement className={'Stability'}>FGC</ColHeaderElement>
                             </RowElement>
                         </RowGroupElement>
@@ -122,16 +116,19 @@ function PlayerRow({player}) {
     return (
         <RowElement>
             <CellElement colIndex={1} className={'Avatar'}>
-                <Avatar size={40} src={player.avatar} alt={`avatar ${player.name}`} />
+                <Avatar size={40} src={player.discordAvatar} alt={`avatar ${player.discordName}`} />
             </CellElement>
-            <CellElement colIndex={2} className={'Discord'}>{player.name}</CellElement>
+            <CellElement colIndex={2} className={'Discord'}>{player.discordName}</CellElement>
             <CellElement colIndex={3} className={'Tier'}>
                 <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                 <p>{player.tierName}</p>
             </CellElement>
-            <CellElement colIndex={4} className={'Rating'}>{player.rating}</CellElement>
-            <CellElement colIndex={5} className={'Stability'}><span className={player.stable ? 'stable' : 'unstable'} /></CellElement>
+            <CellElement colIndex={4} className={'Stability'}><span className={ isValid(player) ? 'stable' : 'unstable' } /></CellElement>
             <Link to={`/player/${player.discordId}`} />
         </RowElement>
     );
+}
+
+function isValid(player) {
+    return player.totalRankedGames >= 4 && player.goldRankedGames >= 2
 }

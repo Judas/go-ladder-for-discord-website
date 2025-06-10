@@ -52,13 +52,6 @@ export default function Header() {
                     </span>
                 </NavLink>
 
-                <NavLink to={'/hunters'} className={'NavLink'}>
-                    <span className={'NavButton'}>
-                        <LuSwords />
-                        <span className={'NavButtonText'}>Hunters</span>
-                    </span>
-                </NavLink>
-
                 <NavLink to={'/about'} className={'NavLink'}>
                     <span className={'NavButton'}>
                         <IoMdInformationCircleOutline />

@@ -1,7 +1,7 @@
 .Game {
     position: sticky;
     display: grid;
-    grid-template-rows: min-content 1fr;
+    grid-template-rows: 5rem 1fr;
     gap: 1rem;
     height: calc(80vh - 0rem);
 }
@@ -25,13 +25,9 @@
 }
 
 .Game__header {
-    background: var(--tundora);
-    border-radius: 1rem;
     margin: 1rem 1rem 0 1rem;
-    padding: .5rem;
     display: grid;
-    grid-template-columns: 1fr max-content 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 0.5fr 2fr 0.5fr 2fr 0.5fr;
     align-items: center;
 }
 
@@ -45,10 +41,18 @@
 }
 
 .Game__Player {
+    background: var(--tundora);
+    border-radius: 1rem;
     display: flex;
     margin: 0;
     justify-content: center;
     align-items: center;
+}
+
+@media only screen and (max-width: 980px) {
+    .Game__Player {
+        margin: 0.5rem;
+    }
 }
 
 .Game__Player img {
@@ -56,9 +60,6 @@
 }
 
 .Game__Player span {
-    display: grid;
-    grid-template-columns: min-content 1fr;
-    gap: .5ch;
     align-items: center;
 }
 
@@ -70,7 +71,8 @@
 }
 
 .Game__PlayerName span {
-    margin: 0 0 0 1rem;
+    margin: 0 1rem 0 1rem;
+    max-width: 200px;
 }
 
 @media only screen and (max-width: 980px) {
@@ -91,10 +93,11 @@
     }
 }
 
-.Game__PlayerTier p {
+.Game__PlayerTier {
     margin: 0;
     color: var(--sun);
-    font-size: 1rem;
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
     font-family: var(--accent-font);
     text-align: center;
 }
@@ -112,40 +115,6 @@
     .Game__PlayerRating {
         margin: 0.25rem;
     }
-}
-
-
-.Game__PlayerRating span .up,
-.Game__PlayerRating span .down,
-.Game__PlayerRating span .equal {
-    display: inline-flex;
-    align-items: center;
-    margin-left: .2rem;
-}
-
-.Game__PlayerRating span .up {
-    color: var(--eucalyptus);
-}
-
-.Game__PlayerRating span .down {
-    color: var(--punch);
-}
-
-.Game__PlayerRating span .equal {
-    color: var(--sun);
-}
-
-.Game__PlayerRating span .up::after,
-.Game__PlayerRating span .down::after {
-    content: '';
-    display: inline-block;
-    width: 2ch;
-    height: 1.3em;
-    background: url('../style/image/trending_up.svg') no-repeat center/contain;
-}
-
-.Game__PlayerRating span .down::after {
-    background-image: url('../style/image/trending_down.svg');
 }
 
 .Game__Actions {

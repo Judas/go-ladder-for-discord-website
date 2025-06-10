@@ -32,7 +32,7 @@ export default function About() {
             </p>
 
             <p lang={'fr-FR'} className={'About__text'}>
-                Les joueurs sont ensuite classés à l'aide d'un algorithme <a href="https://fr.wikipedia.org/wiki/Classement_Glicko">Glicko2</a>, puis répartis en <b>Divisions</b>:
+                Les joueurs sont ensuite répartis en <b>Divisions</b> suivant leurs niveaux respectifs sur les différents serveurs de Go renseignés :
             </p>
 
             <span className={'About__tiers'}>
