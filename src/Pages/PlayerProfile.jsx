@@ -288,7 +288,8 @@ function Tooltip() {
             <p>Pour être valide une partie doit respecter tous ces paramètres :</p>
             <ul>
                 <li>Partie classée</li>
-                <li>Partie datant de moins de 30 jours</li>
+                <li>Jouée sur OGS ou KGS</li>
+                <li>Datant de moins de 30 jours</li>
                 <li>Goban 19x19</li>
                 <li>Pas de handicap</li>
                 <li>Komi compris entre 6 et 9</li>
