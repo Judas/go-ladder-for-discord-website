@@ -1,7 +1,6 @@
 import React from "react";
 import { FaUsers, FaDiscord } from 'react-icons/fa6';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
-import { LuSwords } from 'react-icons/lu';
 import { TbGoGame } from 'react-icons/tb';
 import { Link, NavLink } from 'react-router-dom';
 

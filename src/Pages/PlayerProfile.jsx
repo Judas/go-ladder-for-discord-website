@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
-import { FaMedal, FaStar } from 'react-icons/fa6';
+import { FaCircleInfo } from "react-icons/fa6";
 
 import { hasValidProfile, getProfile } from '../AuthProfile.js';
 import TableElement from "../Components/Table/TableElement.jsx";
@@ -20,6 +20,7 @@ export default function PlayerProfile() {
     const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
     const [tiers, setTiers] = useState(undefined)
     const [tiersFetchStatus, setTiersFetchStatus] = useState('pending');
+    const [tooltipVisible, setTooltipVisible] = useState(false);
 
     // Fetch player
     useEffect(() => {
@@ -52,7 +53,19 @@ export default function PlayerProfile() {
     }, []);
 
     if (playerFetchStatus === 'success' && tiersFetchStatus === 'success') {
-        return <Profile player={player} tiers={tiers} />;
+        return (
+            <article className={'PlayerProfile'}>
+                <Profile player={player} tiers={tiers} tooltipHandler={() => setTooltipVisible(true)} />
+                {tooltipVisible && (
+                    <div className={'Tooltip'}>
+                        <button className={'CallToAction'} onClick={() => setTooltipVisible(false)}>
+                            <span className={'ReaderOnly'}>Fermer</span>
+                        </button>
+                        <Tooltip />
+                    </div>
+                )}
+            </article>
+        );
     } else if (playerFetchStatus === 'pending' || tiersFetchStatus === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;
     } else {
@@ -60,13 +73,13 @@ export default function PlayerProfile() {
     }
 }
 
-function Profile({player, tiers}) {
+function Profile({player, tiers, tooltipHandler}) {
     let playerRating = player.rating > 0 
         ? <h2 className={'PlayerProfile__Rating'}>{Math.round(player.rating)}</h2>
         : <h2 className={'PlayerProfile__Unranked'}>[Non classé]</h2>
 
     return (
-        <article className={'PlayerProfile'}>
+        <>
             <div className={'PlayerProfile__LeftColumn'}>
                 <div className={'CardHighlighted'}>
                     <h2 className={'CardHeader'}><span>{player.discordName}</span></h2>
@@ -94,12 +107,15 @@ function Profile({player, tiers}) {
                     <AccountList player={player} />
                 </div>
 
-                <div className={'Card'}>
-                    <h2 className={'CardHeader'}><span>Validation FGC</span></h2>
+                <div className={'Card TootipIconParent'}>
+                    <h2 className={'CardHeader'}>
+                        <span>Validation FGC</span>
+                        <span className={'TootipIcon'} onClick={tooltipHandler}><FaCircleInfo /></span>
+                    </h2>
                     <Stability player={player} />
                 </div>
             </div>
-        </article>
+        </>
     );
 }
 
@@ -239,24 +255,45 @@ function Stability({player}) {
             <StabilityItem
                 valid={player.totalRankedGames >= 4} 
                 highlight={`${player.totalRankedGames}/4`}
-                text={`parties (classées)`}
+                text={`parties`}
+                goldSpan={false}
             />
             <StabilityItem
                 valid={player.goldRankedGames >= 2}
                 highlight={`${player.goldRankedGames}/2`}
-                text={`parties GOLD (classées)`}
+                text={`parties`}
+                goldSpan={true}
             />
-            <p className={'PlayerProfile__StabilityPeriod'}>sur les 30 derniers jours</p>
         </div>
     );
 }
 
-function StabilityItem({valid, highlight, text}) {
+function StabilityItem({valid, highlight, text, goldSpan}) {
     return (
         <div className={'PlayerProfile__StabilityItem'}>
             <span className={valid ? 'valid' : 'invalid'} />
             <p className={'PlayerProfile__StabilityHighlight'}>{highlight}</p>
-            <p className={'PlayerProfile__StabilityText'}>{text}</p>
+            <p className={'PlayerProfile__StabilityText'}>
+                {text}
+                {goldSpan && <span> GOLD</span>}
+            </p>
         </div>
+    );
+}
+
+function Tooltip() {
+    return (
+        <>
+            <h2>Conditions de validation</h2>
+            <p>Pour être valide une partie doit respecter tous ces paramètres :</p>
+            <ul>
+                <li>Partie classée</li>
+                <li>Partie datant de moins de 30 jours</li>
+                <li>Goban 19x19</li>
+                <li>Pas de handicap</li>
+                <li>Komi compris entre 6 et 9</li>
+            </ul>
+            <p>Une partie <span>GOLD</span> est une partie jouée entre 2 joueurs inscrits sur l'échelle.</p>
+        </>
     );
 }

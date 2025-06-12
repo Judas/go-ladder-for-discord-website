@@ -158,38 +158,6 @@
     margin: 0 1rem 0 1rem;
 }
 
-.Game__Modal {
-    position: absolute;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1010;
-    width: min(100% - 2rem, 30rem);
-    padding: 2.5rem 1rem 1rem;
-    font-family: var(--accent-font);
-    font-size: 1.125rem;
-    text-align: center;
-    background: white;
-    border-radius: .5rem;
-    animation: slide-in .3s forwards;
-}
-
-.Game__Modal button {
-    position: absolute;
-    top: .5rem;
-    right: .5rem;
-    padding: 1em;
-    background: var(--sun) url('../style/image/close.svg') no-repeat center/70%;
-}
-
-.Game__Modal p {
-    margin: 0;
-}
-
-.Game__Modal a {
-    color: var(--sun-20);
-}
-
 @keyframes slide-in {
     from {
         margin-top: 2rem;
