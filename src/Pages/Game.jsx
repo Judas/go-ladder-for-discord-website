@@ -55,22 +55,10 @@ export default function Game() {
 function PlayerHeader({player, black}) {
     return (
         <div className={'Game__Player'}>
-                        <Avatar src={player.discordAvatar} size={40} hidden={true}/>
-                <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
-                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
-                <p className={'Game__PlayerTier'}>{player.tierName}</p>
-            {/* {black && <>
-                <p className={'Game__PlayerTier'}>{player.tierName}</p>
-                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
-                <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
-                <Avatar src={player.discordAvatar} size={40} hidden={true}/>
-            </>}
-            {!black && <>
-                <Avatar src={player.discordAvatar} size={40} hidden={true}/>
-                <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
-                <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
-                <p className={'Game__PlayerTier'}>{player.tierName}</p>
-            </>} */}
+            <Avatar src={player.discordAvatar} size={40} hidden={true}/>
+            <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
+            <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+            <p className={'Game__PlayerTier'}>{player.tierName}</p>
         </div>
     );
 }
