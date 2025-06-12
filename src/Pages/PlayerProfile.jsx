@@ -104,8 +104,13 @@ function Profile({player, tiers}) {
 }
 
 function TierProgression({player, tiers}) {
-    const currentTier = tiers.filter(tier => tier.rank === player.tierRank)[0];
+    var currentTier = tiers.filter(tier => tier.rank === player.tierRank)[0];
     const lastTierRank = Math.max.apply(null, tiers.map(tier => tier.rank));
+
+    // If player is not ranked yet
+    if (currentTier == null) {
+        return null;
+    }
 
     // If last tier, do not display the progress bar
     if (currentTier.rank === lastTierRank) {
