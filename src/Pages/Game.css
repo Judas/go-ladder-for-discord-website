@@ -174,8 +174,7 @@
     display: none;
 }
 
-.wgo-info-value a,
-.CallToAction {
+.wgo-info-value a {
     display: block;
     padding: .75em 1.25em;
     background: var(--sun);
@@ -191,7 +190,12 @@
     padding: .125em;
 }
 
-.CallToAction:focus {
-    outline-offset: .25em;
-    outline: solid var(--outlineColor, var(--sun)) 1px;
+@media only screen and (max-width: 980px) {
+    .wgo-player-bottom-wrapper .wgo-box-title {
+        display: none;
+    }
+
+    .wgo-player-bottom-wrapper .wgo-comments-content {
+        left: 0px !important;
+    }
 }
