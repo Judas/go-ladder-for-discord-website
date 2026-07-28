@@ -95,7 +95,7 @@ class AccountLinkForm extends React.Component {
                         <option disabled selected value>Compte</option>
                         {this.props.accounts.map(acc => <option className={'AccountLinkForm__Option'} value={acc}>{acc}</option>)}
                     </select>
-                    <input type="text" name="pseudo" value={this.state.pseudo} onChange={this.handleChange} placeholder={placeholder} className={'AccountLinkForm__Pseudo'}/>
+                    <input type="text" name="pseudo" value={this.state.pseudo} onChange={this.handleChange} placeholder="Pseudo" className={'AccountLinkForm__Pseudo'}/>
                     <input className={'AccountLinkForm__Submit'} type="submit" value="Valider"  />
                 </form>
                 {status}
