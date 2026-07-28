@@ -27,12 +27,8 @@ export default function About() {
             <h2 className={'About__title'}>À propos</h2>
 
             <p lang={'fr-FR'} className={'About__text'}>
-                GO Ladder for Discord (GOLD) est une échelle de rang pour le jeu de Go interne à la communauté <a href="https://discord.gg/fulgurogo">FulguroGo</a>.
-                Elle est alimentée par les parties jouées sur KGS, OGS et FOX, entre les joueurs inscrits à l'échelle.
-            </p>
-
-            <p lang={'fr-FR'} className={'About__text'}>
-                Les joueurs sont ensuite répartis en <b>Divisions</b> suivant leurs niveaux respectifs sur les différents serveurs de Go renseignés :
+                GO Ladder for Discord (GOLD) est l'outil de la communauté <a href="https://discord.gg/fulgurogo">FulguroGo</a>.
+                Les membres peuvent ajouter leurs compte KGS & OGS afin d'être réparti dans une Division de l'échelle interne.
             </p>
 
             <span className={'About__tiers'}>
@@ -47,6 +43,10 @@ export default function About() {
                     ))}
                 </>}
             </span>
+
+            <p lang={'fr-FR'} className={'About__text'}>
+                Le site sert aussi à centraliser certains évènements communautaires et sert notamment de validation pour la FulguroGo Cup.
+            </p>
 
             <p lang={'fr-FR'} className={'About__text'}>
                 Plus d'infos en rejoignant le Discord <a href="https://discord.gg/fulgurogo">FulguroGo</a>.

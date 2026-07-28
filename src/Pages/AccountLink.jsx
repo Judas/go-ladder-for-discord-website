@@ -77,40 +77,6 @@ class AccountLinkForm extends React.Component {
     }
   
     render() {
-        let placeholder;
-        if (this.state.account === 'FFG' || this.state.account === 'EGF') {
-            placeholder = "Identifiant";
-        } else {
-            placeholder = "Pseudo"
-        }
-
-        let info;
-        if (this.state.account === 'FFG') {
-            info = (
-                <div style={{display: 'grid', height: '100%',}}>
-                    <p className={'Info'}>
-                        Afin de lier ton compte FFG il faudra renseigner ton identifiant de joueur.<br/>
-                        Pour le trouver, ouvre ta page de joueur sur le <a href='https://ffg.jeudego.org/php/listePersonnes.php' target="_blank">site de la FFG</a>.<br/>
-                        Ton identifiant est le chiffre visible à la fin de l'url de ta page de joueur.<br/>
-                        Exemple : si l'url de ta page de joueur est https://ffg.jeudego.org/php/affichePersonne.php?id=14125, l'identifiant à renseigner est 14125.
-                    </p>
-                </div>
-            );
-        } else if (this.state.account === 'EGF') {
-            info = (
-                <div style={{display: 'grid', height: '100%',}}>
-                    <p className={'Info'}>
-                        Afin de lier ton compte EGF il faudra renseigner ton identifiant de joueur.<br/>
-                        Pour le trouver, ouvre ta page de joueur sur le <a href='https://www.europeangodatabase.eu/EGD/Find_Player.php' target="_blank">site de l'EGF</a>.<br/>
-                        Ton identifiant est le chiffre visible à la fin de l'url de ta page de joueur.<br/>
-                        Exemple : si l'url de ta page de joueur est https://www.europeangodatabase.eu/EGD/Player_Card.php?&key=16786198, l'identifiant à renseigner est 16786198.
-                    </p>
-                </div>
-            );
-        } else {
-            info = (<></>);
-        }
-
         let status;
         if (this.state.status === 'pending') {
             status = (<div className={'FlexContainer'}><Loader/></div>);
@@ -132,7 +98,6 @@ class AccountLinkForm extends React.Component {
                     <input type="text" name="pseudo" value={this.state.pseudo} onChange={this.handleChange} placeholder={placeholder} className={'AccountLinkForm__Pseudo'}/>
                     <input className={'AccountLinkForm__Submit'} type="submit" value="Valider"  />
                 </form>
-                {info}
                 {status}
             </div>
         );
