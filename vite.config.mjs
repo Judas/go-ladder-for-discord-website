@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite';
+// defineConfig comes from vitest/config, not vite: it is what makes the `test` block below be read.
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
