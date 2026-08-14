@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import './About.css';
 
@@ -37,7 +37,7 @@ export default function About() {
                 {tiersFetchStatus === 'success' && <>
                     {tiers.map(tier => (
                         <h2 className={'About__tierItem'}>
-                            <img width="96" height="96" src={`${process.env.PUBLIC_URL}/shields/shield-${tier.rank}.svg`} alt={tier.name}/>
+                            <img width="96" height="96" src={`/shields/shield-${tier.rank}.svg`} alt={tier.name}/>
                             <p>{tier.name}</p>
                         </h2>
                     ))}

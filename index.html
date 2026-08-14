@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Teko:wght@700&display=swap" rel="stylesheet">
+    <link type="text/css" href="/wgo/wgo.player.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2C2C2C">
+    <meta name="msapplication-TileColor" content="#2c2c2c">
+    <meta name="theme-color" content="#2c2c2c">
+    <meta
+      name="description"
+      content="GO Ladder for Discord"
+    />
+    <!--
+      site.webmanifest provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developer.mozilla.org/docs/Web/Manifest
+    -->
+    <link rel="manifest" href="/site.webmanifest">
+    <title>GO Ladder for Discord</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!--
+      WGo is vendored under public/ and loaded as plain scripts, not bundled: the player is reached through the
+      window.WGo global by src/Components/WGOPlayer.jsx. Vite serves public/ at the root, so these paths hold in dev
+      and in the build alike.
+    -->
+    <script type="text/javascript" src="/wgo/wgo.min.js"></script>
+    <script type="text/javascript" src="/wgo/wgo.player.min.js"></script>
+    <script type="text/javascript" src="/wgo/i18n.fr.js"></script>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

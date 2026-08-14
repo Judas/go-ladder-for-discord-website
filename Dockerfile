@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 # Add a work directory
 WORKDIR /app
 # Cache and Install dependencies

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import authenticateUser from '../AuthProfile.js';
 import Loader from "../Components/Loader.jsx";
@@ -28,7 +28,7 @@ export default function DiscordAuth() {
                 if (!res.ok) { throw res.statusText; }
                 return res;
             })
-            .then(res => {      
+            .then(() => {
                 setAuthStatus('success');
                 authenticateUser(true);
             })

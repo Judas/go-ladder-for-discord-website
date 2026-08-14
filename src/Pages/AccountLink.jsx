@@ -70,7 +70,7 @@ class AccountLinkForm extends React.Component {
             if (!res.ok) { throw res.statusText; }
             return res;
         })
-        .then(res => {      
+        .then(() => {
             this.setState({['status']: 'done'});
         })
         .catch(() => this.setState({['status']: 'error'}));

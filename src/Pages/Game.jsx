@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import Avatar from "../Components/Avatar.jsx";
@@ -38,26 +38,26 @@ export default function Game() {
             {gameFetchStatus === 'success' && <>
                 <div className={'Game__header'}>
                     <div />
-                    <PlayerHeader player={game.black} black={true} />
+                    <PlayerHeader player={game.black} />
                     <div />
-                    <PlayerHeader player={game.white} black={false} />
+                    <PlayerHeader player={game.white} />
                     <div />
                 </div>
 
                 <div className={'Game__Goban'}>
-                    <WGOPlayer sgf={game.sgf} gameLink={game.gameLink} />
+                    <WGOPlayer sgf={game.sgf} />
                 </div>
             </>}
         </div>
     );
 }
 
-function PlayerHeader({player, black}) {
+function PlayerHeader({player}) {
     return (
         <div className={'Game__Player'}>
             <Avatar src={player.discordAvatar} size={40} hidden={true}/>
             <h2 className={'Game__PlayerName'}><span><Link to={`/player/${player.discordId}`}>{player.discordName}</Link></span></h2>
-            <img width="64" height="64" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+            <img width="64" height="64" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
             <p className={'Game__PlayerTier'}>{player.tierName}</p>
         </div>
     );

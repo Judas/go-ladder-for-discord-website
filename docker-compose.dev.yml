@@ -1,13 +1,15 @@
-version: "3.8"
-
 services:
   app:
     container_name: app-dev
     image: app-dev
     build:
       context: .
+      # Was missing: without it Compose builds ./Dockerfile, which has no `development` stage, and the build fails.
+      dockerfile: Dockerfile-dev
       target: development
     volumes:
       - ./src:/app/src
+      # Vite's entry point lives at the root, not under src/ as it did with react-scripts.
+      - ./index.html:/app/index.html
     ports:
       - 3000:3000

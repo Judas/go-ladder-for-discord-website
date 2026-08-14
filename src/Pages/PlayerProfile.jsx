@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { FaCircleInfo } from "react-icons/fa6";
 
@@ -87,7 +87,7 @@ function Profile({player, tiers, tooltipHandler}) {
                     
                     <div className={'CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
-                            <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                            <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                             <TierProgression player={player} tiers={tiers} />
                             <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
                             { playerRating }
@@ -142,7 +142,7 @@ function TierProgression({player, tiers}) {
         previousShield = (<div width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} />);
     } else {
         previousShield = (<img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={currentTier.name}
-        src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank - 1}.svg`} />);
+        src={`/shields/shield-${currentTier.rank - 1}.svg`} />);
     }
 
     return (
@@ -153,7 +153,7 @@ function TierProgression({player, tiers}) {
                 <span className={'PlayerProfile__ProgressBarLabel'}>{progress} / {total}</span>
             </div>
             <img width="64" height="64" style={{ margin: "0 0 0 0.5rem" }}
-                src={`${process.env.PUBLIC_URL}/shields/shield-${currentTier.rank + 1}.svg`} />
+                src={`/shields/shield-${currentTier.rank + 1}.svg`} />
         </div>
     );
 }
@@ -241,7 +241,7 @@ function GameRow({player, game}) {
             </CellElement>
             <CellElement className={'PlayerProfile__GameName'}>{opponent.discordName}</CellElement>
             <CellElement className={'PlayerProfile__GameTier'}>
-                <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${opponent.tierRank}.svg`} alt={opponent.tierName}/>
+                <img width="48" height="48" src={`/shields/shield-${opponent.tierRank}.svg`} alt={opponent.tierName}/>
                 <p>{opponent.tierName}</p>
             </CellElement>
             <Link to={`/game/${game.goldId}`} />

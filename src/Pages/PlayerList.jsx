@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import TableElement from "../Components/Table/TableElement.jsx";
@@ -120,7 +120,7 @@ function PlayerRow({player}) {
             </CellElement>
             <CellElement colIndex={2} className={'Discord'}>{player.discordName}</CellElement>
             <CellElement colIndex={3} className={'Tier'}>
-                <img width="48" height="48" src={`${process.env.PUBLIC_URL}/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
+                <img width="48" height="48" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                 <p>{player.tierName}</p>
             </CellElement>
             <CellElement colIndex={4} className={'Stability'}><span className={ isValid(player) ? 'stable' : 'unstable' } /></CellElement>

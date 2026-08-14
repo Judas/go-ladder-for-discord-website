@@ -1,4 +1,3 @@
-import React from "react";
 import { FaUsers, FaDiscord } from 'react-icons/fa6';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { TbGoGame } from 'react-icons/tb';
@@ -20,7 +19,7 @@ export default function Header() {
         );
     } else {
         authButton = (
-            <Link className={'DiscordAuth'} to={process.env.REACT_APP_DISCORD_AUTH_URL}>
+            <Link className={'DiscordAuth'} to={import.meta.env.VITE_DISCORD_AUTH_URL}>
                 <span className={'NavButton'}>
                     <FaDiscord />
                     <span className={'NavButtonText'}>Discord</span>
