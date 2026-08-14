@@ -10,7 +10,7 @@
     "react": "^19",
     "react-dom": "^19",
     "react-icons": "^4.10.1",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
