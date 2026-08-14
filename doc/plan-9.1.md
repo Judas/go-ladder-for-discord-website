@@ -38,9 +38,34 @@ remplacé plus tard sans toucher au code appelant.
 
 ---
 
-## Itération 1 — Nettoyage et dépendances
+## Itération 1 — Nettoyage et dépendances ✅
 
 Aucune fonctionnalité. L'objectif est de ne pas construire cinq pages sur une chaîne d'outils morte depuis 2022.
+
+**Faite.** Six commits, de `(chore) drop unused dependencies` à `(chore) upgrade Express to 5`. Écarts par rapport
+au plan ci-dessous, tous assumés :
+
+- **Yarn Classic conservé**, `.yarnrc.yml` supprimé (fichier Berry que Yarn 1.22 ne lit pas) plutôt qu'aligné.
+- **`web-vitals` supprimé** au lieu d'être monté en 6 : `main.jsx` appelait `reportWebVitals()` sans argument, donc
+  le corps entier était derrière un `if` toujours faux. Migrer aurait consisté à renommer `getCLS`→`onCLS` pour
+  garder un no-op en vie.
+- **Node 20 → 22** dans les deux Dockerfiles : Vite 8 exige `^20.19 || >=22.12`, et Node 20 est en fin de vie.
+- **ESLint 9 en flat config ajouté** (`yarn lint`), pas seulement conservé : retirer `react-scripts` supprimait le
+  lint qui tournait dans chaque build. Il a immédiatement trouvé du code mort réel — voir 2.2.
+- **Vitest + jsdom ajoutés** et un test de rendu (`src/App.test.jsx`) écrit tout de suite, pas en 2.4 : un build ne
+  prouve rien ici, il n'exécute jamais un composant. C'est ce test qui a validé chaque montée de version.
+- **`docker-compose.dev.yml` réparé** : il construisait `./Dockerfile`, qui n'a pas de stage `development`. Le
+  conteneur de dev n'avait jamais pu se construire.
+
+Deux ruptures réelles rencontrées, les deux sur le serveur de prod et invisibles au build :
+
+1. `app.get('/*')` fait planter Express 5 au démarrage (path-to-regexp 8) → `'/*splat'`.
+2. Depuis http-proxy-middleware 3, monter sur un préfixe (`app.use('/api', proxy)`) retire ce préfixe avant que le
+   middleware ne voie l'URL : la réécriture `^/api` → `/gold/api` ne matchait plus et **toutes** les requêtes
+   arrivaient en `/api/...`, donc 404, avec un serveur qui démarre normalement. Corrigé avec `pathFilter`.
+
+Vérifié : `yarn lint` (0 erreur, 21 warnings voulus), `yarn test`, `yarn build`, le serveur de prod contre le vrai
+backend (`/api/tiers` renvoie les paliers), et la chaîne de dev de bout en bout contre un bouchon sur 4567.
 
 ### 1.1 Ménage
 
@@ -122,6 +147,18 @@ Confirmés contre le code, à corriger ou à consigner :
   des CTA qui mutent l'état, ce contournement ne tiendra plus (voir 7.4).
 - **`fetch` partout** — le motif `if (!res.ok) throw res.statusText` est copié 8 fois. Il rend impossible la lecture
   d'un corps d'erreur, ce dont l'itération 3 a précisément besoin (le health répond 503 **avec** un corps utile).
+
+Trouvés et corrigés en itération 1, par le linter :
+
+- ~~`src/Components/AccountLinkForm.jsx`~~ — supprimé. Jamais importé, et cassé : pas d'import React, un `accounts`
+  non défini, un `this.state.value` que le constructeur n'initialise pas. Brouillon abandonné de la classe qui vit
+  en ligne dans `Pages/AccountLink.jsx`.
+- ~~`Game.jsx` passait `gameLink` et `black`~~ — deux props que ni `WGOPlayer` ni `PlayerHeader` ne déclarent, et
+  `gameLink` n'existe pas sur `ApiGame`.
+- ~~`path` requis sans être utilisé dans `server-proxy-only.js`~~.
+
+Reste ouvert et à traiter en itération 2 : les `key` manquantes, le `<div width height>`, l'`<img>` sans `alt`, les
+`useEffect` de `PlayerList`, `key={game.id}` dans `RecentGames`.
 
 ### 2.3 Vérifier le contrat lu vs le contrat servi
 
