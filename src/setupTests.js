@@ -10,6 +10,16 @@ import '@testing-library/jest-dom/vitest';
  * on render here while working perfectly in a browser. The descriptor is configurable, so redefine it with a plain
  * in-memory Storage — per worker, cleared by whoever needs it clean.
  */
+/**
+ * WGo is vendored under public/ and loaded by classic <script> tags in index.html, so `window.WGo` simply does not
+ * exist under jsdom. Components/WGOPlayer.jsx reads `window.WGo.BasicPlayer.layouts` while rendering — not in an
+ * effect — so any page carrying a goban throws here without this. A stub, not the real library: nothing in these
+ * tests asserts on a rendered board.
+ */
+class StubBasicPlayer { }
+StubBasicPlayer.layouts = { right_top: {} };
+globalThis.WGo = { BasicPlayer: StubBasicPlayer };
+
 const store = new Map();
 Object.defineProperty(globalThis, 'localStorage', {
     configurable: true,

@@ -36,7 +36,7 @@ export default function About() {
                 {tiersFetchStatus === 'error' && <br/> }
                 {tiersFetchStatus === 'success' && <>
                     {tiers.map(tier => (
-                        <h2 className={'About__tierItem'}>
+                        <h2 key={tier.rank} className={'About__tierItem'}>
                             <img width="96" height="96" src={`/shields/shield-${tier.rank}.svg`} alt={tier.name}/>
                             <p>{tier.name}</p>
                         </h2>

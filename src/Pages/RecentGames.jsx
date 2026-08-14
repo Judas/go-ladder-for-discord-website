@@ -33,7 +33,7 @@ export default function RecentGames() {
                 <h2 className={'RecentGames__title'}>Parties</h2>
                 <ul className={'RecentGames__list NoBulletList'}>
                     {games.map(game => (
-                        <li key={game.id}><GameCard game={game}/></li>
+                        <li key={game.goldId}><GameCard game={game}/></li>
                     ))}
                 </ul>
             </div>

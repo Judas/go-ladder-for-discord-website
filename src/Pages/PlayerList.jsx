@@ -16,34 +16,10 @@ export default function PlayerList() {
     const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
 
     const [searchString, setSearchString] = useState('')
-    const [searchedPlayers, setSearchedPlayers] = useState(null)
-
     const [validOnly, setValidOnly] = useState(false)
-    const [validPlayers, setValidPlayers] = useState([])
-
-    // Search filter
-    function searchPlayers() {
-        if (playerFetchStatus === 'success' && searchString) {
-            var basePlayers = validOnly ? validPlayers : players
-            setSearchedPlayers(basePlayers.filter(
-                player => (
-                    player.discordName.toLowerCase().includes(searchString.toLowerCase()) ||
-                    player.accounts.map((a) => a.name.toLowerCase()).some((a) => a.includes(searchString.toLowerCase()))
-                )
-            ));
-        } else {
-            setSearchedPlayers(null);
-        }
-    }
 
     // Valid filter toggle
     const toggleValidOnly = () => { setValidOnly(!validOnly); };
-
-    // Search hook
-    useEffect(() => { searchPlayers(); }, [searchString])
-
-    // Search hook (when validOnly updates)
-    useEffect(() => { searchPlayers(); }, [validOnly])
 
     // Load hook
     useEffect(() => {
@@ -56,11 +32,17 @@ export default function PlayerList() {
             .then(res => res.filter((player) => player.rating > 0))
             .then(res => {
                 setPlayers(res);
-                setValidPlayers(res.filter((player) => isValid(player)));
                 setPlayerFetchStatus('success');
             })
             .catch(() => setPlayerFetchStatus('error'));
     }, [])
+
+    // Both filters are derived at render rather than mirrored into state by an effect. The effect version ran the
+    // search against whatever `players` held when the search string changed, so a search typed while the list was
+    // still loading returned nothing until the next keystroke.
+    const basePlayers = validOnly ? players.filter(isValid) : players;
+    const visiblePlayers = searchString ? basePlayers.filter(player => matches(player, searchString)) : basePlayers;
+    const noResults = searchString !== '' && visiblePlayers.length === 0;
 
     return (
         <section className={'PlayerList'}>
@@ -97,13 +79,9 @@ export default function PlayerList() {
                         {playerFetchStatus === 'pending' && <Loader/>}
                         {playerFetchStatus === 'error' && <p className={'ErrorRow'}>Erreur lors de la récupération des joueurs</p>}
                         {playerFetchStatus === 'success' && (
-                            <>
-                                {searchedPlayers ? <>
-                                    {searchedPlayers.length ? searchedPlayers.map(player => <PlayerRow key={player.discordId} player={player} />) : <p className={'ErrorRow'}>Aucun résultat</p>}
-                                </> : (validOnly ? validPlayers : players).map(
-                                    player => <PlayerRow key={player.discordId} player={player} />
-                                )}
-                            </>
+                            noResults
+                                ? <p className={'ErrorRow'}>Aucun résultat</p>
+                                : visiblePlayers.map(player => <PlayerRow key={player.discordId} player={player} />)
                         )}
                     </RowGroupElement>
                 </TableElement>
@@ -131,4 +109,16 @@ function PlayerRow({player}) {
 
 function isValid(player) {
     return player.totalRankedGames >= 4 && player.goldRankedGames >= 2
+}
+
+/**
+ * Matches on the Discord name or on any linked account's name.
+ *
+ * Every field of an account is nullable on the API side (ApiPlayerAccount), and `accounts` itself can be absent, so
+ * the guards are not decoration: one account with no name used to take the whole search down.
+ */
+function matches(player, search) {
+    const needle = search.toLowerCase();
+    const names = [player.discordName, ...(player.accounts ?? []).map(account => account.name)];
+    return names.some(name => name?.toLowerCase().includes(needle));
 }

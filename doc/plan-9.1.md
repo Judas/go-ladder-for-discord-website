@@ -116,10 +116,22 @@ Une par commit, dans cet ordre, chacune vérifiable seule :
 
 ---
 
-## Itération 2 — Audit de fonctionnement
+## Itération 2 — Audit de fonctionnement ✅
 
 Photographier ce qui marche avant d'ajouter cinq pages. Livrable : `doc/audit-9.1.md`, une liste de défauts classée,
 plus les corrections évidentes dans la foulée.
+
+**Faite.** Voir `doc/audit-9.1.md` : 8 défauts corrigés, 6 laissés ouverts avec leur motif, contrat vérifié champ par
+champ contre le backend local (aucun écart). Écarts par rapport au plan :
+
+- **2.1 (parcours manuel) non fait** : pas d'outils navigateur dans cette session. Remplacé par une suite de rendu
+  qui exécute chaque page contre des charges utiles capturées sur le vrai backend, avec `console.error` traité comme
+  un échec. Ce qui reste vraiment visuel — goban, mobile, OAuth Discord — est une checklist en fin d'audit.
+- **2.4 (premiers tests) fait plus tôt et plus large** : 17 tests, dont le comportement de recherche et de filtre de
+  `PlayerList`, écrits pour prouver l'absence de régression sur la correction 7.
+- ⚠ **Découverte bloquante pour la suite** : aucune donnée maison ni ligue en local, et `period` vaut `VACATION`.
+  Les états vides sont testables tout de suite, les états peuplés demanderont des données de test avant
+  l'itération 5.
 
 ### 2.1 Parcours manuel, backend local
 

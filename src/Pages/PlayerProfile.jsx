@@ -137,13 +137,13 @@ function TierProgression({player, tiers}) {
     const progress = Math.round(player.rating) - currentTier.min;
     const ratio = 100 * progress / total;
 
-    var previousShield;
-    if (currentTier.rank == 1) {
-        previousShield = (<div width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} />);
-    } else {
-        previousShield = (<img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={currentTier.name}
-        src={`/shields/shield-${currentTier.rank - 1}.svg`} />);
-    }
+    const tierNamed = rank => tiers.filter(tier => tier.rank === rank)[0]?.name ?? '';
+
+    // At the first tier there is no shield to the left, only the space one would take.
+    const previousShield = currentTier.rank === 1
+        ? (<div style={{ width: "64px", height: "64px", margin: "0 0.5rem 0 0" }} />)
+        : (<img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={tierNamed(currentTier.rank - 1)}
+                src={`/shields/shield-${currentTier.rank - 1}.svg`} />);
 
     return (
         <div className={'PlayerProfile__TierContainer'}>
@@ -152,7 +152,7 @@ function TierProgression({player, tiers}) {
                 <div className={'PlayerProfile__ProgressBar'} style={{width: `${ratio}%`}} />
                 <span className={'PlayerProfile__ProgressBarLabel'}>{progress} / {total}</span>
             </div>
-            <img width="64" height="64" style={{ margin: "0 0 0 0.5rem" }}
+            <img width="64" height="64" style={{ margin: "0 0 0 0.5rem" }} alt={tierNamed(currentTier.rank + 1)}
                 src={`/shields/shield-${currentTier.rank + 1}.svg`} />
         </div>
     );
@@ -165,7 +165,7 @@ function AccountList({player}) {
     } else {
         accountList = (
             <RowGroupElement className={'PlayerProfile__AccountListContent'}>
-                {player.accounts.map(account => <AccountRow account={account} />)}
+                {player.accounts.map(account => <AccountRow key={`${account.server}-${account.id}`} account={account} />)}
             </RowGroupElement>
         );
     }
@@ -194,7 +194,7 @@ function AccountList({player}) {
 
 function AccountRow({account}) {
     return (
-        <RowElement key={account.name} className={'PlayerProfile__AccountItem'}>
+        <RowElement className={'PlayerProfile__AccountItem'}>
             <CellElement className={'PlayerProfile__AccountServer'}>{account.server}</CellElement>
             <CellElement className={'PlayerProfile__AccountPseudo'}>{account.name}</CellElement>
             <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
@@ -220,7 +220,7 @@ function GameList({player}) {
                 </RowElement>
             </RowGroupElement>
             <RowGroupElement className={'PlayerProfile__GameListContent'}>
-                {player.games.map(game => <GameRow player={player} game={game} />)}
+                {player.games.map(game => <GameRow key={game.goldId} player={player} game={game} />)}
             </RowGroupElement>
         </TableElement>
     );
@@ -233,7 +233,7 @@ function GameRow({player, game}) {
                     (mainIsBlack && game.result == "black") || (!mainIsBlack && game.result == "white") ? 'victory' :
                     'defeat';
     return (
-        <RowElement key={game.id} className={'PlayerProfile__GameItem'}>
+        <RowElement className={'PlayerProfile__GameItem'}>
             <CellElement className={'PlayerProfile__GameDate'}>{game.date}</CellElement>
             <CellElement className={'PlayerProfile__GameResult'}><span className={mainResult} /></CellElement>
             <CellElement className={'PlayerProfile__GameAvatar'}>
