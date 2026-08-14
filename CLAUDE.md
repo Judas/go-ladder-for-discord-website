@@ -35,7 +35,12 @@ Docker: `docker compose -f docker-compose.dev.yml up` runs the dev target (port 
 
 ### Tests
 
-Vitest + jsdom + Testing Library. `src/setupTests.js` does one non-obvious thing: it redefines `globalThis.localStorage`. Node 24+ ships its own `localStorage` global that is undefined without `--localstorage-file`, and under Vitest the jsdom window *is* globalThis, so that accessor shadows jsdom's storage — `localStorage` and `window.localStorage` both come back undefined. `src/AuthProfile.js` touches a bare `localStorage` on every page load, so without the shim the app throws on render in tests only.
+Vitest + jsdom + Testing Library. Two conventions worth keeping:
+
+- **Fixtures are captured, not written.** `src/__fixtures__/api.json` comes from a running backend. When you need a new shape, capture it from `fulguro-server` rather than inventing one — an invented payload makes the test pass and the site break.
+- **`console.error` is a failure.** `expectNoConsoleErrors` in `src/testUtils.jsx` wraps a render and fails on any React warning, which is how missing list keys and invalid DOM attributes surface. Use it on every new page. `stubApi()` and `renderAt()` in the same file cover the fetch stubbing and the router wrapper.
+
+`src/setupTests.js` does two non-obvious things. It stubs `window.WGo`, which index.html provides and jsdom cannot. And it redefines `globalThis.localStorage`. Node 24+ ships its own `localStorage` global that is undefined without `--localstorage-file`, and under Vitest the jsdom window *is* globalThis, so that accessor shadows jsdom's storage — `localStorage` and `window.localStorage` both come back undefined. `src/AuthProfile.js` touches a bare `localStorage` on every page load, so without the shim the app throws on render in tests only.
 
 ## Backend
 
@@ -102,4 +107,6 @@ Render auto-builds and deploys `master` from the production Dockerfile to `https
 
 ## Current work
 
-`doc/plan-9.1.md` is the plan for catching up with the backend's 9.1 features (houses, league, health), in seven iterations. Read it before starting anything in that area — it records the contract constraints the server imposes and the decisions already taken.
+`doc/plan-9.1.md` is the plan for catching up with the backend's 9.1 features (houses, league, health), in seven iterations. Read it before starting anything in that area — it records the contract constraints the server imposes and the decisions already taken. Iterations 1 and 2 are done.
+
+`doc/audit-9.1.md` is the state of the existing pages: what was fixed, what was left open and why, and a checklist of what still needs verifying in a real browser.
