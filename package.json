@@ -9,9 +9,8 @@
     "normalize.css": "^8.0.1",
     "react": "^19",
     "react-dom": "^19",
-    "react-icons": "^4.10.1",
-    "react-router-dom": "^7",
-    "web-vitals": "^2.1.4"
+    "react-icons": "^5",
+    "react-router-dom": "^7"
   },
   "scripts": {
     "devreact": "vite",
