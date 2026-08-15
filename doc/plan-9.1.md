@@ -262,10 +262,13 @@ dans la nav, 10 tests. Écarts et trouvailles :
   page, que la liste des maisons voulait aussi.
 - **En-tête resserré sous 560px.** Quatre entrées tenaient sur un téléphone en icônes seules ; « Maisons » — et
   « Ligue » derrière — non. La barre est une ligne collante de hauteur fixe, elle ne peut pas passer à la ligne.
-- ⚠ **Fixtures maisons non capturées.** Le backend s'est arrêté avant que je puisse capturer la réponse. Elles sont
-  dans `src/__fixtures__/houses.js`, à part de `api.json`, avec la provenance de chaque partie en tête de fichier :
-  l'état vide a été observé le 14 août, les champs RP viennent du SQL de migration du serveur, l'état peuplé est
-  fabriqué à la main. À re-vérifier contre une vraie réponse.
+- ✅ **Fixtures maisons capturées** (initialement fabriquées à la main, le backend étant arrêté). `fg_dev` a été
+  peuplé avec `doc/seed-houses-dev.sql`, les réponses capturées, puis la base nettoyée. La forme fabriquée était
+  juste, et les quatre cas visés se comportent comme annoncé :
+  égalité entre deux maisons (35 partout), égalité **dans** une maison (deux `rank: 1`), membre à zéro point présent
+  au classement (`rank: 3, total: 0`), et 12 points sans aucun membre chez Sabre Silencieux.
+- ⚠ **`fg_dev` n'est pas anonymisé** et vit sur le même serveur que `fg_prod`. Le seed n'utilise donc que des joueurs
+  synthétiques (`9000000000000000xx`) : aucune donnée réelle n'est entrée dans une fixture, un commit ou un log.
 
 ### 4.1 Prérequis : les blasons
 

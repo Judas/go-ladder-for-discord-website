@@ -1,0 +1,376 @@
+{
+  "populated": {
+    "period": "VACATION",
+    "season": "2025-2026",
+    "houses": [
+      {
+        "slug": "FILS_DU_FROID",
+        "name": "Fils du Froid",
+        "tagline": "Le meilleur coup est celui qui brise.",
+        "color": "#740001",
+        "description": "Nés sous les vents du nord, les membres des Fils du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
+        "memberCount": 3,
+        "totalPoints": 37,
+        "leader": {
+          "discordId": "900000000000000001",
+          "discordName": "Test Boreale",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+          "rank": 1,
+          "points": {
+            "played": 3,
+            "goldOpponent": 4,
+            "rivalHouse": 6,
+            "longGame": 4,
+            "victory": 4,
+            "evenGame": 2,
+            "ranked": 2,
+            "total": 25
+          }
+        }
+      },
+      {
+        "slug": "LUNAIRES_AETHER",
+        "name": "Lunaires d’Æther",
+        "tagline": "Pourquoi jouer comme hier ?",
+        "color": "#B85209",
+        "description": "Curieux, imprévisibles, parfois déconcertants, les Lunaires d’Æther refusent la voie tracée. Leurs coups sont des inventions, leurs ouvertures, des prototypes. Ils collectionnent les formes étranges et les variations absurdes qui finissent, parfois, par fonctionner. Chaque partie est un laboratoire, chaque joueur, un inventeur de l’impossible.",
+        "memberCount": 2,
+        "totalPoints": 35,
+        "leader": {
+          "discordId": "900000000000000006",
+          "discordName": "Test Croissant",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+          "rank": 1,
+          "points": {
+            "played": 3,
+            "goldOpponent": 4,
+            "rivalHouse": 4,
+            "longGame": 4,
+            "victory": 4,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 22
+          }
+        }
+      },
+      {
+        "slug": "NEXUS_ALPHA",
+        "name": "Nexus Alpha",
+        "tagline": "Chaque coup est une équation.",
+        "color": "#0E1A40",
+        "description": "Nexus Alpha analyse, anticipe, optimise. Ici, l’intuition est assistée par la froideur mathématique. Chaque partie est une simulation, chaque mouvement calculé pour tendre vers l’efficacité maximale. Ils cherchent la ligne idéale dans le chaos apparent, convaincus que la vérité du Go réside dans la logique pure et la maîtrise des séquences.",
+        "memberCount": 2,
+        "totalPoints": 35,
+        "leader": {
+          "discordId": "900000000000000005",
+          "discordName": "Test Obsidienne",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+          "rank": 1,
+          "points": {
+            "played": 2,
+            "goldOpponent": 4,
+            "rivalHouse": 2,
+            "longGame": 4,
+            "victory": 2,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 17
+          }
+        }
+      },
+      {
+        "slug": "SABRE_SILENCIEUX",
+        "name": "Sabre Silencieux",
+        "tagline": "Un coup, un destin !",
+        "color": "#1A472A",
+        "description": "Fidèles au bushido, les membres du Sabre Silencieux considèrent le Go comme un art martial spirituel. La beauté d’un joseki maîtrisé vaut mieux qu’un triomphe désordonné. Ils ne trahissent jamais leurs principes : respect de l’adversaire, discipline du jeu, et harmonie dans les formes. Leur calme est leur plus puissante arme.",
+        "memberCount": 0,
+        "totalPoints": 12,
+        "leader": null
+      }
+    ]
+  },
+  "detail": {
+    "FILS_DU_FROID": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "house": {
+        "slug": "FILS_DU_FROID",
+        "name": "Fils du Froid",
+        "tagline": "Le meilleur coup est celui qui brise.",
+        "color": "#740001",
+        "description": "Nés sous les vents du nord, les membres des Fils du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
+        "memberCount": 3,
+        "totalPoints": 37,
+        "leader": {
+          "discordId": "900000000000000001",
+          "discordName": "Test Boreale",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+          "rank": 1,
+          "points": {
+            "played": 3,
+            "goldOpponent": 4,
+            "rivalHouse": 6,
+            "longGame": 4,
+            "victory": 4,
+            "evenGame": 2,
+            "ranked": 2,
+            "total": 25
+          }
+        }
+      },
+      "members": [
+        {
+          "discordId": "900000000000000001",
+          "discordName": "Test Boreale",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+          "rank": 1,
+          "points": {
+            "played": 3,
+            "goldOpponent": 4,
+            "rivalHouse": 6,
+            "longGame": 4,
+            "victory": 4,
+            "evenGame": 2,
+            "ranked": 2,
+            "total": 25
+          }
+        },
+        {
+          "discordId": "900000000000000002",
+          "discordName": "Test Givre",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+          "rank": 2,
+          "points": {
+            "played": 2,
+            "goldOpponent": 2,
+            "rivalHouse": 2,
+            "longGame": 2,
+            "victory": 2,
+            "evenGame": 1,
+            "ranked": 1,
+            "total": 12
+          }
+        },
+        {
+          "discordId": "900000000000000003",
+          "discordName": "Test Frimas",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
+          "rank": 3,
+          "points": {
+            "played": 0,
+            "goldOpponent": 0,
+            "rivalHouse": 0,
+            "longGame": 0,
+            "victory": 0,
+            "evenGame": 0,
+            "ranked": 0,
+            "total": 0
+          }
+        }
+      ]
+    },
+    "NEXUS_ALPHA": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "house": {
+        "slug": "NEXUS_ALPHA",
+        "name": "Nexus Alpha",
+        "tagline": "Chaque coup est une équation.",
+        "color": "#0E1A40",
+        "description": "Nexus Alpha analyse, anticipe, optimise. Ici, l’intuition est assistée par la froideur mathématique. Chaque partie est une simulation, chaque mouvement calculé pour tendre vers l’efficacité maximale. Ils cherchent la ligne idéale dans le chaos apparent, convaincus que la vérité du Go réside dans la logique pure et la maîtrise des séquences.",
+        "memberCount": 2,
+        "totalPoints": 35,
+        "leader": {
+          "discordId": "900000000000000005",
+          "discordName": "Test Obsidienne",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+          "rank": 1,
+          "points": {
+            "played": 2,
+            "goldOpponent": 4,
+            "rivalHouse": 2,
+            "longGame": 4,
+            "victory": 2,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 17
+          }
+        }
+      },
+      "members": [
+        {
+          "discordId": "900000000000000005",
+          "discordName": "Test Obsidienne",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+          "rank": 1,
+          "points": {
+            "played": 2,
+            "goldOpponent": 4,
+            "rivalHouse": 2,
+            "longGame": 4,
+            "victory": 2,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 17
+          }
+        },
+        {
+          "discordId": "900000000000000004",
+          "discordName": "Test Quartz",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+          "rank": 1,
+          "points": {
+            "played": 2,
+            "goldOpponent": 4,
+            "rivalHouse": 2,
+            "longGame": 4,
+            "victory": 2,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 17
+          }
+        }
+      ]
+    },
+    "SABRE_SILENCIEUX": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "house": {
+        "slug": "SABRE_SILENCIEUX",
+        "name": "Sabre Silencieux",
+        "tagline": "Un coup, un destin !",
+        "color": "#1A472A",
+        "description": "Fidèles au bushido, les membres du Sabre Silencieux considèrent le Go comme un art martial spirituel. La beauté d’un joseki maîtrisé vaut mieux qu’un triomphe désordonné. Ils ne trahissent jamais leurs principes : respect de l’adversaire, discipline du jeu, et harmonie dans les formes. Leur calme est leur plus puissante arme.",
+        "memberCount": 0,
+        "totalPoints": 12,
+        "leader": null
+      },
+      "members": []
+    },
+    "LUNAIRES_AETHER": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "house": {
+        "slug": "LUNAIRES_AETHER",
+        "name": "Lunaires d’Æther",
+        "tagline": "Pourquoi jouer comme hier ?",
+        "color": "#B85209",
+        "description": "Curieux, imprévisibles, parfois déconcertants, les Lunaires d’Æther refusent la voie tracée. Leurs coups sont des inventions, leurs ouvertures, des prototypes. Ils collectionnent les formes étranges et les variations absurdes qui finissent, parfois, par fonctionner. Chaque partie est un laboratoire, chaque joueur, un inventeur de l’impossible.",
+        "memberCount": 2,
+        "totalPoints": 35,
+        "leader": {
+          "discordId": "900000000000000006",
+          "discordName": "Test Croissant",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+          "rank": 1,
+          "points": {
+            "played": 3,
+            "goldOpponent": 4,
+            "rivalHouse": 4,
+            "longGame": 4,
+            "victory": 4,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 22
+          }
+        }
+      },
+      "members": [
+        {
+          "discordId": "900000000000000006",
+          "discordName": "Test Croissant",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+          "rank": 1,
+          "points": {
+            "played": 3,
+            "goldOpponent": 4,
+            "rivalHouse": 4,
+            "longGame": 4,
+            "victory": 4,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 22
+          }
+        },
+        {
+          "discordId": "900000000000000007",
+          "discordName": "Test Nebuleuse",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+          "rank": 2,
+          "points": {
+            "played": 2,
+            "goldOpponent": 2,
+            "rivalHouse": 2,
+            "longGame": 2,
+            "victory": 2,
+            "evenGame": 1,
+            "ranked": 2,
+            "total": 13
+          }
+        }
+      ]
+    }
+  },
+  "empty": {
+    "period": "VACATION",
+    "season": "2025-2026",
+    "houses": [
+      {
+        "slug": "FILS_DU_FROID",
+        "name": "Fils du Froid",
+        "tagline": "Le meilleur coup est celui qui brise.",
+        "color": "#740001",
+        "description": "Nés sous les vents du nord, les membres des Fils du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
+        "memberCount": 0,
+        "totalPoints": 0,
+        "leader": null
+      },
+      {
+        "slug": "LUNAIRES_AETHER",
+        "name": "Lunaires d’Æther",
+        "tagline": "Pourquoi jouer comme hier ?",
+        "color": "#B85209",
+        "description": "Curieux, imprévisibles, parfois déconcertants, les Lunaires d’Æther refusent la voie tracée. Leurs coups sont des inventions, leurs ouvertures, des prototypes. Ils collectionnent les formes étranges et les variations absurdes qui finissent, parfois, par fonctionner. Chaque partie est un laboratoire, chaque joueur, un inventeur de l’impossible.",
+        "memberCount": 0,
+        "totalPoints": 0,
+        "leader": null
+      },
+      {
+        "slug": "NEXUS_ALPHA",
+        "name": "Nexus Alpha",
+        "tagline": "Chaque coup est une équation.",
+        "color": "#0E1A40",
+        "description": "Nexus Alpha analyse, anticipe, optimise. Ici, l’intuition est assistée par la froideur mathématique. Chaque partie est une simulation, chaque mouvement calculé pour tendre vers l’efficacité maximale. Ils cherchent la ligne idéale dans le chaos apparent, convaincus que la vérité du Go réside dans la logique pure et la maîtrise des séquences.",
+        "memberCount": 0,
+        "totalPoints": 0,
+        "leader": null
+      },
+      {
+        "slug": "SABRE_SILENCIEUX",
+        "name": "Sabre Silencieux",
+        "tagline": "Un coup, un destin !",
+        "color": "#1A472A",
+        "description": "Fidèles au bushido, les membres du Sabre Silencieux considèrent le Go comme un art martial spirituel. La beauté d’un joseki maîtrisé vaut mieux qu’un triomphe désordonné. Ils ne trahissent jamais leurs principes : respect de l’adversaire, discipline du jeu, et harmonie dans les formes. Leur calme est leur plus puissante arme.",
+        "memberCount": 0,
+        "totalPoints": 0,
+        "leader": null
+      }
+    ]
+  },
+  "detailEmpty": {
+    "period": "VACATION",
+    "season": "2025-2026",
+    "house": {
+      "slug": "SABRE_SILENCIEUX",
+      "name": "Sabre Silencieux",
+      "tagline": "Un coup, un destin !",
+      "color": "#1A472A",
+      "description": "Fidèles au bushido, les membres du Sabre Silencieux considèrent le Go comme un art martial spirituel. La beauté d’un joseki maîtrisé vaut mieux qu’un triomphe désordonné. Ils ne trahissent jamais leurs principes : respect de l’adversaire, discipline du jeu, et harmonie dans les formes. Leur calme est leur plus puissante arme.",
+      "memberCount": 0,
+      "totalPoints": 0,
+      "leader": null
+    },
+    "members": []
+  }
+}
