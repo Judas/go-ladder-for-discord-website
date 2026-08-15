@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { hasValidProfile, getProfile } from '../AuthProfile.js';
 
 import Loader from "../Components/Loader.jsx";
+import useApi from "../hooks/useApi.js";
 
 import './AccountLink.css';
 
 export default function AccountLink() {
-    const [accounts, setAccounts] = useState(undefined)
-    const [accountsFetchStatus, setAccountsFetchStatus] = useState('pending');
-
-    // Fetch accounts
-    useEffect(() => {
-        fetch(`/api/accounts`)
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setAccounts(res);
-                setAccountsFetchStatus('success');
-            })
-            .catch(() => setAccountsFetchStatus('error'));
-    }, []);
+    const { status: accountsFetchStatus, data: accounts } = useApi('/api/accounts');
 
     if (accountsFetchStatus === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;

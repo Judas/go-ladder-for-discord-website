@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import useApi from '../hooks/useApi.js';
 
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
@@ -12,8 +14,7 @@ import Avatar from "../Components/Avatar.jsx";
 import './PlayerList.css'
 
 export default function PlayerList() {
-    const [players, setPlayers] = useState([])
-    const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
+    const { status: playerFetchStatus, data } = useApi('/api/players');
 
     const [searchString, setSearchString] = useState('')
     const [validOnly, setValidOnly] = useState(false)
@@ -21,21 +22,8 @@ export default function PlayerList() {
     // Valid filter toggle
     const toggleValidOnly = () => { setValidOnly(!validOnly); };
 
-    // Load hook
-    useEffect(() => {
-        fetch(`/api/players`)
-            .then(res => {
-                if(!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => res.filter((player) => player.rating > 0))
-            .then(res => {
-                setPlayers(res);
-                setPlayerFetchStatus('success');
-            })
-            .catch(() => setPlayerFetchStatus('error'));
-    }, [])
+    // Unrated players are not on the ladder, so they are not on the list.
+    const players = (data ?? []).filter(player => player.rating > 0);
 
     // Both filters are derived at render rather than mirrored into state by an effect. The effect version ran the
     // search against whatever `players` held when the search string changed, so a search typed while the list was

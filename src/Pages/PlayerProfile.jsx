@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { FaCircleInfo } from "react-icons/fa6";
 
@@ -10,47 +10,18 @@ import ColHeaderElement from "../Components/Table/ColHeaderElement.jsx";
 import CellElement from "../Components/Table/CellElement.jsx";
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
+import useApi from "../hooks/useApi.js";
 
 import './PlayerProfile.css'
 
 export default function PlayerProfile() {
     const {playerId} = useParams()
 
-    const [player, setPlayer] = useState(undefined)
-    const [playerFetchStatus, setPlayerFetchStatus] = useState('pending');
-    const [tiers, setTiers] = useState(undefined)
-    const [tiersFetchStatus, setTiersFetchStatus] = useState('pending');
     const [tooltipVisible, setTooltipVisible] = useState(false);
 
-    // Fetch player
-    useEffect(() => {
-        fetch(`/api/player/${playerId}`)
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setPlayer(res);
-                setPlayerFetchStatus('success');
-            })
-            .catch(() => setPlayerFetchStatus('error'));
-    }, [playerId]);
-
-    // Fetch tiers
-    useEffect(() => {
-        fetch(`/api/tiers`)
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setTiers(res);
-                setTiersFetchStatus('success');
-            })
-            .catch(() => setTiersFetchStatus('error'));
-    }, []);
+    // Two requests, deliberately: the profile changes with the route, the tier scale does not.
+    const { status: playerFetchStatus, data: player } = useApi(`/api/player/${playerId}`);
+    const { status: tiersFetchStatus, data: tiers } = useApi('/api/tiers');
 
     if (playerFetchStatus === 'success' && tiersFetchStatus === 'success') {
         return (

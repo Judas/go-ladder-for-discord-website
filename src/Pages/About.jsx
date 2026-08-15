@@ -1,26 +1,9 @@
-import { useEffect, useState } from "react";
+import useApi from "../hooks/useApi.js";
 
 import './About.css';
 
 export default function About() {
-    const [tiers, setTiers] = useState();
-    const [tiersFetchStatus, setTiersFetchStatus] = useState('pending');
-
-    useEffect(() => {
-        setTiersFetchStatus('pending');
-
-        fetch(`/api/tiers`)
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setTiers(res);
-                setTiersFetchStatus('success');
-            })
-            .catch(() => setTiersFetchStatus('error'));
-    }, []);
+    const { status: tiersFetchStatus, data: tiers } = useApi('/api/tiers');
 
     return (
         <section className={'About Container'}>

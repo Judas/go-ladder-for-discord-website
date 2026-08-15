@@ -1,31 +1,15 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
 import WGOPlayer from "../Components/WGOPlayer.jsx";
+import useApi from "../hooks/useApi.js";
 
 import './RecentGames.css';
 
 export default function RecentGames() {
-    const [games, setGames] = useState([]);
-    const [gameFetchStatus, setGameFetchStatus] = useState('pending');
-
-    useEffect(() => {
-        setGameFetchStatus('pending');
-
-        fetch("/api/games")
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setGames(res);
-                setGameFetchStatus('success');
-            })
-            .catch(() => setGameFetchStatus('error'));
-    }, []);
+    const { status: gameFetchStatus, data } = useApi("/api/games");
+    const games = data ?? [];
 
     switch(gameFetchStatus) {
         case 'success': return (

@@ -48,7 +48,7 @@ et cassé), les props fantômes `gameLink` / `black` de `Game.jsx`, le `require(
 | 10 | `WGOPlayer.jsx` | L'effet ne dépend pas de `move` : changer de coup ne redessinerait pas le goban | Latent — aucun appelant ne passe `move` aujourd'hui. À traiter si une page l'utilise |
 | 11 | `DiscordAuth.jsx` | L'effet ne dépend pas de `queryParams` | Voulu : l'échange OAuth est à un coup, au montage |
 | 12 | `AuthProfile.js` | `hasValidProfile()` est lu pendant le rendu, sans re-rendu à la connexion. C'est le `window.location.replace` de `fetchUserProfile` qui masque le problème | **Bloque l'itération 7** : des CTA qui mutent l'état ne peuvent pas s'en contenter. Traité en 7.4 |
-| 13 | 8 pages | `if (!res.ok) throw res.statusText` empêche de lire un corps d'erreur | **Bloque l'itération 3** : `/api/health` répond 503 **avec** un corps utile. Traité par le hook `useApi` |
+| ~~13~~ | ~~8 pages~~ | ~~`if (!res.ok) throw res.statusText` empêche de lire un corps d'erreur~~ | **Réglé.** `useApi` en itération 3, puis les 6 pages qui font un GET migrées dessus. Restent hors périmètre les deux POST et `AuthProfile.js`, qui tourne hors de React |
 | 14 | `PlayerList` / `PlayerProfile` | `isValid` (`>= 4 && >= 2`) dupliqué | À fusionner lors de la refonte du profil, itération 7 |
 
 ## Contrat lu vs contrat servi

@@ -1,35 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import Avatar from "../Components/Avatar.jsx";
 import Loader from "../Components/Loader.jsx";
 import WGOPlayer from "../Components/WGOPlayer.jsx";
+import useApi from "../hooks/useApi.js";
 
 import './Game.css';
 
 export default function Game() {
     const params = useParams();
 
-    const [game, setGame] = useState();
-    const [gameFetchStatus, setGameFetchStatus] = useState('pending');
+    const { status: gameFetchStatus, data: game } = useApi(`/api/game/${params.gameId}`);
 
-    useEffect(() => {
-        window.scrollTo(0, 0)
-
-        setGameFetchStatus('pending');
-
-        fetch(`/api/game/${params.gameId}`)
-            .then(res => {
-                if (!res.ok) { throw res.statusText; }
-                return res;
-            })
-            .then(res => res.json())
-            .then(res => {
-                setGame(res);
-                setGameFetchStatus('success');
-            })
-            .catch(() => setGameFetchStatus('error'));
-    }, [params.gameId]);
+    // Following a game link from halfway down a profile would otherwise land on the goban already scrolled past.
+    useEffect(() => { window.scrollTo(0, 0); }, [params.gameId]);
 
     return (
         <div className={'Game'}>

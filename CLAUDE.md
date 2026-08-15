@@ -89,7 +89,11 @@ Discord OAuth, orchestrated in `src/AuthProfile.js` and entirely localStorage-ba
 
 **Fetch-and-status pattern.** Every page owns its data, with a status cycling `'pending' | 'success' | 'error'`; rendering branches on it and shows `<Loader/>` while pending. Don't introduce a data-fetching library.
 
-New code uses **`src/hooks/useApi.js`**, which is that pattern as a hook — `{status, data, httpStatus, reload}`, plus `acceptErrorStatus` (parse the body of a non-2xx instead of throwing it away, which `/api/health`'s 503 needs) and `refreshMs` (polling). The eight pages predating it still inline the idiom by hand: `fetch(...)` → `if (!res.ok) throw res.statusText` → `.json()` → set both states → `.catch(...)`. Migrate one when you touch it; don't do a sweep.
+**`src/hooks/useApi.js` is that pattern, and every GET goes through it.** It returns `{status, data, httpStatus, reload}`, and takes `acceptErrorStatus` (parse the body of a non-2xx instead of throwing it away — `/api/health` answers 503 with the diagnosis) and `refreshMs` (polling). Don't hand-roll a `fetch` in a component.
+
+Two things it does that the hand-written version did not: a path change reads as `pending` at once instead of serving the previous payload, and an in-flight response is dropped after unmount. It writes state only in async continuations, never in the effect body, which is why it raises no `react-hooks/set-state-in-effect`.
+
+The exceptions are not GETs: `Pages/DiscordAuth.jsx` POSTs the OAuth code once on mount, `Pages/AccountLink.jsx`'s class component POSTs the link form, and `AuthProfile.js` runs outside React entirely.
 
 **Tables are ARIA divs, not `<table>`.** `src/Components/Table/` wraps `role="table" | "rowgroup" | "row" | "columnheader" | "gridcell"` divs so CSS grid can lay them out. `RowElement` often contains a bare `<Link>`/`<a>` as its last child — CSS stretches it to make the whole row clickable. Screen-reader-only headers use the `ReaderOnly` class.
 

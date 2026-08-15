@@ -216,7 +216,22 @@ renvoyé un 504 en texte que `res.json()` rejette.
 
 Introduire `src/hooks/useApi.js` : un hook qui rend `{data, status, error}` avec le cycle `pending | success | error`
 déjà en place partout, plus une option pour accepter certains codes non-2xx. Il sert ici, puis aux itérations 4 à 7.
-Ne pas réécrire les 8 pages existantes dans cette itération — le faire au fil des touches suivantes.
+~~Ne pas réécrire les 8 pages existantes dans cette itération.~~
+
+**Migration faite dans la foulée**, sur demande. Les 6 pages qui font un GET — `PlayerList`, `RecentGames`,
+`PlayerProfile` (deux appels), `Game`, `About`, `AccountLink` — passent par le hook. Hors périmètre : les deux POST
+(`DiscordAuth`, le formulaire de `AccountLink`) et `AuthProfile.js`, qui tourne hors de React.
+
+Deux effets de bord réels, au-delà du code en moins :
+
+- **`PlayerProfile` ne sert plus le profil précédent pendant le chargement du suivant.** L'ancien code ne remettait
+  jamais son statut à `pending` quand `playerId` changeait : naviguer d'un joueur à l'autre affichait l'ancien
+  profil, puis le nouveau. Le hook fait voyager le chemin avec le résultat, donc le changement se lit `pending`
+  immédiatement.
+- **Une réponse en vol est ignorée après démontage**, ce qu'aucune des pages ne faisait.
+
+`react-hooks/set-state-in-effect` tombe de 4 à 1, le dernier étant dans `DiscordAuth`, laissé en place. Lint : 9
+warnings au lieu de 18 en début d'itération 3.
 
 ### 3.3 La page
 
