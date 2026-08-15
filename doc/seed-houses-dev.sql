@@ -72,7 +72,12 @@ INSERT INTO house_points
   ('TEST_H_014', '900000000000000007', 4, '2025-2026', 1, 0, 0, 0, 0, 0, 1, '2025-11-14 12:00:00'),
   -- Sabre Silencieux: 12 points in the register, and nobody left in the house to own them
   ('TEST_H_015', '900000000000000008', 3, '2025-2026', 1, 2, 2, 2, 2, 1, 1, '2025-11-08 12:00:00'),
-  ('TEST_H_016', '900000000000000008', 3, '2025-2026', 1, 0, 0, 0, 0, 0, 0, '2025-11-15 12:00:00');
+  ('TEST_H_016', '900000000000000008', 3, '2025-2026', 1, 0, 0, 0, 0, 0, 0, '2025-11-15 12:00:00'),
+  -- And one more for Nexus Alpha, credited to the same departed player, which brings the house to 35 and ties it
+  -- with Lunaires d'Aether. That tie is the point of the whole fixture: it is why ApiHouses attaches no rank.
+  -- Credited to a non-member on purpose -- adding it to Quartz or Obsidienne would break their 17-all tie inside
+  -- the house, and that one is what proves the competition ranks.
+  ('TEST_H_017', '900000000000000008', 2, '2025-2026', 1, 0, 0, 0, 0, 0, 0, '2025-10-20 12:00:00');
 
 COMMIT;
 
