@@ -1,0 +1,7 @@
+/* Holds the layout for a player the API has no avatar for. */
+.Avatar__Empty {
+    display: inline-block;
+    flex: none;
+    background: var(--emperor);
+    border-radius: 50%;
+}

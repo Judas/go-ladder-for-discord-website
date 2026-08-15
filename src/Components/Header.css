@@ -87,5 +87,45 @@
 @media only screen and (max-width: 980px) {
     .NavButtonText {
         display: none;
-    }    
+    }
+}
+
+/*
+ * Four entries fitted a phone on icons alone; "Maisons" — and "Ligue" after it — do not. The header is a single
+ * sticky row of fixed height, so it cannot wrap: everything tightens instead.
+ */
+@media only screen and (max-width: 560px) {
+    .Header {
+        padding: .5rem;
+    }
+
+    .Header img {
+        width: 36px;
+        height: 36px;
+        margin-left: .25rem;
+        margin-right: .25rem;
+    }
+
+    .Header .NavLink,
+    .Header .DiscordAuth {
+        margin-left: .125rem;
+        margin-right: .125rem;
+        padding: .25rem;
+    }
+
+    .NavButton {
+        margin-left: .25rem;
+        margin-right: .25rem;
+    }
+
+    .NavButton svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .Header .DiscordAuth picture,
+    .Header .DiscordAuth img {
+        width: 36px;
+        height: 36px;
+    }
 }

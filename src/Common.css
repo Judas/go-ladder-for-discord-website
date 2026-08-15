@@ -37,6 +37,23 @@
     clip-path: polygon(0 0,0 0,0 0);
 }
 
+/* Shared utility: a list that keeps its semantics and loses its bullets. Lived in RecentGames.css until Houses
+   needed it too. */
+.NoBulletList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.NoBulletList > li {
+    display: grid;
+}
+
+.NoBulletList > li::marker,
+.NoBulletList > li::before {
+    position: absolute;
+    content: "​";
+}
+
 .Container {
     width: min(100%, 60rem);
     margin: 0 auto;

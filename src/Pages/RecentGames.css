@@ -149,16 +149,3 @@
     display: none !important;
 }
 
-.NoBulletList {
-    list-style-type: none;
-}
-
-.NoBulletList > li {
-    display: grid;
-}
-
-.NoBulletList > li::marker,
-.NoBulletList > li::before {
-    position: absolute;
-    content: "​";
-}

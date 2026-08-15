@@ -25,16 +25,15 @@ Branche de travail : `feat/update-2026`. `master` part en prod à chaque push (R
 | Les libellés de session (`15 – 30 septembre`) sont servis prêts à afficher | Formater une date en français demande une locale épinglée ; le navigateur a le même piège que la JVM. On imprime, on ne reformate pas |
 | L'API n'a **aucune authentification** | Les POST portent le `discordId` dans le corps. Les CTA ne s'affichent que sur son propre profil (`getProfile().discordId === player.discordId`), comme le fait déjà « Lier un compte ». C'est du confort d'affichage, pas de la sécurité |
 
-### Point ouvert à trancher (itération 4)
+### ~~Point ouvert~~ Tranché en itération 4
 
 La convention de nommage des **blasons** à partir du `slug`. Le plan maisons la laisse explicitement au dépôt du
-site (« Reste entière la convention de nommage des blasons à partir du slug »). Proposition : `public/crests/{slug}.svg`,
-en miroir de `public/shields/shield-{rank}.svg` déjà en place. Les 4 slugs sont `FILS_DU_FROID`, `NEXUS_ALPHA`,
-`SABRE_SILENCIEUX`, `LUNAIRES_AETHER`.
+site. **Retenu : `public/crests/{SLUG}.svg`**, en miroir de `public/shields/shield-{rank}.svg`. Les 4 fichiers sont
+`FILS_DU_FROID.svg`, `NEXUS_ALPHA.svg`, `SABRE_SILENCIEUX.svg`, `LUNAIRES_AETHER.svg`, servis par le composant
+`Components/Crest.jsx`.
 
-⚠ Les 4 blasons n'existent pas. C'est un travail de design, pas de code, et c'est le seul vrai bloqueur de
-l'itération 4. Repli si les visuels ne sont pas prêts : un monogramme sur pastille de la couleur `color` de la maison,
-remplacé plus tard sans toucher au code appelant.
+⚠ **Les 4 fichiers livrés sont des placeholders** — écusson géométrique dans la couleur de la maison, dessinés faute
+de visuels. Les vrais blasons sont un remplacement de fichiers, pas un changement de code : garder les noms.
 
 ---
 
@@ -247,7 +246,26 @@ warnings au lieu de 18 en début d'itération 3.
 
 ---
 
-## Itération 4 — Page maisons
+## Itération 4 — Page maisons ✅
+
+**Faite.** `/houses`, `Components/Crest.jsx`, `Components/SeasonBanner.jsx`, 4 blasons placeholder, entrée « Maisons »
+dans la nav, 10 tests. Écarts et trouvailles :
+
+- **`SeasonBanner` extrait tout de suite** plutôt qu'au fil de l'eau : les itérations 5, 6 et 7 affichent toutes le
+  même couple `period` / `season`, et c'est le genre de libellé qui diverge s'il est réécrit quatre fois.
+- **Vrai bug trouvé dans `Avatar`**, du code partagé par tout le site : le défaut `src = ''` ne s'applique qu'à
+  `undefined`, donc un `discordAvatar` **null** atteignait `src.includes(...)` et faisait tomber la page entière —
+  il n'y a aucune error boundary dans cette application. `discordAvatar` est nullable sur `ApiPlayer`,
+  `ApiHouseMember` et `ApiLeagueMember`. Sans avatar, le composant rend désormais l'espace et rien d'autre : un
+  `<img src="">` demanderait au navigateur de recharger la page courante pour la dessiner en image cassée.
+- **`.NoBulletList` déplacé de `RecentGames.css` vers `Common.css`** : une classe partagée coincée dans le CSS d'une
+  page, que la liste des maisons voulait aussi.
+- **En-tête resserré sous 560px.** Quatre entrées tenaient sur un téléphone en icônes seules ; « Maisons » — et
+  « Ligue » derrière — non. La barre est une ligne collante de hauteur fixe, elle ne peut pas passer à la ligne.
+- ⚠ **Fixtures maisons non capturées.** Le backend s'est arrêté avant que je puisse capturer la réponse. Elles sont
+  dans `src/__fixtures__/houses.js`, à part de `api.json`, avec la provenance de chaque partie en tête de fichier :
+  l'état vide a été observé le 14 août, les champs RP viennent du SQL de migration du serveur, l'état peuplé est
+  fabriqué à la main. À re-vérifier contre une vraie réponse.
 
 ### 4.1 Prérequis : les blasons
 
