@@ -30,7 +30,9 @@ export default [
             ...reactHooks.configs.recommended.rules,
             'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
             // Loose equality is all over the existing pages. Flagged, not fatal: fixing it belongs to the audit.
-            eqeqeq: 'warn',
+            // `x == null` is exempt — it is the idiomatic way to catch null and undefined together, and the one
+            // place where == says something === cannot.
+            eqeqeq: ['warn', 'always', { null: 'ignore' }],
             // Every page opens its fetch effect with setStatus('pending'). It is the codebase's idiom, not a defect to
             // fix file by file: the useApi hook of iteration 3 removes it structurally. Warn until then.
             'react-hooks/set-state-in-effect': 'warn',

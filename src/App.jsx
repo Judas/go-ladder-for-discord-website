@@ -7,6 +7,7 @@ import About from './Pages/About.jsx';
 import AccountLink from './Pages/AccountLink.jsx';
 import DiscordAuth from './Pages/DiscordAuth.jsx';
 import Game from "./Pages/Game";
+import Health from './Pages/Health.jsx';
 import PlayerList from './Pages/PlayerList.jsx';
 import PlayerProfile from './Pages/PlayerProfile.jsx';
 import RecentGames from "./Pages/RecentGames.jsx";
@@ -27,6 +28,7 @@ export default function App() {
                     <Route path="/game/:gameId" element={<Game/>}/>
                     <Route path="/auth/discord" element={<DiscordAuth/>}/>
                     <Route path="/link" element={<AccountLink/>}/>
+                    <Route path="/health" element={<Health/>}/>
                 </Routes>
             </main>
             <Footer />

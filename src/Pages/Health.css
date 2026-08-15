@@ -1,0 +1,186 @@
+.Health {
+    color: var(--white-87);
+    padding-bottom: 4rem;
+}
+
+.Health__Title {
+    margin: 2rem 0 1rem 0;
+    font-family: var(--accent-font);
+    font-size: 3rem;
+    text-align: center;
+}
+
+.Health__Verdict {
+    display: grid;
+    gap: .25rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    background: var(--tundora);
+    border-radius: .5rem;
+    border-left: .5rem solid var(--eucalyptus);
+    text-align: center;
+}
+
+.Health__Verdict.unhealthy {
+    border-left-color: var(--punch);
+}
+
+.Health__VerdictLabel {
+    margin: 0;
+    font-family: var(--accent-font);
+    font-size: 2rem;
+    color: var(--eucalyptus);
+}
+
+.Health__Verdict.unhealthy .Health__VerdictLabel {
+    color: var(--punch);
+}
+
+.Health__VerdictDetail {
+    margin: 0;
+    font-size: .875rem;
+    opacity: .7;
+}
+
+.Health__Controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.Health__Button {
+    padding: .5rem 1.25rem;
+    font-family: var(--default-font);
+    font-size: .875rem;
+    color: var(--cod-gray);
+    background: var(--sun);
+    border: none;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.Health__Button:hover {
+    opacity: .85;
+}
+
+.Health__Auto {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    font-size: .875rem;
+    opacity: .7;
+    cursor: pointer;
+}
+
+.Health__Auto input {
+    accent-color: var(--sun);
+}
+
+/* The table is a CSS grid over the ARIA rows, as everywhere else in this project. */
+.Health__Table {
+    display: grid;
+}
+
+.Health__THead .Row,
+.Health__Row {
+    display: grid;
+    grid-template-columns: 2rem 1fr 8rem 5rem 4rem;
+    gap: .75rem;
+    align-items: center;
+    padding: .75rem 1rem;
+}
+
+.Health__THead .Row {
+    font-family: var(--accent-font);
+    font-size: 1.25rem;
+    background: var(--mine-shaft);
+    border-radius: .5rem .5rem 0 0;
+}
+
+.Health__Row {
+    background: var(--tundora);
+    border-top: 1px solid var(--emperor);
+}
+
+.Health__Row:last-child {
+    border-radius: 0 0 .5rem .5rem;
+}
+
+.Health__State span:first-child {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--eucalyptus);
+}
+
+.Health__State span.invalid {
+    background: var(--punch);
+}
+
+.Health__Name {
+    display: grid;
+    word-break: break-word;
+}
+
+.Health__Reason,
+.Health__Threshold,
+.Health__Failure {
+    font-size: .75rem;
+    opacity: .6;
+}
+
+.Health__Reason {
+    color: var(--punch);
+    opacity: 1;
+}
+
+.Health__Success,
+.Health__Interval,
+.Health__Failures {
+    display: grid;
+    font-size: .875rem;
+}
+
+.Health__Failure {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--punch);
+}
+
+/* Column headers carry the meaning on desktop; on mobile the head is dropped and each cell labels itself. */
+.Health__Label {
+    display: none;
+    font-size: .75rem;
+    opacity: .6;
+}
+
+@media only screen and (max-width: 720px) {
+    .Health__THead {
+        display: none;
+    }
+
+    .Health__Label {
+        display: block;
+    }
+
+    .Health__Row {
+        grid-template-columns: 2rem 1fr;
+        grid-template-areas:
+            'state name'
+            '.     success'
+            '.     interval'
+            '.     failures';
+        row-gap: .25rem;
+    }
+
+    .Health__State { grid-area: state; align-self: start; }
+    .Health__Name { grid-area: name; }
+    .Health__Success { grid-area: success; }
+    .Health__Interval { grid-area: interval; }
+    .Health__Failures { grid-area: failures; }
+}

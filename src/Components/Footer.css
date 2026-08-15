@@ -9,3 +9,9 @@
 .Footer a {
     color: var(--sun);
 }
+
+/* An operations page, not a destination: linked from here rather than from the main navigation. */
+.Footer__Health {
+    font-size: .75rem;
+    opacity: .5;
+}

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import './Footer.css';
 
 export default function Footer() {
@@ -11,6 +13,7 @@ export default function Footer() {
             href="https://theworldasastage.com/">NicoTupe</a> <a
             href="/player/119456225724334081">Valloa</a>
             </p>
+            <p className={'Footer__Health'}><Link to="/health">État des services</Link></p>
         </footer>
     );
 }

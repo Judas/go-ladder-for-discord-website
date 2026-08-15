@@ -87,7 +87,9 @@ Discord OAuth, orchestrated in `src/AuthProfile.js` and entirely localStorage-ba
 
 ## Code conventions
 
-**Fetch-and-status pattern.** Every page owns its data. The idiom, repeated in all pages, is a `useState` for the payload plus a `xFetchStatus` string state cycling `'pending' | 'success' | 'error'`, filled by a `useEffect` with `fetch(...)` → `if (!res.ok) throw res.statusText` → `.json()` → set both states → `.catch(() => setStatus('error'))`. Rendering branches on that status and shows `<Loader/>` while pending. Follow this rather than introducing a data-fetching library.
+**Fetch-and-status pattern.** Every page owns its data, with a status cycling `'pending' | 'success' | 'error'`; rendering branches on it and shows `<Loader/>` while pending. Don't introduce a data-fetching library.
+
+New code uses **`src/hooks/useApi.js`**, which is that pattern as a hook — `{status, data, httpStatus, reload}`, plus `acceptErrorStatus` (parse the body of a non-2xx instead of throwing it away, which `/api/health`'s 503 needs) and `refreshMs` (polling). The eight pages predating it still inline the idiom by hand: `fetch(...)` → `if (!res.ok) throw res.statusText` → `.json()` → set both states → `.catch(...)`. Migrate one when you touch it; don't do a sweep.
 
 **Tables are ARIA divs, not `<table>`.** `src/Components/Table/` wraps `role="table" | "rowgroup" | "row" | "columnheader" | "gridcell"` divs so CSS grid can lay them out. `RowElement` often contains a bare `<Link>`/`<a>` as its last child — CSS stretches it to make the whole row clickable. Screen-reader-only headers use the `ReaderOnly` class.
 

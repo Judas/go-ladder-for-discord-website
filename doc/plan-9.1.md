@@ -184,9 +184,28 @@ prouvé avant que les pages ligue/maisons n'arrivent. Pas de couverture cible.
 
 ---
 
-## Itération 3 — Page santé
+## Itération 3 — Page santé ✅
 
 La plus petite des nouvelles pages, et celle qui sert de banc d'essai aux quatre suivantes.
+
+**Faite.** `src/hooks/useApi.js`, `src/Pages/Health.jsx` + `.css`, route `/health`, lien dans le footer, 10 tests.
+Écarts et précisions :
+
+- **`acceptErrorStatus` plutôt qu'une liste de codes acceptés.** Un tableau en option force à gérer son identité
+  dans les dépendances de l'effet ; un booléen ne pose pas ce problème. Le sens est le même ici : lire le corps quoi
+  qu'il arrive, et exposer `httpStatus` pour que l'appelant tranche.
+- **`useApi` ne déclenche aucun avertissement `set-state-in-effect`**, contrairement aux 8 pages existantes : l'état
+  n'est écrit que dans les continuations asynchrones, jamais dans le corps de l'effet. Le chemin voyage avec le
+  résultat, donc un changement d'URL se lit `pending` au rendu sans effet qui réécrive l'état.
+- **Le libellé d'état était rendu deux fois** (une fois `ReaderOnly` sur la pastille, une fois visible à côté du
+  nom) : un lecteur d'écran l'aurait lu en double. La pastille ne porte son libellé que pour un service sain.
+- **`eqeqeq` exempte désormais `== null`**, seul cas où `==` dit quelque chose que `===` ne dit pas. 12 warnings de
+  lint au lieu de 18.
+
+⚠ **Pas vérifié contre le backend en direct** : celui-ci s'est arrêté en cours d'itération (4567 ne répond plus).
+Ce qui est vérifié : les 10 tests contre une charge utile de santé capturée sur le vrai serveur, la route `/health`
+servie par le fallback SPA du build de prod, et — par accident utile — la branche d'erreur, le proxy Vite ayant
+renvoyé un 504 en texte que `res.json()` rejette.
 
 ### 3.1 Le piège du 503
 
