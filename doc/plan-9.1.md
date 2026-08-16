@@ -304,7 +304,21 @@ Ajouter « Maisons » au `Header`. ⚠ Il porte déjà 4 entrées + l'avatar, et
 
 ---
 
-## Itération 5 — Page d'une maison
+## Itération 5 — Page d'une maison ✅
+
+**Faite.** Route `/house/:slug`, `src/Pages/House.jsx` + `.css`, 12 tests. Écarts et trouvailles :
+
+- **`useApi` remonte désormais le code HTTP en cas d'échec.** Le serveur répond au 404 avec un **corps vide**, donc
+  `acceptErrorStatus` ne sert à rien ici : `res.json()` échouerait de toute façon. Le code voyage avec l'erreur à la
+  place. C'est ce qui permet de distinguer « cette maison n'existe pas » de « le serveur est tombé » — et les
+  itérations 6 et 7 en auront besoin pour le 404 de session et les 403/404/409 des CTA.
+- **Le barème est affiché en pastilles, pas en colonnes dépliables** comme le proposait 5.2. Les sept chiffres
+  tiennent à côté de l'identité sur desktop et passent à la ligne en dessous de 760px : un téléphone voit les mêmes
+  nombres qu'un écran large, ce qu'un dépliant lui aurait retiré. Les valeurs du barème sont dans une légende
+  repliée, pas répétées ligne par ligne.
+- **L'écart `memberCount` / `members.length` est dit à voix haute** plutôt que laissé à constater : quand un membre
+  n'a pas de profil Discord, la page écrit combien de membres ne sont pas affichés.
+- Le `total` vient du serveur et n'est jamais recalculé côté site, comme les sept colonnes.
 
 ### 5.1 Données
 

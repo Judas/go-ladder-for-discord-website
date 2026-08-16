@@ -16,7 +16,7 @@
     font-style: italic;
 }
 
-/* Same specificity as `.Footer a` above and declared after it, so it already wins — no !important needed. */
+/* Outranks `.Footer a` above on specificity, so no !important is needed to override its colour. */
 .Footer .Footer__Health a {
     color: white;
     text-decoration: none;

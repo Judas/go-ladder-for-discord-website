@@ -29,14 +29,23 @@ export default function useApi(path, { acceptErrorStatus = false, refreshMs = 0 
 
         const run = () => fetch(path)
             .then(res => {
-                if (!res.ok && !acceptErrorStatus) { throw res.statusText; }
+                if (!res.ok && !acceptErrorStatus) {
+                    // The code travels with the failure so a caller can tell "no such house" from "the server is
+                    // down". It cannot be read off the body: this API answers 404 with an empty one, which is why
+                    // acceptErrorStatus is not the answer here — res.json() would throw on nothing to parse.
+                    const failure = new Error(res.statusText);
+                    failure.httpStatus = res.status;
+                    throw failure;
+                }
                 return res.json().then(data => ({ data, httpStatus: res.status }));
             })
             .then(({ data, httpStatus }) => {
                 if (!cancelled) { setResult({ status: 'success', data, httpStatus, path }); }
             })
-            .catch(() => {
-                if (!cancelled) { setResult({ status: 'error', data: null, httpStatus: null, path }); }
+            .catch(error => {
+                // Null for a network failure or a body that is not JSON — nothing was said, so nothing is reported.
+                const httpStatus = error?.httpStatus ?? null;
+                if (!cancelled) { setResult({ status: 'error', data: null, httpStatus, path }); }
             });
 
         run();
