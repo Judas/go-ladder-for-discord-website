@@ -7,7 +7,7 @@ export default function About() {
 
     return (
         <section className={'About Container'}>
-            <h2 className={'About__title'}>À propos</h2>
+            <h2 className={'PageTitle'}>À propos</h2>
 
             <p lang={'fr-FR'} className={'About__text'}>
                 GO Ladder for Discord (GOLD) est l'outil de la communauté <a href="https://discord.gg/fulgurogo">FulguroGo</a>.

@@ -3,13 +3,6 @@
     padding-bottom: 4rem;
 }
 
-.Houses__Title {
-    margin: 2rem 0 1.5rem 0;
-    font-family: var(--accent-font);
-    font-size: 3rem;
-    text-align: center;
-}
-
 .Houses__List {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -26,10 +19,21 @@
 .HouseCard {
     display: grid;
     height: 100%;
-    background: var(--tundora);
+    background: var(--mine-shaft);
     border-radius: .5rem;
-    border-top: .375rem solid var(--house-color);
+    border: .2rem solid var(--house-color);
     overflow: hidden;
+    /* What to write on top of --house-color. Light on dark for three of the four houses. */
+    --house-ink: var(--white-87);
+}
+
+/*
+ * Nexus Alpha's colour is a near-white cyan, and white on it is unreadable. Keyed to the house rather than computed
+ * from the colour, because it is the only one that needs it — and keyed to the *slug*, not the hex, so it survives
+ * the shade being tweaked again.
+ */
+.HouseCard--NEXUS_ALPHA {
+    --house-ink: var(--cod-gray);
 }
 
 .HouseCard__Link {
@@ -51,21 +55,12 @@
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .5));
 }
 
-.HouseCard__Name {
-    margin: .5rem 0 0 0;
-    font-family: var(--accent-font);
-    font-size: 2rem;
-    line-height: 1;
-    text-align: center;
-    transition: color .2s;
-}
-
 .HouseCard__Tagline {
-    margin: 0;
+    margin: 1rem;
     font-style: italic;
-    font-size: .875rem;
-    opacity: .7;
+    font-size: 1rem;
     text-align: center;
+    color: var(--sun);
 }
 
 .HouseCard__Figures {
@@ -98,10 +93,11 @@
     align-items: center;
     margin: 0;
     padding: .75rem 1rem;
-    background: var(--mine-shaft);
-    color: var(--white-87);
+    background: var(--house-color);
+    color: var(--house-ink);
     text-decoration: none;
     font-size: .875rem;
+    border-radius: 0;
 }
 
 .HouseCard__NoLeader {
@@ -110,8 +106,22 @@
     font-style: italic;
 }
 
+.HouseCard__Leader img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-position: center;
+    object-fit: cover;
+}
+
 .HouseCard__Leader:hover .HouseCard__LeaderName {
     color: var(--sun);
+}
+
+/* Orange on that cyan is as unreadable as white was, so the hover is marked without a colour change here. */
+.HouseCard--NEXUS_ALPHA .HouseCard__Leader:hover .HouseCard__LeaderName {
+    color: var(--house-ink);
+    text-decoration: underline;
 }
 
 .HouseCard__LeaderName {
@@ -125,18 +135,17 @@
 .HouseCard__LeaderPoints {
     font-family: var(--accent-font);
     font-size: 1.25rem;
-    color: var(--sun);
 }
 
 .Houses__Lore {
     max-width: 42rem;
     margin: 0 auto;
     line-height: 1.7;
-    opacity: .8;
 }
 
 .Houses__Lore h3 {
     font-family: var(--accent-font);
+    color: var(--sun);
     font-size: 2rem;
     text-align: center;
     margin-bottom: 1.5rem;

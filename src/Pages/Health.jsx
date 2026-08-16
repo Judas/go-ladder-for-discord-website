@@ -29,7 +29,7 @@ export default function Health() {
     if (status === 'error') {
         return (
             <section className={'Health Container'}>
-                <h2 className={'Health__Title'}>État des services</h2>
+                <h2 className={'PageTitle PageTitle--standalone'}>État des services</h2>
                 <p className={'Error'}>Impossible de joindre l'API.</p>
             </section>
         );
@@ -39,7 +39,7 @@ export default function Health() {
 
     return (
         <section className={'Health Container'}>
-            <h2 className={'Health__Title'}>État des services</h2>
+            <h2 className={'PageTitle PageTitle--standalone'}>État des services</h2>
 
             <Verdict
                 healthy={data.healthy}

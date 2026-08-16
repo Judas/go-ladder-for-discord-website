@@ -8,7 +8,17 @@ import { expectNoConsoleErrors, renderAt, stubApi } from '../testUtils.jsx';
 /** The captured payload was taken during the summer break; this is the same data with a season under way. */
 const inSeason = { ...housesPopulated, period: 'SEASON', season: '2026-2027' };
 
-const byName = name => screen.getByRole('heading', { name }).closest('li');
+/**
+ * A card no longer carries a heading — the house name lives in the crest's alt text and nowhere else, so that is
+ * what every lookup here goes through.
+ */
+const byName = name => screen.getByAltText(name).closest('li');
+
+/** The house names in the order the page lays them out, read off the crests. */
+const renderedOrder = () => within(screen.getByRole('list'))
+    .getAllByRole('img')
+    .filter(img => img.getAttribute('src')?.startsWith('/crests/'))
+    .map(img => img.getAttribute('alt'));
 
 describe('Houses', () => {
     beforeEach(() => {
@@ -20,11 +30,11 @@ describe('Houses', () => {
         stubApi({ '/api/houses': housesEmpty });
         await expectNoConsoleErrors(async () => {
             renderAt(<Houses />, { path: '/houses' });
-            await screen.findByRole('heading', { name: 'Fils du Froid' });
+            await screen.findByAltText('Fils du Froid');
         });
 
         for (const house of housesEmpty.houses) {
-            expect(screen.getByRole('heading', { name: house.name })).toBeInTheDocument();
+            expect(screen.getByAltText(house.name)).toBeInTheDocument();
             expect(screen.getByAltText(house.name)).toHaveAttribute('src', `/crests/${house.slug}.svg`);
             expect(within(byName(house.name)).getByText("Aucun membre pour l'instant")).toBeInTheDocument();
         }
@@ -34,7 +44,7 @@ describe('Houses', () => {
         stubApi({ '/api/houses': housesPopulated });
         await expectNoConsoleErrors(async () => {
             renderAt(<Houses />, { path: '/houses' });
-            await screen.findByRole('heading', { name: 'Fils du Froid' });
+            await screen.findByAltText('Fils du Froid');
         });
 
         for (const house of housesPopulated.houses.filter(h => h.leader)) {
@@ -44,22 +54,45 @@ describe('Houses', () => {
     });
 
     /**
-     * Lunaires d'Æther and Nexus Alpha both total 35 in the captured payload. That tie is why ApiHouses carries no
-     * rank: a position counted off the list would print a 2nd and a 3rd where the truth is two 2nds.
+     * The order is fixed and owned by the page, not by the API — which sorts by points and, in the captured payload,
+     * puts them in a different order. The assertion below on the API order is what keeps this test meaningful: if a
+     * re-capture ever happened to match the display order, the reordering would no longer be under test.
      */
-    it('keeps the order the server sends, and numbers nothing', async () => {
-        const [first, second] = housesPopulated.houses;
-        expect(first.totalPoints).not.toBe(second.totalPoints);
-        const tied = housesPopulated.houses.filter(h => h.totalPoints === housesPopulated.houses[1].totalPoints);
-        expect(tied.length).toBeGreaterThan(1);
+    it('always shows the houses in the same order, whatever the server sends', async () => {
+        const expected = ['Fils du Froid', 'Nexus Alpha', 'Sabre Silencieux', 'Lunaires d’Æther'];
+        expect(housesPopulated.houses.map(h => h.name)).not.toEqual(expected);
 
         stubApi({ '/api/houses': housesPopulated });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByRole('heading', { name: 'Fils du Froid' });
+        await screen.findByAltText('Fils du Froid');
 
-        const list = screen.getByRole('list');
-        const names = within(list).getAllByRole('heading', { level: 3 }).map(h => h.textContent);
-        expect(names).toEqual(housesPopulated.houses.map(h => h.name));
+        expect(renderedOrder()).toEqual(expected);
+    });
+
+    it('shows the same order when the season is empty', async () => {
+        stubApi({ '/api/houses': housesEmpty });
+        renderAt(<Houses />, { path: '/houses' });
+        await screen.findByAltText('Fils du Froid');
+
+        expect(renderedOrder()).toEqual(['Fils du Froid', 'Nexus Alpha', 'Sabre Silencieux', 'Lunaires d’Æther']);
+    });
+
+    /** A house the display order does not know must still appear, rather than being dropped. */
+    it('keeps an unknown house rather than losing it', async () => {
+        const newcomer = { ...housesPopulated.houses[0], slug: 'ORDRE_INCONNU', name: 'Ordre Inconnu' };
+        stubApi({ '/api/houses': { ...housesPopulated, houses: [newcomer, ...housesPopulated.houses] } });
+        renderAt(<Houses />, { path: '/houses' });
+        await screen.findByAltText('Ordre Inconnu');
+
+        const names = renderedOrder();
+        expect(names).toHaveLength(5);
+        expect(names[4]).toBe('Ordre Inconnu');
+    });
+
+    it('numbers nothing: a fixed position says nothing about standing', async () => {
+        stubApi({ '/api/houses': housesPopulated });
+        renderAt(<Houses />, { path: '/houses' });
+        await screen.findByAltText('Fils du Froid');
 
         for (const card of screen.getAllByRole('listitem')) {
             expect(within(card).queryByText(/^[1-4](er|e|ème)$/)).not.toBeInTheDocument();
@@ -76,7 +109,7 @@ describe('Houses', () => {
 
         stubApi({ '/api/houses': housesPopulated });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByRole('heading', { name: orphan.name });
+        await screen.findByAltText(orphan.name);
 
         const card = byName(orphan.name);
         expect(within(card).getByText("Aucun membre pour l'instant")).toBeInTheDocument();
@@ -94,7 +127,7 @@ describe('Houses', () => {
         ));
         stubApi({ '/api/houses': { ...housesPopulated, houses } });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByRole('heading', { name: 'Fils du Froid' });
+        await screen.findByAltText('Fils du Froid');
 
         const leader = houses.find(h => h.leader).leader;
         expect(screen.getByText(leader.discordId)).toBeInTheDocument();
@@ -103,7 +136,7 @@ describe('Houses', () => {
     it('links each house to its own page and each leader to their profile', async () => {
         stubApi({ '/api/houses': housesPopulated });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByRole('heading', { name: 'Fils du Froid' });
+        await screen.findByAltText('Fils du Froid');
 
         const house = housesPopulated.houses.find(h => h.leader);
         expect(screen.getByRole('link', { name: new RegExp(house.name) })).toHaveAttribute('href', `/house/${house.slug}`);

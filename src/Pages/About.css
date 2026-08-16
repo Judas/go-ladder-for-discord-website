@@ -4,13 +4,6 @@
     line-height: 1.4;
 }
 
-.About__title {
-    color: var(--sun);
-    text-align: center;
-    font-family: var(--accent-font);
-    font-size: 3rem;
-}
-
 .About__text a {
     color: var(--sun);
 }

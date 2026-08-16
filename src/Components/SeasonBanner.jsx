@@ -16,12 +16,12 @@ export default function SeasonBanner({period, season}) {
             {vacation ? (
                 <>
                     <span className={'SeasonBanner__Label'}>Intersaison</span>
-                    La saison {season} est terminée. Les points reprennent le 1<sup>er</sup> septembre.
+                    <span className={'SeasonBanner__Text'}>La saison {season} est terminée. Reprise le 1er septembre.</span>
                 </>
             ) : (
                 <>
                     <span className={'SeasonBanner__Label'}>Saison {season}</span>
-                    Les parties comptent jusqu'au 31 mai.
+                    <span className={'SeasonBanner__Text'}>Les parties comptent jusqu'au 31 mai.</span>
                 </>
             )}
         </p>

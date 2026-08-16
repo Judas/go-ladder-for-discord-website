@@ -5,7 +5,7 @@
 }
 
 :root {
-    --cod-gray: #121212;
+    --cod-gray: #12110F;
     --mine-shaft: #2C2C2C;
     --tundora: #383838;
     --emperor: #545454;
@@ -35,6 +35,45 @@
     overflow: hidden;
     clip: rect(1px,1px,1px,1px);
     clip-path: polygon(0 0,0 0,0 0);
+}
+
+/*
+ * The heading of a page.
+ *
+ * Hidden above 980px and revealed below it, and that breakpoint is not arbitrary: it is exactly where Header.css
+ * drops the navigation labels (`.NavButtonText { display: none }`) and leaves bare icons. Above it the nav already
+ * names the page and the heading only repeats it; below it nothing else does.
+ *
+ * `display: inline` rather than `display: none` is what keeps the space the heading would have taken, so the top of
+ * the page does not jump at the breakpoint.
+ *
+ * ⚠ `visibility: hidden` also takes the heading out of the accessibility tree, so above 980px these pages carry no
+ * h2 at all. That is the trade-off of the effect, not an oversight.
+ */
+.PageTitle {
+    margin: 2rem 0 1.5rem 0;
+    color: var(--sun);
+    text-align: center;
+    font-family: var(--accent-font);
+    font-size: 3rem;
+    display: inline;
+    visibility: hidden;
+}
+
+@media only screen and (max-width: 980px) {
+    .PageTitle {
+        display: block;
+        visibility: visible;
+    }
+}
+
+/*
+ * For a page the navigation does not name — /health, reached from the footer, and /link, reached from a profile.
+ * Hiding those would leave them with no title anywhere, at any width.
+ */
+.PageTitle--standalone {
+    display: block;
+    visibility: visible;
 }
 
 /* Shared utility: a list that keeps its semantics and loses its bullets. Lived in RecentGames.css until Houses

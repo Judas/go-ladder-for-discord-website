@@ -12,6 +12,12 @@
 
 /* An operations page, not a destination: linked from here rather than from the main navigation. */
 .Footer__Health {
-    font-size: .75rem;
-    opacity: .5;
+    font-size: .8rem;
+    font-style: italic;
+}
+
+/* Same specificity as `.Footer a` above and declared after it, so it already wins — no !important needed. */
+.Footer .Footer__Health a {
+    color: white;
+    text-decoration: none;
 }

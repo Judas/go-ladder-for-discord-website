@@ -16,7 +16,7 @@ export default function AccountLink() {
     } else {
         return ( 
             <section className={'AccountLink Container'}>
-                <h2 className={'AccountLink__Title'}>Lier un compte</h2>
+                <h2 className={'PageTitle PageTitle--standalone'}>Lier un compte</h2>
                 <AccountLinkForm accounts={accounts} profile={getProfile()}/>
             </section>
         );

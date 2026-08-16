@@ -35,22 +35,23 @@ export default function PlayerList() {
     return (
         <section className={'PlayerList'}>
             <h2 className={'ReaderOnly'}>Liste des joueurs</h2>
-            <div className={'SearchWidget'}>
-                <label className="ReaderOnly" htmlFor={'search'}>Recherchez un joueur</label>
-                <input
-                    id={'search'}
-                    type="search"
-                    placeholder='Rechercher un joueur'
-                    onChange={(event) => setSearchString(event.target.value)}
-                    className={'SearchWidget__input'}/>
+            <div className={'PlayerList__Filters'}>
+                <div className={'SearchWidget'}>
+                    <label className="ReaderOnly" htmlFor={'search'}>Recherchez un joueur</label>
+                    <input
+                        id={'search'}
+                        type="search"
+                        placeholder='Rechercher un joueur'
+                        onChange={(event) => setSearchString(event.target.value)}
+                        className={'SearchWidget__input'}/>
+                </div>
+                <div className={'ValidWidget'}>
+                    <label>
+                        <input type="checkbox" checked={validOnly} onChange={toggleValidOnly}/>
+                        <span>Valide FGC</span>
+                    </label>
+                </div>
             </div>
-            <div className={'ValidWidget'}>
-                <label>
-                    <input type="checkbox" checked={validOnly} onChange={toggleValidOnly}/>
-                    <span>Joueurs validés uniquement</span>
-                </label>
-            </div>
-
             <div>
                 <TableElement>
                     <div className={'PlayerList__THeadContainer'}>

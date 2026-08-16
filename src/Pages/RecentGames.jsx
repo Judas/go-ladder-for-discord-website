@@ -14,7 +14,7 @@ export default function RecentGames() {
     switch(gameFetchStatus) {
         case 'success': return (
             <div className={'RecentGames'}>
-                <h2 className={'RecentGames__title'}>Parties</h2>
+                <h2 className={'PageTitle'}>Parties</h2>
                 <ul className={'RecentGames__list NoBulletList'}>
                     {games.map(game => (
                         <li key={game.goldId}><GameCard game={game}/></li>

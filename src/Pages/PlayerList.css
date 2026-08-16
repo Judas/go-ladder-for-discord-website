@@ -1,8 +1,20 @@
+/*
+ * The search field and the FGC filter sit on one row. They wrap back to two lines when there is not enough width for
+ * both — 16rem of input plus the label does not fit a phone — rather than shrinking the input to nothing.
+ */
+.PlayerList__Filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto;
+}
+
 .SearchWidget {
     position: relative;
     display: grid;
     width: 16rem;
-    margin: 2rem auto 0.5rem auto;
     background: white;
     border-radius: .25rem;
 }
@@ -37,18 +49,19 @@
     outline: solid var(--outlineColor, var(--sun)) 2px;
 }
 
+/* No width of its own any more: beside the search field it takes what its label needs. */
 .ValidWidget {
     position: relative;
-    display: grid;
-    text-align: center;
-    width: 16rem;
-    margin: 0.5rem auto 2rem auto;
     color: white;
     border-radius: .25rem;
 }
 
-.ValidWidget span {
-    margin: 0.5rem;
+.ValidWidget label {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 .ValidWidget input {
