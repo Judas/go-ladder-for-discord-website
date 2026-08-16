@@ -72,18 +72,27 @@
     opacity: .6;
 }
 
+/*
+ * Everything on one line. The seven scoring columns are fixed and narrow, so on a phone the row is wider than the
+ * screen — this scrolls sideways rather than squashing the figures into each other.
+ */
+.House__RankingScroll {
+    overflow-x: auto;
+}
+
 .House__Ranking {
     display: grid;
+    min-width: 34rem;
 }
 
 .House__RankingHead .Row,
 .House__Row {
     position: relative;
     display: grid;
-    grid-template-columns: 3rem 3rem minmax(6rem, 1fr) auto 4rem;
-    gap: .75rem;
+    grid-template-columns: 2.5rem 2.5rem minmax(6rem, 1fr) repeat(7, 2rem) 3.5rem;
+    gap: .5rem;
     align-items: center;
-    padding: .5rem 1rem;
+    padding: .5rem .75rem;
 }
 
 .House__RankingHead .Row {
@@ -95,7 +104,11 @@
 
 .House__Row {
     background: var(--tundora);
-    border-top: 1px solid var(--emperor);
+}
+
+/* Zebra striping, so the eye can follow a row across ten columns. */
+.House__RankingBody > .Row:nth-of-type(even) {
+    background: var(--mine-shaft);
 }
 
 .House__RankingBody > .Row:last-child {
@@ -108,8 +121,9 @@
     inset: 0;
 }
 
-.House__Row:hover {
-    background: var(--emperor);
+.House__Row:hover,
+.House__Row:focus-within {
+    background: var(--sun-20);
 }
 
 .House__Rank {
@@ -131,31 +145,14 @@
     text-align: right;
 }
 
-.House__Breakdown {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .25rem;
-}
-
 .House__Point {
-    display: grid;
-    justify-items: center;
-    min-width: 2.75rem;
-    padding: .125rem .25rem;
-    background: var(--mine-shaft);
-    border-radius: .25rem;
-    line-height: 1.1;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
-.House__Point b {
-    font-family: var(--accent-font);
-    font-size: 1.125rem;
-    font-weight: normal;
-}
-
-.House__Point small {
-    font-size: .625rem;
-    opacity: .6;
+/* A zero says "played nothing here", and should not compete with the figures that carry weight. */
+.House__RankingBody .House__Point {
+    opacity: .85;
 }
 
 .House__Missing {
@@ -184,6 +181,11 @@
     padding: .125rem 0;
 }
 
+/* The legend is what maps the header emoji back to what it counts. */
+.House__LegendEmoji {
+    min-width: 1.5rem;
+}
+
 .House__LegendWorth {
     min-width: 2rem;
     font-family: var(--accent-font);
@@ -200,27 +202,10 @@
     color: var(--sun);
 }
 
-/*
- * Below this width the seven figures no longer fit beside the identity, so the row becomes two lines: rank, avatar,
- * name and total on the first, the breakdown wrapping underneath. Nothing is dropped — a phone gets the same numbers
- * as a desktop, which is the point of showing them as pills rather than as columns.
- */
+/* The header scrolls with the body, so it has to keep the same width as the rows it labels. */
 @media only screen and (max-width: 760px) {
-    .House__RankingHead {
-        display: none;
+    .House__Container,
+    .House.Container {
+        padding: 0 1rem;
     }
-
-    .House__Row {
-        grid-template-columns: 3rem 3rem 1fr 4rem;
-        grid-template-areas:
-            'rank avatar name total'
-            'breakdown breakdown breakdown breakdown';
-        row-gap: .5rem;
-    }
-
-    .House__Rank { grid-area: rank; }
-    .House__Avatar { grid-area: avatar; }
-    .House__Name { grid-area: name; }
-    .House__Total { grid-area: total; }
-    .House__Breakdown { grid-area: breakdown; }
 }

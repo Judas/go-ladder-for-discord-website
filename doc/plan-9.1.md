@@ -312,10 +312,11 @@ Ajouter « Maisons » au `Header`. ⚠ Il porte déjà 4 entrées + l'avatar, et
   `acceptErrorStatus` ne sert à rien ici : `res.json()` échouerait de toute façon. Le code voyage avec l'erreur à la
   place. C'est ce qui permet de distinguer « cette maison n'existe pas » de « le serveur est tombé » — et les
   itérations 6 et 7 en auront besoin pour le 404 de session et les 403/404/409 des CTA.
-- **Le barème est affiché en pastilles, pas en colonnes dépliables** comme le proposait 5.2. Les sept chiffres
-  tiennent à côté de l'identité sur desktop et passent à la ligne en dessous de 760px : un téléphone voit les mêmes
-  nombres qu'un écran large, ce qu'un dépliant lui aurait retiré. Les valeurs du barème sont dans une légende
-  repliée, pas répétées ligne par ligne.
+- **Le barème tient sur une seule ligne**, comme le classement de l'ancien Exam Hunter (`git show 4a83e8d`) : sept
+  colonnes fixes et étroites, dont l'en-tête est un emoji avec le vrai libellé conservé en `ReaderOnly`. Écrits en
+  toutes lettres, les sept noms prendraient plus de place que les chiffres qu'ils désignent. Le plan proposait un
+  dépliant sur mobile ; c'est un défilement horizontal à la place, qui garde la ligne intacte au lieu de tasser les
+  chiffres. La légende repliée sous le tableau est ce qui relie chaque emoji à ce qu'il compte.
 - **L'écart `memberCount` / `members.length` est dit à voix haute** plutôt que laissé à constater : quand un membre
   n'a pas de profil Discord, la page écrit combien de membres ne sont pas affichés.
 - Le `total` vient du serveur et n'est jamais recalculé côté site, comme les sept colonnes.

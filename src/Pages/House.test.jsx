@@ -66,18 +66,35 @@ describe('House', () => {
         expect(rankOf(silent.discordName)).toHaveTextContent(String(silent.rank));
     });
 
-    it('shows the seven scoring columns and the total the server computed', async () => {
+    /**
+     * The seven headers are an emoji, so the real label only exists for screen readers — losing it would leave the
+     * columns unnameable to anyone not looking at the glyphs.
+     */
+    it('names every scoring column for a screen reader', async () => {
+        render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        for (const label of ['Partie jouée', 'Adversaire inscrit sur l’échelle', 'Adversaire d’une maison adverse',
+                             'Partie longue', 'Victoire', 'Partie à égalité', 'Partie classée']) {
+            expect(screen.getByRole('columnheader', { name: new RegExp(label) })).toBeInTheDocument();
+        }
+    });
+
+    it('puts the seven figures and the total on the member row, in the served order', async () => {
         render('FILS_DU_FROID', FILS);
         await screen.findByRole('heading', { name: FILS.house.name });
 
         const leader = FILS.members[0];
-        const row = rowOf(leader.discordName);
+        const cells = within(rowOf(leader.discordName)).getAllByRole('gridcell');
 
-        for (const label of ['Jouée', 'GOLD', 'Rivale', 'Longue', 'Victoire', 'Égale', 'Classée']) {
-            expect(within(row).getByText(label)).toBeInTheDocument();
-        }
+        // rank, avatar, name, then the seven columns, then the total: one line, eleven cells.
+        expect(cells).toHaveLength(11);
+        const served = ['played', 'goldOpponent', 'rivalHouse', 'longGame', 'victory', 'evenGame', 'ranked']
+            .map(key => String(leader.points[key]));
+        expect(cells.slice(3, 10).map(cell => cell.textContent)).toEqual(served);
+
         // The total is the server's, never a sum recomputed here.
-        expect(within(row).getByText(String(leader.points.total))).toBeInTheDocument();
+        expect(cells[10]).toHaveTextContent(String(leader.points.total));
     });
 
     it('links each member to their profile', async () => {

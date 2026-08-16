@@ -20,13 +20,13 @@ import './House.css';
  * re-adding the seven here would make the site wrong the day the scale gains a column while the server stays right.
  */
 const SCORING = [
-    { key: 'played', label: 'Jouée', worth: 1, title: 'Partie jouée' },
-    { key: 'goldOpponent', label: 'GOLD', worth: 2, title: 'Adversaire inscrit sur l’échelle' },
-    { key: 'rivalHouse', label: 'Rivale', worth: 2, title: 'Adversaire d’une maison adverse' },
-    { key: 'longGame', label: 'Longue', worth: 2, title: 'Partie longue' },
-    { key: 'victory', label: 'Victoire', worth: 2, title: 'Victoire' },
-    { key: 'evenGame', label: 'Égale', worth: 1, title: 'Partie à égalité' },
-    { key: 'ranked', label: 'Classée', worth: 1, title: 'Partie classée' },
+    { key: 'played', emoji: '🎮', worth: 1, label: 'Partie jouée' },
+    { key: 'goldOpponent', emoji: '🏅', worth: 2, label: 'Adversaire inscrit sur l’échelle' },
+    { key: 'rivalHouse', emoji: '⚔️', worth: 2, label: 'Adversaire d’une maison adverse' },
+    { key: 'longGame', emoji: '⏳', worth: 2, label: 'Partie longue' },
+    { key: 'victory', emoji: '🏆', worth: 2, label: 'Victoire' },
+    { key: 'evenGame', emoji: '⚖️', worth: 1, label: 'Partie à égalité' },
+    { key: 'ranked', emoji: '📊', worth: 1, label: 'Partie classée' },
 ];
 
 export default function House() {
@@ -94,20 +94,31 @@ function Ranking({members, memberCount}) {
 
     return (
         <>
-            <TableElement className={'House__Ranking'}>
-                <RowGroupElement className={'House__RankingHead'}>
-                    <RowElement>
-                        <ColHeaderElement className={'House__Rank'}>Rang</ColHeaderElement>
-                        <ColHeaderElement className={'House__Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
-                        <ColHeaderElement className={'House__Name'}>Joueur</ColHeaderElement>
-                        <ColHeaderElement className={'House__Breakdown'}>Détail</ColHeaderElement>
-                        <ColHeaderElement className={'House__Total'}>Points</ColHeaderElement>
-                    </RowElement>
-                </RowGroupElement>
-                <RowGroupElement className={'House__RankingBody'}>
-                    {members.map(member => <MemberRow key={member.discordId} member={member} />)}
-                </RowGroupElement>
-            </TableElement>
+            {/*
+              * Everything on one line, as the old Exam Hunter ranking did: the seven scoring columns are narrow and
+              * fixed, and their headers are an emoji with the real label kept for screen readers. Written out, the
+              * seven names would need more width than the figures they label.
+              */}
+            <div className={'House__RankingScroll'}>
+                <TableElement className={'House__Ranking'}>
+                    <RowGroupElement className={'House__RankingHead'}>
+                        <RowElement>
+                            <ColHeaderElement className={'House__Rank'}><span className={'ReaderOnly'}>Rang</span>#</ColHeaderElement>
+                            <ColHeaderElement className={'House__Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
+                            <ColHeaderElement className={'House__Name'}>Joueur</ColHeaderElement>
+                            {SCORING.map(column => (
+                                <ColHeaderElement key={column.key} className={'House__Point'} title={column.label}>
+                                    <span className={'ReaderOnly'}>{column.label}</span>{column.emoji}
+                                </ColHeaderElement>
+                            ))}
+                            <ColHeaderElement className={'House__Total'}>Points</ColHeaderElement>
+                        </RowElement>
+                    </RowGroupElement>
+                    <RowGroupElement className={'House__RankingBody'}>
+                        {members.map(member => <MemberRow key={member.discordId} member={member} />)}
+                    </RowGroupElement>
+                </TableElement>
+            </div>
 
             {/*
               * memberCount counts the house's members; this list only holds the ones with a Discord profile row, so
@@ -139,15 +150,12 @@ function MemberRow({member}) {
                 <Avatar src={member.discordAvatar} size={40} alt={''} hidden={true} />
             </CellElement>
             <CellElement colIndex={3} className={'House__Name'}>{member.discordName ?? member.discordId}</CellElement>
-            <CellElement colIndex={4} className={'House__Breakdown'}>
-                {SCORING.map(column => (
-                    <span className={'House__Point'} key={column.key} title={column.title}>
-                        <b>{member.points[column.key]}</b>
-                        <small>{column.label}</small>
-                    </span>
-                ))}
-            </CellElement>
-            <CellElement colIndex={5} className={'House__Total'}>{member.points.total}</CellElement>
+            {SCORING.map((column, index) => (
+                <CellElement key={column.key} colIndex={4 + index} className={'House__Point'}>
+                    {member.points[column.key]}
+                </CellElement>
+            ))}
+            <CellElement colIndex={11} className={'House__Total'}>{member.points.total}</CellElement>
             <Link to={`/player/${member.discordId}`} />
         </RowElement>
     );
@@ -160,8 +168,9 @@ function Legend() {
             <ul className={'NoBulletList'}>
                 {SCORING.map(column => (
                     <li key={column.key}>
+                        <span className={'House__LegendEmoji'} aria-hidden={true}>{column.emoji}</span>
                         <span className={'House__LegendWorth'}>+{column.worth}</span>
-                        {column.title}
+                        {column.label}
                     </li>
                 ))}
             </ul>
