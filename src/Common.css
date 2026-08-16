@@ -76,6 +76,88 @@
     visibility: visible;
 }
 
+/*
+ * The info overlay: an ⓘ affordance next to a heading, and the panel it opens.
+ *
+ * Lived in PlayerProfile.css, with its animation defined over in Game.css — the pair only ever worked because Vite
+ * merges every page's CSS into one bundle. The house ranking wanted the same overlay, so both moved here.
+ *
+ * ⚠ The class names are misspelled — Tootip, not Tooltip — and are kept as they are: renaming them is a change to
+ * PlayerProfile's markup, not to this file.
+ */
+.TootipIconParent {
+    position: relative;
+}
+
+.TootipIcon {
+    position: absolute;
+    right: 0;
+}
+
+.TootipIcon svg {
+    margin-right: 1rem;
+    width: 24px;
+    height: 24px;
+    color: var(--sun);
+    cursor: pointer;
+}
+
+.Tooltip {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    z-index: 1010;
+    width: min(100% - 2rem, 30rem);
+    padding: 2.5rem 1rem 1rem;
+    background: var(--cod-gray);
+    border-radius: .5rem;
+    animation: slide-in .3s forwards;
+}
+
+.Tooltip button {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    padding: 1em;
+    border: none;
+    background: var(--sun) url('./style/image/close.svg') no-repeat center/70%;
+    cursor: pointer;
+}
+
+.Tooltip h2 {
+    color: var(--sun);
+    font-family: var(--accent-font);
+    font-size: 2rem;
+    text-align: center;
+}
+
+.Tooltip p,
+.Tooltip li {
+    color: var(--white-87);
+    font-family: var(--default-font);
+    font-size: 1rem;
+    text-align: start;
+}
+
+.Tooltip span {
+    color: var(--sun);
+    font-family: var(--accent-font);
+    font-size: 1.125rem;
+}
+
+@keyframes slide-in {
+    from {
+        margin-top: 2rem;
+        opacity: .25;
+    }
+
+    to {
+        margin-top: 0;
+        opacity: 1;
+    }
+}
+
 /* Shared utility: a list that keeps its semantics and loses its bullets. Lived in RecentGames.css until Houses
    needed it too. */
 .NoBulletList {

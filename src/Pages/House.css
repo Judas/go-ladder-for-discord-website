@@ -1,10 +1,13 @@
-/*
- * No --house-ink here, unlike the cards on /houses: the house colour is only ever a border on this page, never a
- * background with text on it, so nothing needs a readable counterpart.
- */
 .House {
     color: var(--white-87);
     padding-bottom: 4rem;
+    /* What to write on the house colour — the ranking header is filled with it. Same rule as the cards on /houses. */
+    --house-ink: var(--white-87);
+}
+
+/* Nexus Alpha's colour is a near-white cyan; white on it is unreadable. Keyed to the house, not to the hex. */
+.House--NEXUS_ALPHA {
+    --house-ink: var(--cod-gray);
 }
 
 .House__Identity {
@@ -58,12 +61,52 @@
     text-align: center;
 }
 
-.House__RankingTitle {
+/* The title centred on the page, with the info button riding beside it rather than displacing it. */
+.House__RankingHeader {
+    position: relative;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    justify-content: center;
     margin: 2rem 0 1rem 0;
+}
+
+.House__RankingTitle {
+    margin: 0;
     font-family: var(--accent-font);
     font-size: 2rem;
     color: var(--sun);
     text-align: center;
+}
+
+.House__ScoringButton {
+    display: flex;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--sun);
+}
+
+.House__ScoringButton svg {
+    width: 24px;
+    height: 24px;
+}
+
+.House__ScoringList li {
+    display: flex !important;
+    gap: .5rem;
+    align-items: baseline;
+    padding: .125rem 0;
+}
+
+.House__ScoringEmoji {
+    min-width: 1.5rem;
+}
+
+.House__ScoringLabel {
+    font-family: var(--default-font) !important;
+    color: var(--default-font) !important;
 }
 
 .House__NoMember {
@@ -98,7 +141,8 @@
 .House__RankingHead .Row {
     font-family: var(--accent-font);
     font-size: 1.25rem;
-    background: var(--mine-shaft);
+    background: var(--house-color);
+    color: var(--house-ink);
     border-radius: .5rem .5rem 0 0;
 }
 
@@ -163,36 +207,7 @@
     text-align: center;
 }
 
-.House__Legend {
-    margin: 1.5rem auto 0 auto;
-    max-width: 42rem;
-    font-size: .875rem;
-}
-
-.House__Legend summary {
-    cursor: pointer;
-    color: var(--sun);
-}
-
-.House__Legend li {
-    display: flex;
-    gap: .5rem;
-    align-items: baseline;
-    padding: .125rem 0;
-}
-
-/* The legend is what maps the header emoji back to what it counts. */
-.House__LegendEmoji {
-    min-width: 1.5rem;
-}
-
-.House__LegendWorth {
-    min-width: 2rem;
-    font-family: var(--accent-font);
-    font-size: 1.125rem;
-    color: var(--sun);
-}
-
+/* Only the error state still offers a way back, being a dead end with nothing else on it. */
 .House__Back {
     margin-top: 2rem;
     text-align: center;

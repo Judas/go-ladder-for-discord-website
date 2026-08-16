@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FaCircleInfo } from "react-icons/fa6";
 
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
@@ -21,16 +23,17 @@ import './House.css';
  */
 const SCORING = [
     { key: 'played', emoji: '🎮', worth: 1, label: 'Partie jouée' },
-    { key: 'goldOpponent', emoji: '🏅', worth: 2, label: 'Adversaire inscrit sur l’échelle' },
-    { key: 'rivalHouse', emoji: '⚔️', worth: 2, label: 'Adversaire d’une maison adverse' },
+    { key: 'goldOpponent', emoji: '🏅', worth: 2, label: 'Adversaire GOLD' },
+    { key: 'rivalHouse', emoji: '⚔️', worth: 2, label: 'Adversaire dans une maison rivale' },
     { key: 'longGame', emoji: '⏳', worth: 2, label: 'Partie longue' },
     { key: 'victory', emoji: '🏆', worth: 2, label: 'Victoire' },
     { key: 'evenGame', emoji: '⚖️', worth: 1, label: 'Partie à égalité' },
-    { key: 'ranked', emoji: '📊', worth: 1, label: 'Partie classée' },
+    { key: 'ranked', emoji: '🎓', worth: 1, label: 'Partie classée' },
 ];
 
 export default function House() {
     const { slug } = useParams();
+    const [scoringVisible, setScoringVisible] = useState(false);
 
     // acceptErrorStatus stays off: this API answers 404 with an empty body, so there is nothing to parse. The code
     // rides along with the failure instead — see useApi.
@@ -57,10 +60,8 @@ export default function House() {
     const { house, members } = data;
 
     return (
-        <section className={'House Container'} style={{'--house-color': house.color}}>
+        <section className={`House House--${house.slug} Container`} style={{'--house-color': house.color}}>
             <h2 className={'PageTitle PageTitle--standalone'}>{house.name}</h2>
-
-            <SeasonBanner period={data.period} season={data.season} />
 
             <header className={'House__Identity'}>
                 <Crest slug={house.slug} name={house.name} size={148} className={'House__Crest'} />
@@ -79,10 +80,27 @@ export default function House() {
 
             <p className={'House__Description'} lang={'fr-FR'}>{house.description}</p>
 
-            <h3 className={'House__RankingTitle'}>Classement</h3>
+            <div className={'House__RankingHeader'}>
+                <h3 className={'House__RankingTitle'}>Classement</h3>
+                <button
+                    type="button"
+                    className={'House__ScoringButton'}
+                    onClick={() => setScoringVisible(true)}
+                    aria-label={'Comment les points sont comptés'}>
+                    <FaCircleInfo />
+                </button>
+            </div>
+
             <Ranking members={members} memberCount={house.memberCount} />
 
-            <p className={'House__Back'}><Link to={'/houses'}>Retour aux maisons</Link></p>
+            {scoringVisible && (
+                <div className={'Tooltip'}>
+                    <button className={'CallToAction'} onClick={() => setScoringVisible(false)}>
+                        <span className={'ReaderOnly'}>Fermer</span>
+                    </button>
+                    <Scoring />
+                </div>
+            )}
         </section>
     );
 }
@@ -103,9 +121,9 @@ function Ranking({members, memberCount}) {
                 <TableElement className={'House__Ranking'}>
                     <RowGroupElement className={'House__RankingHead'}>
                         <RowElement>
-                            <ColHeaderElement className={'House__Rank'}><span className={'ReaderOnly'}>Rang</span>#</ColHeaderElement>
+                            <ColHeaderElement className={'House__Rank'}><span className={'ReaderOnly'}>Rang</span></ColHeaderElement>
                             <ColHeaderElement className={'House__Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
-                            <ColHeaderElement className={'House__Name'}>Joueur</ColHeaderElement>
+                            <ColHeaderElement className={'House__Name'}><span className={'ReaderOnly'}>Joueur</span></ColHeaderElement>
                             {SCORING.map(column => (
                                 <ColHeaderElement key={column.key} className={'House__Point'} title={column.label}>
                                     <span className={'ReaderOnly'}>{column.label}</span>{column.emoji}
@@ -130,8 +148,6 @@ function Ranking({members, memberCount}) {
                     Discord {memberCount - members.length > 1 ? 'ne sont pas affichés' : "n'est pas affiché"}.
                 </p>
             )}
-
-            <Legend />
         </>
     );
 }
@@ -161,21 +177,24 @@ function MemberRow({member}) {
     );
 }
 
-function Legend() {
+/**
+ * What the overlay says. It is also the only place the header emoji are mapped back to what they count, so it is
+ * load-bearing rather than decorative — see the SCORING comment.
+ */
+function Scoring() {
     return (
-        <details className={'House__Legend'}>
-            <summary>Comment les points sont comptés</summary>
-            <ul className={'NoBulletList'}>
+        <>
+            <ul className={'House__ScoringList NoBulletList'}>
                 {SCORING.map(column => (
                     <li key={column.key}>
-                        <span className={'House__LegendEmoji'} aria-hidden={true}>{column.emoji}</span>
-                        <span className={'House__LegendWorth'}>+{column.worth}</span>
-                        {column.label}
+                        <span className={'House__ScoringEmoji'} aria-hidden={true}>{column.emoji}</span>
+                        <span className={'House__ScoringWorth'}>+{column.worth}</span>
+                        <span className={'House__ScoringLabel'}>{column.label}</span>
                     </li>
                 ))}
             </ul>
             <p>Une partie cumule les lignes qu'elle vérifie : une victoire longue et classée contre un membre d'une
                 maison adverse compte pour huit points.</p>
-        </details>
+        </>
     );
 }

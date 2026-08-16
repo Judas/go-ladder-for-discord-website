@@ -1,4 +1,5 @@
 import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import House from './House.jsx';
@@ -95,6 +96,44 @@ describe('House', () => {
 
         // The total is the server's, never a sum recomputed here.
         expect(cells[10]).toHaveTextContent(String(leader.points.total));
+    });
+
+    /**
+     * The scale is behind a button now, and it is the only place the header emoji are explained — so a broken toggle
+     * does not just hide a nicety, it makes seven columns unreadable.
+     */
+    it('keeps the scoring scale behind the info button, and opens it on click', async () => {
+        render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        expect(screen.queryByRole('heading', { name: 'Comment les points sont comptés' })).not.toBeInTheDocument();
+
+        await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
+
+        // Scoped to the panel: each label also exists in the column header, where it is screen-reader only.
+        const panel = screen.getByRole('heading', { name: 'Comment les points sont comptés' }).parentElement;
+        for (const column of ['Partie jouée', 'Victoire', 'Partie classée']) {
+            expect(within(panel).getByText(column)).toBeInTheDocument();
+        }
+        // All seven columns are explained, not a subset: the emoji headers have no other legend.
+        expect(within(panel).getAllByRole('listitem')).toHaveLength(7);
+    });
+
+    it('closes the scoring overlay again', async () => {
+        render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+
+        expect(screen.queryByRole('heading', { name: 'Comment les points sont comptés' })).not.toBeInTheDocument();
+    });
+
+    it('does not offer a way back from a house that loaded', async () => {
+        render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        expect(screen.queryByRole('link', { name: 'Retour aux maisons' })).not.toBeInTheDocument();
     });
 
     it('links each member to their profile', async () => {

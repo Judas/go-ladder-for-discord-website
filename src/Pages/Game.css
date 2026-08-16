@@ -158,17 +158,6 @@
     margin: 0 1rem 0 1rem;
 }
 
-@keyframes slide-in {
-    from {
-        margin-top: 2rem;
-        opacity: .25;
-    }
-
-    to {
-        margin-top: 0;
-        opacity: 1;
-    }
-}
 
 .wgo-menu-item-permalink {
     display: none;
