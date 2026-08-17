@@ -13,6 +13,7 @@
 --   DELETE FROM league_exemptions WHERE discord_id LIKE '9000000000000000%';
 --   DELETE FROM league_members    WHERE discord_id LIKE '9000000000000000%';
 --   DELETE FROM league_players    WHERE discord_id LIKE '9000000000000000%';
+--   DELETE FROM ogs_user_info     WHERE discord_id LIKE '9000000000000000%';
 --   DELETE FROM league_sessions   WHERE season = '2025-2026' AND session <= 4;
 --
 -- What it is shaped to show, one case per thing the pages have to get right:
@@ -26,6 +27,20 @@
 --   * no pairing ever puts two members of the same house together.
 
 START TRANSACTION;
+
+-- ⚠ A synthetic player needs a fake OGS account or the running server takes them straight back out again.
+-- CleanService deactivates any active league member with no `ogs_user_info` row — unlinking OGS means leaving the
+-- academy — so without this the whole set turns inactive within a tick and the standings quietly become a list of
+-- people who left. `error = 1` marks the row as one OgsService has already failed on, so it stops trying to scrape
+-- an id that does not exist.
+INSERT INTO ogs_user_info (discord_id, ogs_id, ogs_name, ogs_rank, updated, error) VALUES
+  ('900000000000000001', 99000001, 'test-boreale',    '5k', NOW(), 1),
+  ('900000000000000002', 99000002, 'test-givre',      '7k', NOW(), 1),
+  ('900000000000000003', 99000003, 'test-frimas',     '9k', NOW(), 1),
+  ('900000000000000004', 99000004, 'test-quartz',     '3k', NOW(), 1),
+  ('900000000000000005', 99000005, 'test-obsidienne', '2k', NOW(), 1),
+  ('900000000000000006', 99000006, 'test-croissant',  '1d', NOW(), 1),
+  ('900000000000000007', 99000007, 'test-nebuleuse',  '4k', NOW(), 1);
 
 -- Every synthetic house member joins. Nebuleuse and Frimas are inactive: one left mid-season, one never played.
 INSERT INTO league_members (season, discord_id, joined, active, left_since) VALUES

@@ -21,7 +21,13 @@ import fixtures from './league.json';
  * - ⚠ **No invite link anywhere.** `black_invite` and `white_invite` never leave the server; only `spectatorLink`
  *   does. The capture was checked for it.
  *
- * `currentSession` is null: the capture was taken in August, outside the season.
+ * `currentSession` is null: the capture was taken in August, outside the season, and no seeding can change that —
+ * the period and the running session are read off the clock, never the database. `doc/seed-league-states-dev.sql`
+ * documents the two config keys that move them, and why only one of the two is safe to set.
+ *
+ * ⚠ These fixtures are **not** refreshed from the database as it now stands. That seed added sixteen real members
+ * for volume, and fg_dev is not anonymised: recapturing would pull real Discord names and ids into this repository.
+ * The seven players here stay synthetic on purpose, and they still cover every case listed above.
  */
 
 /** `GET /api/league`. */
