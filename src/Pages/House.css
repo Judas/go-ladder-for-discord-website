@@ -104,9 +104,17 @@
     min-width: 1.5rem;
 }
 
+/*
+ * Overrides `.Tooltip span` from Common.css, which accents every span in the panel — that rule exists to highlight a
+ * word inside a sentence on the profile, and here it would paint the whole label orange.
+ *
+ * `color` took `var(--default-font)` — a font stack, not a colour, so the declaration was dropped and the label kept
+ * the accent it was meant to lose.
+ */
 .House__ScoringLabel {
     font-family: var(--default-font) !important;
-    color: var(--default-font) !important;
+    color: var(--white-87) !important;
+    font-size: 1rem !important;
 }
 
 .House__NoMember {

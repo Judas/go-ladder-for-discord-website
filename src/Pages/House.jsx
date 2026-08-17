@@ -5,7 +5,6 @@ import { FaCircleInfo } from "react-icons/fa6";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import Loader from "../Components/Loader.jsx";
-import SeasonBanner from "../Components/SeasonBanner.jsx";
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
 import RowElement from "../Components/Table/RowElement.jsx";

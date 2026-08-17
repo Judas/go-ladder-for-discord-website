@@ -75,7 +75,7 @@ describe('House', () => {
         render('FILS_DU_FROID', FILS);
         await screen.findByRole('heading', { name: FILS.house.name });
 
-        for (const label of ['Partie jouée', 'Adversaire inscrit sur l’échelle', 'Adversaire d’une maison adverse',
+        for (const label of ['Partie jouée', 'Adversaire GOLD', 'Adversaire dans une maison rivale',
                              'Partie longue', 'Victoire', 'Partie à égalité', 'Partie classée']) {
             expect(screen.getByRole('columnheader', { name: new RegExp(label) })).toBeInTheDocument();
         }
@@ -106,12 +106,13 @@ describe('House', () => {
         render('FILS_DU_FROID', FILS);
         await screen.findByRole('heading', { name: FILS.house.name });
 
-        expect(screen.queryByRole('heading', { name: 'Comment les points sont comptés' })).not.toBeInTheDocument();
+        // The panel carries no heading of its own, so its close button is what says it is open.
+        expect(screen.queryByRole('button', { name: 'Fermer' })).not.toBeInTheDocument();
 
         await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
 
         // Scoped to the panel: each label also exists in the column header, where it is screen-reader only.
-        const panel = screen.getByRole('heading', { name: 'Comment les points sont comptés' }).parentElement;
+        const panel = screen.getByRole('button', { name: 'Fermer' }).parentElement;
         for (const column of ['Partie jouée', 'Victoire', 'Partie classée']) {
             expect(within(panel).getByText(column)).toBeInTheDocument();
         }
@@ -126,7 +127,7 @@ describe('House', () => {
         await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
         await userEvent.click(screen.getByRole('button', { name: 'Fermer' }));
 
-        expect(screen.queryByRole('heading', { name: 'Comment les points sont comptés' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Fermer' })).not.toBeInTheDocument();
     });
 
     it('does not offer a way back from a house that loaded', async () => {
@@ -180,9 +181,11 @@ describe('House', () => {
         expect(await screen.findByText('Erreur lors de la récupération de la maison')).toBeInTheDocument();
     });
 
-    it('carries the calendar banner', async () => {
+    /** The calendar banner belongs to /houses; a single house does not repeat it. */
+    it('leaves the calendar banner to the houses list', async () => {
         render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
 
-        expect(await screen.findByText('Intersaison')).toBeInTheDocument();
+        expect(screen.queryByText('Intersaison')).not.toBeInTheDocument();
     });
 });
