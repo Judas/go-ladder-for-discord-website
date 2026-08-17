@@ -129,6 +129,35 @@ describe('League', () => {
         expect(cells[8]).toHaveTextContent(String(exempted.renown.total));
     });
 
+    /**
+     * The standings repeat a crest once per row, so they use the simplified drawing rather than the full one — it
+     * holds up at 28px, where the detailed crest turns to mud, and it is an order of magnitude lighter.
+     */
+    it('uses the small crest in the standings', async () => {
+        const housed = league.standings.find(s => s.house);
+        expect(housed, 'the captured standings should still hold a player with a house').toBeDefined();
+
+        stubApi({ '/api/league': league });
+        renderAt(<League />, { path: '/league' });
+        await screen.findByRole('heading', { name: 'Classement' });
+
+        const crest = within(rowOf(housed.discordName)).getByAltText(housed.house.name);
+        expect(crest).toHaveAttribute('src', `/crests/${housed.house.slug}_SMALL.svg`);
+    });
+
+    /**
+     * E is exemptions, not draws — and it has to stay: the perfect-attendance bonus is
+     * `played + exempted == sessionCount`, so a table showing only `played` makes a legitimate bonus look wrongly
+     * awarded to anyone adding the column up.
+     */
+    it('names the exemptions column for anyone who cannot see the letter', async () => {
+        stubApi({ '/api/league': league });
+        renderAt(<League />, { path: '/league' });
+        await screen.findByRole('heading', { name: 'Classement' });
+
+        expect(screen.getByRole('columnheader', { name: /Exemptions/ })).toBeInTheDocument();
+    });
+
     /** Inactive players keep their renown and their rank; they are simply no longer drawn. */
     it('keeps players who left the league in the standings', async () => {
         const gone = league.standings.filter(s => !s.active);
@@ -140,7 +169,10 @@ describe('League', () => {
 
         for (const player of gone) {
             const row = rowOf(player.discordName);
-            expect(within(row).getByText('a quitté la ligue')).toBeInTheDocument();
+            // Marked as no longer drawn — the wording is free to change, the marking is not.
+            expect(row).toHaveClass('inactive');
+            // And still holding everything they earned.
+            expect(within(row).getAllByRole('gridcell')[0]).toHaveTextContent(String(player.rank));
             expect(within(row).getAllByRole('gridcell')[8]).toHaveTextContent(String(player.renown.total));
         }
     });

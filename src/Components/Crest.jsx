@@ -4,16 +4,17 @@
  * The naming convention is this repository's call — the server plan leaves it open and says only that the site
  * builds the filename from the slug. It mirrors the tier shields: `public/crests/{SLUG}.svg`, served at the root.
  *
- * ⚠ The four files currently in `public/crests/` are placeholders, drawn here for want of the real artwork. Replacing
- * them is a file swap, not a code change: keep the filenames.
+ * `small` picks `{SLUG}_SMALL.svg`, a simplified drawing meant to hold up at table-row size where the full crest
+ * turns to mud — and which is an order of magnitude lighter, which matters when a standings table repeats it once
+ * per row.
  */
-export default function Crest({slug, name, size = 96, className}) {
+export default function Crest({slug, name, size = 96, small = false, className}) {
     return (
         <img
             className={className}
             width={size}
             height={size}
-            src={`/crests/${slug}.svg`}
+            src={`/crests/${slug}${small ? '_SMALL' : ''}.svg`}
             alt={name ?? ''}
             loading={'lazy'} />
     );

@@ -48,12 +48,12 @@
 
 /* Still to come. */
 .League__Session.upcoming {
-    background: var(--mine-shaft);
+    background: var(--tundora);
 }
 
 /* Behind us. */
 .League__Session.past {
-    background: var(--tundora);
+    background: none;
 }
 
 /* Running: the same ground as an upcoming one, ringed so it reads at a glance. */
@@ -83,25 +83,28 @@
     overflow-x: auto;
 }
 
+/* The nine columns need 33.5rem at their narrowest, plus the row's own padding. Below that, scroll. */
 .League__Standings {
     display: grid;
-    min-width: 32rem;
+    min-width: 35rem;
 }
 
 .League__StandingsHead .Row,
 .League__Row {
     position: relative;
     display: grid;
-    grid-template-columns: 2.5rem 2.5rem minmax(6rem, 1fr) 2rem repeat(4, 2rem) 5rem;
+    grid-template-columns: 2.5rem 2.5rem minmax(6rem, 1fr) 2.5rem repeat(4, 2rem) 8rem;
     gap: .5rem;
     align-items: center;
     padding: .5rem .75rem;
 }
 
+/* Dark ink on the accent, as the highlighted cards do — white on --sun is unreadable. */
 .League__StandingsHead .Row {
     font-family: var(--accent-font);
     font-size: 1.25rem;
-    background: var(--mine-shaft);
+    background: var(--sun);
+    color: var(--cod-gray);
     border-radius: .5rem .5rem 0 0;
 }
 
@@ -139,11 +142,30 @@
     opacity: .8;
 }
 
+/* Round, as every avatar on the site is. */
+.League__Avatar img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-position: center;
+    object-fit: cover;
+}
+
+.League__Crest {
+    display: flex;
+    justify-content: center;
+}
+
 .League__Rank {
     font-family: var(--accent-font);
     font-size: 1.5rem;
     color: var(--sun);
     text-align: center;
+}
+
+/* The header sits on the accent, so its rank cell must not be accent-on-accent. */
+.League__StandingsHead .League__Rank {
+    color: inherit;
 }
 
 .League__Player {

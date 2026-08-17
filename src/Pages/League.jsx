@@ -90,8 +90,8 @@ function sessionPhase(session, current) {
  * never drawn — so the three states are read in this order and never inferred from a date.
  */
 function sessionState(session) {
-    if (session.settled) { return 'réglée'; }
-    if (session.drawn) { return 'tirée'; }
+    if (session.settled) { return 'terminée'; }
+    if (session.drawn) { return 'en cours'; }
     return 'à venir';
 }
 
@@ -120,7 +120,9 @@ function Standings({standings, sessionCount}) {
                             <ColHeaderElement className={'League__Figure'} title={'Matchs joués'}><span className={'ReaderOnly'}>Matchs joués</span>J</ColHeaderElement>
                             <ColHeaderElement className={'League__Figure'} title={'Victoires'}><span className={'ReaderOnly'}>Victoires</span>V</ColHeaderElement>
                             <ColHeaderElement className={'League__Figure'} title={'Défaites'}><span className={'ReaderOnly'}>Défaites</span>D</ColHeaderElement>
-                            <ColHeaderElement className={'League__Figure'} title={'Sessions sans adversaire'}><span className={'ReaderOnly'}>Exemptions</span>E</ColHeaderElement>
+                            {/* E is for exemptions — sessions the draw could not pair the player in. Not "égalité":
+                                the league has no draws column, and this figure is load-bearing, see StandingRow. */}
+                            <ColHeaderElement className={'League__Figure'} title={'Exemptions : sessions sans adversaire'}><span className={'ReaderOnly'}>Exemptions</span>E</ColHeaderElement>
                             <ColHeaderElement className={'League__Renown'}>Renommée</ColHeaderElement>
                         </RowElement>
                     </RowGroupElement>
@@ -151,11 +153,11 @@ function StandingRow({player}) {
             </CellElement>
             <CellElement colIndex={3} className={'League__Player'}>
                 {player.discordName ?? player.discordId}
-                {!player.active && <span className={'League__Inactive'}>a quitté la ligue</span>}
+                {!player.active && <span className={'League__Inactive'}>Inactif</span>}
             </CellElement>
             <CellElement colIndex={4} className={'League__Crest'}>
                 {player.house
-                    ? <Crest slug={player.house.slug} name={player.house.name} size={24} />
+                    ? <Crest slug={player.house.slug} name={player.house.name} size={28} small={true} />
                     : <span className={'ReaderOnly'}>Sans maison</span>}
             </CellElement>
             <CellElement colIndex={5} className={'League__Figure'}>{player.played}</CellElement>

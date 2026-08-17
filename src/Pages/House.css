@@ -185,6 +185,15 @@
     text-align: center;
 }
 
+/* Round, as every avatar on the site is. */
+.House__Avatar img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-position: center;
+    object-fit: cover;
+}
+
 .House__Name {
     overflow: hidden;
     text-overflow: ellipsis;
