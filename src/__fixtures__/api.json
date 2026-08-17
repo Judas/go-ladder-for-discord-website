@@ -1,23 +1,23 @@
 {
   "players": [
     {
-      "discordId": "222329614914027521",
-      "discordName": "Le méga-loup stylé impérial 9p",
-      "discordAvatar": "https://cdn.discordapp.com/avatars/222329614914027521/17b35ed7a812c7a0b98a9f3d35ab4a5e.png",
+      "discordId": "900000000000001000",
+      "discordName": "Joueur A",
+      "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
       "accounts": [
         {
           "server": "KGS",
-          "id": "Lullaby",
-          "name": "Lullaby",
+          "id": "joueur-1",
+          "name": "joueur-1",
           "rank": "?",
-          "link": "https://www.gokgs.com/graphPage.jsp?user=Lullaby"
+          "link": "https://www.gokgs.com/graphPage.jsp?user=joueur-1"
         },
         {
           "server": "OGS",
-          "id": "429699",
-          "name": "Fantleroy",
+          "id": "joueur-2",
+          "name": "joueur-3",
           "rank": "5d",
-          "link": "https://online-go.com/player/429699"
+          "link": "https://online-go.com/player/103"
         }
       ],
       "rating": 2280.342130644401,
@@ -30,23 +30,23 @@
       "league": null
     },
     {
-      "discordId": "205702045980819465",
-      "discordName": "HisokaH",
-      "discordAvatar": "https://cdn.discordapp.com/avatars/205702045980819465/416998ae3f111e54ed8d61cacc468971.png",
+      "discordId": "900000000000001001",
+      "discordName": "Joueur B",
+      "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
       "accounts": [
         {
           "server": "KGS",
-          "id": "HisokaH",
-          "name": "HisokaH",
+          "id": "joueur-4",
+          "name": "joueur-4",
           "rank": "?",
-          "link": "https://www.gokgs.com/graphPage.jsp?user=HisokaH"
+          "link": "https://www.gokgs.com/graphPage.jsp?user=joueur-4"
         },
         {
           "server": "OGS",
-          "id": "143771",
-          "name": "HisokaH",
+          "id": "joueur-5",
+          "name": "joueur-4",
           "rank": "4d",
-          "link": "https://online-go.com/player/143771"
+          "link": "https://online-go.com/player/105"
         }
       ],
       "rating": 2183.936417805809,
@@ -59,23 +59,23 @@
       "league": null
     },
     {
-      "discordId": "221760576894926849",
-      "discordName": "Nzxt69",
-      "discordAvatar": "https://cdn.discordapp.com/avatars/221760576894926849/b03f39a1726679989c1ec83e49b3a227.png",
+      "discordId": "900000000000001002",
+      "discordName": "Joueur C",
+      "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
       "accounts": [
         {
           "server": "KGS",
-          "id": "nzxt69",
-          "name": "nzxt69",
+          "id": "joueur-6",
+          "name": "joueur-6",
           "rank": "4d",
-          "link": "https://www.gokgs.com/graphPage.jsp?user=nzxt69"
+          "link": "https://www.gokgs.com/graphPage.jsp?user=joueur-6"
         },
         {
           "server": "OGS",
-          "id": "343367",
-          "name": "nzxt",
+          "id": "joueur-7",
+          "name": "joueur-8",
           "rank": "3d",
-          "link": "https://online-go.com/player/343367"
+          "link": "https://online-go.com/player/108"
         }
       ],
       "rating": 2132.641983537632,
@@ -91,49 +91,49 @@
   "tiers": [
     {
       "rank": 1,
-      "name": "Novice",
+      "name": "joueur-9",
       "min": 0,
       "max": 1000
     },
     {
       "rank": 2,
-      "name": "Initié",
+      "name": "joueur-10",
       "min": 1000,
       "max": 1200
     },
     {
       "rank": 3,
-      "name": "Adepte",
+      "name": "joueur-11",
       "min": 1200,
       "max": 1400
     },
     {
       "rank": 4,
-      "name": "Elite",
+      "name": "joueur-12",
       "min": 1400,
       "max": 1600
     },
     {
       "rank": 5,
-      "name": "Maître",
+      "name": "joueur-13",
       "min": 1600,
       "max": 1800
     },
     {
       "rank": 6,
-      "name": "Grand-Maître",
+      "name": "joueur-14",
       "min": 1800,
       "max": 2000
     },
     {
       "rank": 7,
-      "name": "Immortel",
+      "name": "joueur-15",
       "min": 2000,
       "max": 2200
     },
     {
       "rank": 8,
-      "name": "Légendaire",
+      "name": "joueur-16",
       "min": 2200,
       "max": 3000
     }
@@ -147,87 +147,87 @@
       "goldId": "OGS_89739928",
       "date": "14 Aug",
       "black": {
-        "discordId": "626464189858447370",
-        "discordName": "Labda (Dalab on OGS)",
-        "discordAvatar": "https://cdn.discordapp.com/avatars/626464189858447370/3249ac8e34a01d14fa1fd47420cf86ed.png",
+        "discordId": "900000000000001003",
+        "discordName": "Joueur D",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
         "rating": 1576.1509527071823,
         "tierRank": 4,
         "tierName": "Elite"
       },
       "white": {
-        "discordId": "456526912605650946",
-        "discordName": "Shineblood",
-        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+        "discordId": "900000000000001004",
+        "discordName": "Joueur E",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
         "rating": 1918.4917143969326,
         "tierRank": 6,
         "tierName": "Grand-Maître"
       },
       "result": "white",
-      "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-14]\nPC[OGS: https://online-go.com/game/89739928]\nGN[Finale FGC ronde 2]\nPB[Dalab]\nPW[\n)"
+      "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
     },
     {
       "goldId": "OGS_89731448",
       "date": "14 Aug",
       "black": {
-        "discordId": "272742575935324161",
-        "discordName": "Yanae",
-        "discordAvatar": "https://cdn.discordapp.com/avatars/272742575935324161/13dac41c15902dd0067c6f4a022125ec.png",
+        "discordId": "900000000000001005",
+        "discordName": "Joueur F",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
         "rating": 1142.456513621056,
         "tierRank": 2,
         "tierName": "Initié"
       },
       "white": {
-        "discordId": "235099802134773760",
-        "discordName": "Seika",
-        "discordAvatar": "https://cdn.discordapp.com/avatars/235099802134773760/2f1b5a8563430b922283f7b15ab56c68.png",
+        "discordId": "900000000000001006",
+        "discordName": "Joueur G",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
         "rating": 1047.8995080467507,
         "tierRank": 2,
         "tierName": "Initié"
       },
       "result": "black",
-      "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-14]\nPC[OGS: https://online-go.com/game/89731448]\nGN[r2 FGC]\nPB[Yanae]\nPW[SeikaNoGo]\nB\n)"
+      "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
     }
   ],
   "gameDetail": {
     "goldId": "OGS_89739928",
     "date": "14 Aug",
     "black": {
-      "discordId": "626464189858447370",
-      "discordName": "Labda (Dalab on OGS)",
-      "discordAvatar": "https://cdn.discordapp.com/avatars/626464189858447370/3249ac8e34a01d14fa1fd47420cf86ed.png",
+      "discordId": "900000000000001003",
+      "discordName": "Joueur D",
+      "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
       "rating": 1576.1509527071823,
       "tierRank": 4,
       "tierName": "Elite"
     },
     "white": {
-      "discordId": "456526912605650946",
-      "discordName": "Shineblood",
-      "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+      "discordId": "900000000000001004",
+      "discordName": "Joueur E",
+      "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
       "rating": 1918.4917143969326,
       "tierRank": 6,
       "tierName": "Grand-Maître"
     },
     "result": "white",
-    "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-14]\nPC[OGS: https://online-go.com/game/89739928]\nGN[Finale FGC ronde 2]\nPB[Dalab]\nPW[\n)"
+    "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
   },
   "profile": {
-    "discordId": "347829829501976606",
-    "discordName": "Rikikilord",
-    "discordAvatar": "https://cdn.discordapp.com/avatars/347829829501976606/bf7d1dda451cb28ca2a83b91b772e89c.png",
+    "discordId": "900000000000001007",
+    "discordName": "Joueur H",
+    "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
     "accounts": [
       {
         "server": "KGS",
-        "id": "rikikilord",
-        "name": "rikikilord",
+        "id": "joueur-17",
+        "name": "joueur-17",
         "rank": "1d",
-        "link": "https://www.gokgs.com/graphPage.jsp?user=rikikilord"
+        "link": "https://www.gokgs.com/graphPage.jsp?user=joueur-17"
       },
       {
         "server": "OGS",
-        "id": "416791",
-        "name": "Rikikilord",
+        "id": "joueur-18",
+        "name": "joueur-19",
         "rank": "3d",
-        "link": "https://online-go.com/player/416791"
+        "link": "https://online-go.com/player/119"
       }
     ],
     "rating": 2014.6665598003533,
@@ -240,112 +240,112 @@
         "goldId": "OGS_89678364",
         "date": "12 Aug",
         "black": {
-          "discordId": "347829829501976606",
-          "discordName": "Rikikilord",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/347829829501976606/bf7d1dda451cb28ca2a83b91b772e89c.png",
+          "discordId": "900000000000001007",
+          "discordName": "Joueur H",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
           "rating": 2014.6665598003533,
           "tierRank": 7,
           "tierName": "Immortel"
         },
         "white": {
-          "discordId": "241971156075282433",
-          "discordName": "Sophonxe?",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/241971156075282433/bf92c2a03a136b02b8b66d7c09f3b0bf.png",
+          "discordId": "900000000000001008",
+          "discordName": "Joueur I",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
           "rating": 1379.0024555755103,
           "tierRank": 3,
           "tierName": "Adepte"
         },
         "result": "black",
-        "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-12]\nPC[OGS: https://online-go.com/game/89678364]\nGN[FGC - Ronde 2]\nPB[Rikikilord]\nPW[\n)"
+        "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
       },
       {
         "goldId": "OGS_89600045",
         "date": "10 Aug",
         "black": {
-          "discordId": "626464189858447370",
-          "discordName": "Labda (Dalab on OGS)",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/626464189858447370/3249ac8e34a01d14fa1fd47420cf86ed.png",
+          "discordId": "900000000000001003",
+          "discordName": "Joueur D",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
           "rating": 1576.1509527071823,
           "tierRank": 4,
           "tierName": "Elite"
         },
         "white": {
-          "discordId": "347829829501976606",
-          "discordName": "Rikikilord",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/347829829501976606/bf7d1dda451cb28ca2a83b91b772e89c.png",
+          "discordId": "900000000000001007",
+          "discordName": "Joueur H",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
           "rating": 2014.6665598003533,
           "tierRank": 7,
           "tierName": "Immortel"
         },
         "result": "white",
-        "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-10]\nPC[OGS: https://online-go.com/game/89600045]\nGN[FGC - Ronde 1]\nPB[Dalab]\nPW[Rikik\n)"
+        "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
       },
       {
         "goldId": "OGS_89458804",
         "date": "5 Aug",
         "black": {
-          "discordId": "477108106187374593",
-          "discordName": "Go Seigen",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/477108106187374593/1034c4bd30490a5f340931e0928910b4.png",
+          "discordId": "900000000000001009",
+          "discordName": "Joueur J",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
           "rating": 1918.4917143969326,
           "tierRank": 6,
           "tierName": "Grand-Maître"
         },
         "white": {
-          "discordId": "347829829501976606",
-          "discordName": "Rikikilord",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/347829829501976606/bf7d1dda451cb28ca2a83b91b772e89c.png",
+          "discordId": "900000000000001007",
+          "discordName": "Joueur H",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
           "rating": 2014.6665598003533,
           "tierRank": 7,
           "tierName": "Immortel"
         },
         "result": "white",
-        "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-05]\nPC[OGS: https://online-go.com/game/89458804]\nGN[Partie amicale]\nPB[CochonFrançais\n)"
+        "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
       },
       {
         "goldId": "OGS_89455108",
         "date": "5 Aug",
         "black": {
-          "discordId": "272742575935324161",
-          "discordName": "Yanae",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/272742575935324161/13dac41c15902dd0067c6f4a022125ec.png",
+          "discordId": "900000000000001005",
+          "discordName": "Joueur F",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
           "rating": 1142.456513621056,
           "tierRank": 2,
           "tierName": "Initié"
         },
         "white": {
-          "discordId": "347829829501976606",
-          "discordName": "Rikikilord",
-          "discordAvatar": "https://cdn.discordapp.com/avatars/347829829501976606/bf7d1dda451cb28ca2a83b91b772e89c.png",
+          "discordId": "900000000000001007",
+          "discordName": "Joueur H",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
           "rating": 2014.6665598003533,
           "tierRank": 7,
           "tierName": "Immortel"
         },
         "result": "white",
-        "sgf": "(;FF[4]\nCA[UTF-8]\nGM[1]\nDT[2026-08-05]\nPC[OGS: https://online-go.com/game/89455108]\nGN[pédago]\nPB[Yanae]\nPW[Rikikilord]\n\n)"
+        "sgf": "(;FF[4]CA[UTF-8]GM[1]SZ[19];B[qd];W[dp])"
       }
     ],
     "house": null,
     "league": null
   },
   "noGamesProfile": {
-    "discordId": "222329614914027521",
-    "discordName": "Le méga-loup stylé impérial 9p",
-    "discordAvatar": "https://cdn.discordapp.com/avatars/222329614914027521/17b35ed7a812c7a0b98a9f3d35ab4a5e.png",
+    "discordId": "900000000000001000",
+    "discordName": "Joueur A",
+    "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
     "accounts": [
       {
         "server": "KGS",
-        "id": "Lullaby",
-        "name": "Lullaby",
+        "id": "joueur-1",
+        "name": "joueur-1",
         "rank": "?",
-        "link": "https://www.gokgs.com/graphPage.jsp?user=Lullaby"
+        "link": "https://www.gokgs.com/graphPage.jsp?user=joueur-1"
       },
       {
         "server": "OGS",
-        "id": "429699",
-        "name": "Fantleroy",
+        "id": "joueur-2",
+        "name": "joueur-3",
         "rank": "5d",
-        "link": "https://online-go.com/player/429699"
+        "link": "https://online-go.com/player/119"
       }
     ],
     "rating": 2280.342130644401,
@@ -361,7 +361,7 @@
     "healthy": true,
     "services": [
       {
-        "name": "DiscordService",
+        "name": "joueur-20",
         "running": true,
         "intervalSeconds": 5,
         "secondsSinceLastSuccess": 0,
@@ -373,7 +373,7 @@
         "healthy": true
       },
       {
-        "name": "KgsService",
+        "name": "joueur-21",
         "running": true,
         "intervalSeconds": 60,
         "secondsSinceLastSuccess": 52,
@@ -385,7 +385,7 @@
         "healthy": true
       },
       {
-        "name": "OgsService",
+        "name": "joueur-22",
         "running": true,
         "intervalSeconds": 15,
         "secondsSinceLastSuccess": 26,
@@ -397,7 +397,7 @@
         "healthy": true
       },
       {
-        "name": "OgsRealTimeService",
+        "name": "joueur-23",
         "running": true,
         "intervalSeconds": 10,
         "secondsSinceLastSuccess": 0,
@@ -409,7 +409,7 @@
         "healthy": true
       },
       {
-        "name": "GoldService",
+        "name": "joueur-24",
         "running": true,
         "intervalSeconds": 15,
         "secondsSinceLastSuccess": 0,
@@ -421,7 +421,7 @@
         "healthy": true
       },
       {
-        "name": "FgcService",
+        "name": "joueur-25",
         "running": true,
         "intervalSeconds": 15,
         "secondsSinceLastSuccess": 13,
@@ -433,7 +433,7 @@
         "healthy": true
       },
       {
-        "name": "HousePointsService",
+        "name": "joueur-26",
         "running": true,
         "intervalSeconds": 30,
         "secondsSinceLastSuccess": 3,
@@ -445,7 +445,7 @@
         "healthy": true
       },
       {
-        "name": "HouseSeasonService",
+        "name": "joueur-27",
         "running": true,
         "intervalSeconds": 600,
         "secondsSinceLastSuccess": 63,
@@ -457,7 +457,7 @@
         "healthy": true
       },
       {
-        "name": "LeagueSessionService",
+        "name": "joueur-28",
         "running": true,
         "intervalSeconds": 600,
         "secondsSinceLastSuccess": 33,
@@ -469,7 +469,7 @@
         "healthy": true
       },
       {
-        "name": "PingService",
+        "name": "joueur-29",
         "running": true,
         "intervalSeconds": 600,
         "secondsSinceLastSuccess": 183,
@@ -481,7 +481,7 @@
         "healthy": true
       },
       {
-        "name": "CleanService",
+        "name": "joueur-30",
         "running": true,
         "intervalSeconds": 600,
         "secondsSinceLastSuccess": null,
