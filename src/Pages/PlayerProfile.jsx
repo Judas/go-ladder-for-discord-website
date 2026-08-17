@@ -12,6 +12,7 @@ import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import useApi from "../hooks/useApi.js";
+import { FGC_RULES } from "../fgc.js";
 
 import './PlayerProfile.css'
 
@@ -547,8 +548,14 @@ function GameRow({player, game}) {
 function Stability({player}) {
     return (
         <div className={'PlayerProfile__Stability'}>
-            <StabilityItem count={player.totalRankedGames} threshold={4} text={`parties`} goldSpan={false} />
-            <StabilityItem count={player.goldRankedGames} threshold={2} text={`parties`} goldSpan={true} />
+            {FGC_RULES.map(rule => (
+                <StabilityItem
+                    key={rule.key}
+                    count={player[rule.key]}
+                    threshold={rule.threshold}
+                    text={'parties'}
+                    goldSpan={rule.gold} />
+            ))}
         </div>
     );
 }

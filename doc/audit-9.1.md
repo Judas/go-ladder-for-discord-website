@@ -49,7 +49,7 @@ et cassé), les props fantômes `gameLink` / `black` de `Game.jsx`, le `require(
 | 11 | `DiscordAuth.jsx` | L'effet ne dépend pas de `queryParams` | Voulu : l'échange OAuth est à un coup, au montage |
 | 12 | `AuthProfile.js` | `hasValidProfile()` est lu pendant le rendu, sans re-rendu à la connexion. C'est le `window.location.replace` de `fetchUserProfile` qui masque le problème | **Bloque l'itération 7** : des CTA qui mutent l'état ne peuvent pas s'en contenter. Traité en 7.4 |
 | ~~13~~ | ~~8 pages~~ | ~~`if (!res.ok) throw res.statusText` empêche de lire un corps d'erreur~~ | **Réglé.** `useApi` en itération 3, puis les 6 pages qui font un GET migrées dessus. Restent hors périmètre les deux POST et `AuthProfile.js`, qui tourne hors de React |
-| 14 | `PlayerList` / `PlayerProfile` | `isValid` (`>= 4 && >= 2`) dupliqué | À fusionner lors de la refonte du profil, itération 7 |
+| ~~14~~ | ~~`PlayerList` / `PlayerProfile`~~ | ~~`isValid` (`>= 4 && >= 2`) dupliqué~~ | **Réglé.** Fusionné dans `src/fgc.js`. Le serveur compte les parties mais n'applique aucun seuil et n'expose aucun booléen : ces deux nombres n'existent que côté site, ce qui rendait la duplication d'autant plus risquée |
 
 ## Contrat lu vs contrat servi
 

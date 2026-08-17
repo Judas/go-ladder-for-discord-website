@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import useApi from '../hooks/useApi.js';
+import { isFgcValid } from '../fgc.js';
 
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
@@ -28,7 +29,7 @@ export default function PlayerList() {
     // Both filters are derived at render rather than mirrored into state by an effect. The effect version ran the
     // search against whatever `players` held when the search string changed, so a search typed while the list was
     // still loading returned nothing until the next keystroke.
-    const basePlayers = validOnly ? players.filter(isValid) : players;
+    const basePlayers = validOnly ? players.filter(isFgcValid) : players;
     const visiblePlayers = searchString ? basePlayers.filter(player => matches(player, searchString)) : basePlayers;
     const noResults = searchString !== '' && visiblePlayers.length === 0;
 
@@ -90,14 +91,10 @@ function PlayerRow({player}) {
                 <img width="48" height="48" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                 <p>{player.tierName}</p>
             </CellElement>
-            <CellElement colIndex={4} className={'Stability'}><span className={ isValid(player) ? 'stable' : 'unstable' } /></CellElement>
+            <CellElement colIndex={4} className={'Stability'}><span className={ isFgcValid(player) ? 'stable' : 'unstable' } /></CellElement>
             <Link to={`/player/${player.discordId}`} />
         </RowElement>
     );
-}
-
-function isValid(player) {
-    return player.totalRankedGames >= 4 && player.goldRankedGames >= 2
 }
 
 /**
