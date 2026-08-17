@@ -27,25 +27,55 @@ describe('League', () => {
     });
 
     /**
-     * currentSession is null out of season and inside the two holes of the calendar. That is an answer, not a gap,
-     * and a page that showed nothing there would look broken rather than out of season.
+     * The calendar carries the state of the season on its own: the "session en cours" block is gone, so a tile has to
+     * say where it sits. Which one is running is the server's call, since currentSession is null out of season and
+     * inside the two holes of the calendar; past and upcoming are read off `end`, served as an ISO instant for
+     * exactly that.
      */
-    it('says when no session is running', async () => {
+    it('marks each session as past, running or still to come', async () => {
+        const sessions = [
+            { ...league.sessions[0], number: 1, end: '2020-01-01T00:00:00+01:00' },
+            { ...league.sessions[1], number: 2, end: '2020-02-01T00:00:00+01:00' },
+            { ...league.sessions[2], number: 3, end: '2099-01-01T00:00:00+01:00' },
+        ];
+        const current = sessions[1];
+
+        stubApi({ '/api/league': { ...league, period: 'SEASON', currentSession: current, sessions } });
+        renderAt(<League />, { path: '/league' });
+        await screen.findByRole('heading', { name: 'Calendrier' });
+
+        const tiles = within(screen.getAllByRole('list')[0]).getAllByRole('link');
+        expect(tiles[0]).toHaveClass('past');
+        expect(tiles[1]).toHaveClass('current');
+        expect(tiles[2]).toHaveClass('upcoming');
+    });
+
+    /** A finished season is entirely behind us, and none of its tiles is the running one. */
+    it('shows a finished season as wholly past', async () => {
         expect(league.currentSession, 'the capture was taken out of season').toBeNull();
 
         stubApi({ '/api/league': league });
         renderAt(<League />, { path: '/league' });
+        await screen.findByRole('heading', { name: 'Calendrier' });
 
-        expect(await screen.findByText('Aucune session en cours.')).toBeInTheDocument();
+        const tiles = within(screen.getAllByRole('list')[0]).getAllByRole('link');
+        expect(tiles.every(tile => tile.classList.contains('past'))).toBe(true);
+        expect(tiles.some(tile => tile.classList.contains('current'))).toBe(false);
     });
 
-    it('highlights the running session when there is one', async () => {
-        const current = { ...league.sessions[7], drawn: true, settled: false };
-        stubApi({ '/api/league': { ...league, period: 'SEASON', currentSession: current } });
-        renderAt(<League />, { path: '/league' });
+    /**
+     * `settled` would be the tempting shortcut and it is wrong: out of season every session played is settled and
+     * every session never drawn is not, so half a finished season would come back as still to come.
+     */
+    it('does not read "still to come" off an undrawn session', async () => {
+        const undrawn = league.sessions.map(s => ({ ...s, drawn: false, settled: false }));
 
-        expect(await screen.findByText(`Session ${current.number}`)).toBeInTheDocument();
-        expect(screen.getAllByText(current.label).length).toBeGreaterThan(0);
+        stubApi({ '/api/league': { ...league, sessions: undrawn } });
+        renderAt(<League />, { path: '/league' });
+        await screen.findByRole('heading', { name: 'Calendrier' });
+
+        const tiles = within(screen.getAllByRole('list')[0]).getAllByRole('link');
+        expect(tiles.every(tile => tile.classList.contains('past'))).toBe(true);
     });
 
     /**

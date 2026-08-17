@@ -35,30 +35,9 @@ export default function League() {
 
             <SeasonBanner period={data.period} season={data.season} />
 
-            <CurrentSession session={data.currentSession} />
             <Calendar sessions={data.sessions} current={data.currentSession} />
             <Standings standings={data.standings} sessionCount={data.sessionCount} />
         </section>
-    );
-}
-
-/**
- * What is running, or the fact that nothing is.
- *
- * `currentSession` is null out of season **and** inside the two holes of the calendar — the first half of September
- * and the second half of December. That is an answer, not a gap, so it is stated rather than hidden.
- */
-function CurrentSession({session}) {
-    if (session == null) {
-        return <p className={'League__NoSession'}>Aucune session en cours.</p>;
-    }
-
-    return (
-        <Link to={`/league/session/${session.number}`} className={'League__Current'}>
-            <span className={'League__CurrentLabel'}>Session {session.number}</span>
-            <span className={'League__CurrentDates'}>{session.label}</span>
-            <span className={'League__CurrentState'}>{sessionState(session)}</span>
-        </Link>
     );
 }
 
@@ -77,7 +56,7 @@ function Calendar({sessions, current}) {
                     <li key={session.number}>
                         <Link
                             to={`/league/session/${session.number}`}
-                            className={`League__Session ${current?.number === session.number ? 'current' : ''}`}>
+                            className={`League__Session ${sessionPhase(session, current)}`}>
                             <span className={'League__SessionNumber'}>{session.number}</span>
                             <span className={'League__SessionLabel'}>{session.label}</span>
                             <span className={'League__SessionState'}>{sessionState(session)}</span>
@@ -87,6 +66,23 @@ function Calendar({sessions, current}) {
             </ul>
         </>
     );
+}
+
+/**
+ * Where a session sits on the calendar: behind us, running, or still to come.
+ *
+ * Which one is **running** is the server's call — `currentSession` is null out of season and inside the two holes of
+ * the calendar, and no arithmetic here would get that right. Whether a session is behind us is read off `end`, which
+ * is served as an ISO instant with an offset precisely so code can ask that question; `end` is exclusive, so a
+ * session ending "1 to 14" is over from the 15th at 00:00.
+ *
+ * Not read off `settled`: out of season every session past is settled *and* every session never drawn is not, so a
+ * whole finished season would come back as half of it still to come.
+ */
+function sessionPhase(session, current) {
+    if (current?.number === session.number) { return 'current'; }
+    if (Date.parse(session.end) <= Date.now()) { return 'past'; }
+    return 'upcoming';
 }
 
 /**

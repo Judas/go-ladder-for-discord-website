@@ -5,6 +5,7 @@ import { FaCircleInfo } from "react-icons/fa6";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import Loader from "../Components/Loader.jsx";
+import SeasonBanner from "../Components/SeasonBanner.jsx";
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
 import RowElement from "../Components/Table/RowElement.jsx";
@@ -61,6 +62,8 @@ export default function House() {
     return (
         <section className={`House House--${house.slug} Container`} style={{'--house-color': house.color}}>
             <h2 className={'PageTitle PageTitle--standalone'}>{house.name}</h2>
+
+            <SeasonBanner period={data.period} season={data.season} />
 
             <header className={'House__Identity'}>
                 <Crest slug={house.slug} name={house.name} size={148} className={'House__Crest'} />

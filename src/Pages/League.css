@@ -11,37 +11,12 @@
     text-align: center;
 }
 
-.League__NoSession,
 .League__Empty {
     text-align: center;
     font-style: italic;
     opacity: .6;
 }
 
-.League__Current {
-    display: grid;
-    justify-items: center;
-    gap: .25rem;
-    padding: 1.5rem;
-    background: var(--mine-shaft);
-    border: .2rem solid var(--sun);
-    border-radius: .5rem;
-    text-decoration: none;
-    color: var(--white-87);
-}
-
-.League__CurrentLabel {
-    font-family: var(--accent-font);
-    font-size: 2rem;
-    line-height: 1;
-    color: var(--sun);
-}
-
-.League__CurrentDates {
-    font-size: 1.125rem;
-}
-
-.League__CurrentState,
 .League__SessionState {
     font-size: .75rem;
     text-transform: uppercase;
@@ -55,12 +30,15 @@
     gap: .5rem;
 }
 
+/*
+ * The calendar carries the state of the season on its own, now that there is no separate "session en cours" block:
+ * a played fortnight is lighter, one still to come sits back, and the running one is ringed.
+ */
 .League__Session {
     display: grid;
     justify-items: center;
     gap: .125rem;
     padding: .5rem;
-    background: var(--tundora);
     border: 1px solid transparent;
     border-radius: .25rem;
     text-decoration: none;
@@ -68,12 +46,24 @@
     height: 100%;
 }
 
-.League__Session:hover {
-    background: var(--emperor);
+/* Still to come. */
+.League__Session.upcoming {
+    background: var(--mine-shaft);
 }
 
+/* Behind us. */
+.League__Session.past {
+    background: var(--tundora);
+}
+
+/* Running: the same ground as an upcoming one, ringed so it reads at a glance. */
 .League__Session.current {
+    background: var(--mine-shaft);
     border-color: var(--sun);
+}
+
+.League__Session:hover {
+    background: var(--emperor);
 }
 
 .League__SessionNumber {

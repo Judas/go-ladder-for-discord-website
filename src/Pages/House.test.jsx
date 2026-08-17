@@ -181,11 +181,11 @@ describe('House', () => {
         expect(await screen.findByText('Erreur lors de la récupération de la maison')).toBeInTheDocument();
     });
 
-    /** The calendar banner belongs to /houses; a single house does not repeat it. */
-    it('leaves the calendar banner to the houses list', async () => {
+    /** Points are counted over a season, so the page that shows them says which one, and whether it is running. */
+    it('carries the calendar banner', async () => {
         render('FILS_DU_FROID', FILS);
-        await screen.findByRole('heading', { name: FILS.house.name });
 
-        expect(screen.queryByText('Intersaison')).not.toBeInTheDocument();
+        expect(await screen.findByText('Intersaison')).toBeInTheDocument();
+        expect(screen.getByText(new RegExp(FILS.season))).toBeInTheDocument();
     });
 });
