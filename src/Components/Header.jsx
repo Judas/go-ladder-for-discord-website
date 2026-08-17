@@ -3,15 +3,16 @@ import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { TbGoGame } from 'react-icons/tb';
 import { Link, NavLink } from 'react-router-dom';
 
-import { hasValidProfile, getProfile } from '../AuthProfile.js';
+import { useAuth } from '../auth.js';
 import Avatar from './Avatar.jsx';
 
 import './Header.css';
 
 export default function Header() {
+    const { profile } = useAuth();
+
     let authButton;
-    if (hasValidProfile()) {
-        let profile = getProfile();
+    if (profile != null) {
         authButton = (
             <Link to={`/player/${profile.discordId}`} >
                 <Avatar size={48} src={profile.avatar} alt={`avatar ${profile.name}`} />

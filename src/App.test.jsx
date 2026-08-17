@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+
+import AuthProvider from './AuthProvider.jsx';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import App from './App.jsx';
@@ -18,7 +20,7 @@ describe('App', () => {
     });
 
     it('renders the navigation and the footer on the player list route', () => {
-        render(<MemoryRouter initialEntries={['/']}><App /></MemoryRouter>);
+        render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
 
         expect(screen.getByRole('navigation')).toBeInTheDocument();
         expect(screen.getByRole('link', { name: 'Joueurs' })).toBeInTheDocument();
@@ -29,13 +31,13 @@ describe('App', () => {
     });
 
     it('offers Discord sign-in when no profile is stored', () => {
-        render(<MemoryRouter initialEntries={['/']}><App /></MemoryRouter>);
+        render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
 
         expect(screen.getByRole('link', { name: 'Discord' })).toBeInTheDocument();
     });
 
     it('renders the about page, including the tier fetch failure', async () => {
-        render(<MemoryRouter initialEntries={['/about']}><App /></MemoryRouter>);
+        render(<MemoryRouter initialEntries={['/about']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
 
         expect(await screen.findByRole('heading', { name: 'À propos' })).toBeInTheDocument();
     });

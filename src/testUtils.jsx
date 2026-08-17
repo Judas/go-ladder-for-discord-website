@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { expect, vi } from 'vitest';
 
+import AuthProvider from './AuthProvider.jsx';
 import fixtures from './__fixtures__/api.json';
 
 export { fixtures };
@@ -22,6 +23,9 @@ export function stubApi(overrides = {}) {
         '/api/game/': fixtures.gameDetail,
         '/api/player/': fixtures.profile,
         '/api/health': fixtures.health,
+        // The provider asks who the visitor is at boot. 404 is the honest answer for a signed-out one, and it is
+        // what a test gets unless it writes a profile into localStorage first — see the pages' signInAs helpers.
+        '/api/auth/profile': { status: 404 },
         ...overrides,
     };
 
@@ -47,11 +51,19 @@ export function stubApi(overrides = {}) {
     return fetchStub;
 }
 
-/** Renders `element` at `path`, with `route` as the matched route pattern (e.g. '/player/:playerId'). */
+/**
+ * Renders `element` at `path`, with `route` as the matched route pattern (e.g. '/player/:playerId').
+ *
+ * Wrapped in AuthProvider because useAuth throws outside one — deliberately, since a component that asks who the
+ * visitor is and gets silence would render as signed-out rather than fail. The provider reads localStorage
+ * synchronously, so a test that writes a profile before rendering is signed in on the first paint.
+ */
 export function renderAt(element, { path = '/', route = path } = {}) {
     return render(
         <MemoryRouter initialEntries={[path]}>
-            <Routes><Route path={route} element={element} /></Routes>
+            <AuthProvider>
+                <Routes><Route path={route} element={element} /></Routes>
+            </AuthProvider>
         </MemoryRouter>
     );
 }

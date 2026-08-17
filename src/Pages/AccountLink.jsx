@@ -1,5 +1,5 @@
 import React from "react";
-import { hasValidProfile, getProfile } from '../AuthProfile.js';
+import { useAuth } from '../auth.js';
 
 import Loader from "../Components/Loader.jsx";
 import useApi from "../hooks/useApi.js";
@@ -8,16 +8,17 @@ import './AccountLink.css';
 
 export default function AccountLink() {
     const { status: accountsFetchStatus, data: accounts } = useApi('/api/accounts');
+    const { profile } = useAuth();
 
     if (accountsFetchStatus === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;
-    } else if (accountsFetchStatus === 'error' || !hasValidProfile()) {
+    } else if (accountsFetchStatus === 'error' || profile == null) {
         return <div style={{display: 'grid', height: '100%',}}><p className={'Error'}>Echec lors de la récupération du profil.</p></div>; 
     } else {
         return ( 
             <section className={'AccountLink Container'}>
                 <h2 className={'PageTitle PageTitle--standalone'}>Lier un compte</h2>
-                <AccountLinkForm accounts={accounts} profile={getProfile()}/>
+                <AccountLinkForm accounts={accounts} profile={profile}/>
             </section>
         );
     }

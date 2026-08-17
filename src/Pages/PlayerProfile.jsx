@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { FaCircleInfo } from "react-icons/fa6";
 
-import { hasValidProfile, getProfile } from '../AuthProfile.js';
+import { useIsSelf } from '../auth.js';
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
 import RowElement from "../Components/Table/RowElement.jsx";
@@ -111,17 +111,6 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
 }
 
 /**
- * Whether the visitor is looking at their own profile.
- *
- * The API authenticates nothing — a join carries the Discord id in its body and takes it as it comes — so this is
- * about not offering a button that acts on somebody else, not about security. Read straight from localStorage, as
- * the header does.
- */
-function isOwnProfile(player) {
-    return hasValidProfile() && getProfile().discordId === player.discordId;
-}
-
-/**
  * The house block, or the way into one.
  *
  * `house` is null for a player in none. Joining is refused outside the season — the server answers 403, and the
@@ -129,6 +118,8 @@ function isOwnProfile(player) {
  * fail. `period` comes from /api/houses, never from a date computed here.
  */
 function HouseSection({player, period, reload}) {
+    // Hooks before any branch: the early return below is exactly what rules-of-hooks is about.
+    const isSelf = useIsSelf(player.discordId);
     const house = player.house;
 
     if (house == null) {
@@ -157,7 +148,7 @@ function HouseSection({player, period, reload}) {
                 </div>
             </dl>
 
-            {period === 'VACATION' && isOwnProfile(player) && <HouseChoice player={player} reload={reload} />}
+            {period === 'VACATION' && isSelf && <HouseChoice player={player} reload={reload} />}
         </div>
     );
 }
@@ -282,7 +273,7 @@ function HouseChoice({player, reload}) {
 }
 
 function JoinHouse({player, period, reload}) {
-    if (!isOwnProfile(player)) {
+    if (!useIsSelf(player.discordId)) {
         return <p className={'PlayerProfile__Empty'}>Ce joueur n'appartient à aucune maison.</p>;
     }
 
@@ -312,6 +303,7 @@ function JoinHouse({player, period, reload}) {
  * anyone click.
  */
 function LeagueSection({player, period, reload}) {
+    const isSelf = useIsSelf(player.discordId);
     const league = player.league;
 
     if (league != null) {
@@ -332,7 +324,7 @@ function LeagueSection({player, period, reload}) {
                     {' '}· {league.exempted} exempté{league.exempted > 1 ? 's' : ''}
                 </p>
                 {!league.active && <p className={'PlayerProfile__Empty'}>Inactif : plus tiré au sort cette saison.</p>}
-                {league.active && isOwnProfile(player) && <LeaveLeague player={player} reload={reload} />}
+                {league.active && isSelf && <LeaveLeague player={player} reload={reload} />}
             </div>
         );
     }
@@ -341,7 +333,7 @@ function LeagueSection({player, period, reload}) {
         return <p className={'PlayerProfile__Empty'}>Il faut appartenir à une maison pour rejoindre la ligue.</p>;
     }
 
-    if (!isOwnProfile(player)) {
+    if (!isSelf) {
         return <p className={'PlayerProfile__Empty'}>Ce joueur n'a pas rejoint la ligue.</p>;
     }
 
@@ -461,7 +453,7 @@ function AccountList({player}) {
     }
 
     let addAccount;
-    if (isOwnProfile(player)) {
+    if (useIsSelf(player.discordId)) {
         addAccount = (<a href='/link' className={'AddAccount'}>Lier un compte</a>);
     } else {
         addAccount = (<></>);

@@ -83,14 +83,14 @@ A 404 on one of these usually means the proxy rewrite, not a missing route — c
 
 ## Auth model
 
-Discord OAuth, orchestrated in `src/AuthProfile.js` and entirely localStorage-based — there is no auth context, no token in headers:
+Discord OAuth, held in React state by `src/AuthProvider.jsx` and read through `useAuth()` / `useIsSelf()` from `src/auth.js`. `src/AuthProfile.js` is the storage-and-network half and knows nothing about React. There is no token in a header and no session:
 
-1. `authenticateUser()` is called once at boot from `src/main.jsx`. It generates a `gold_uuid` (crypto.randomUUID) in localStorage if absent, then fetches `/api/auth/profile?goldId=` and caches the result under `user_profile`.
+1. The site mints a `gold_uuid` (crypto.randomUUID) on first visit. The server files the Discord credentials against it, so **anyone holding that uuid is the session** — which is why the routes taking a Discord id in a body are not authentication.
 2. The Discord login link is `import.meta.env.VITE_DISCORD_AUTH_URL` (different client id / redirect per env — see `.env.development` and `.env.production`, both committed).
-3. Discord redirects to `/auth/discord`; `Pages/DiscordAuth.jsx` POSTs `{code, goldId}` to `/api/auth`, then re-runs `authenticateUser(true)`.
-4. Components check auth synchronously with `hasValidProfile()` / `getProfile()` — no hooks, no re-render on login. `fetchUserProfile` finishes with `window.location.replace(...)`, which is what makes the header update.
+3. Discord redirects to `/auth/discord`; `Pages/DiscordAuth.jsx` POSTs `{code, goldId}` to `/api/auth`, then calls `refresh()` and navigates home.
+4. `AuthProvider` reads the stored profile synchronously at init, so a returning visitor never flashes as signed out, and asks `/api/auth/profile?goldId=` only when nothing valid is stored. An expired `user_profile` reads as absent.
 
-`user_profile` is considered expired past its `expirationDate` field.
+⚠ This replaced a version that read localStorage *during render*. React never learned the value changed, so signing in only appeared because the profile fetch ended with `window.location.replace` — a full page reload. Don't reintroduce either: read the identity through the hooks, and let state do the re-render.
 
 ## Code conventions
 

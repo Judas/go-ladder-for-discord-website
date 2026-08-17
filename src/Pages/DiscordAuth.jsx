@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import authenticateUser from '../AuthProfile.js';
+import { useAuth } from '../auth.js';
 import Loader from "../Components/Loader.jsx";
 
 export default function DiscordAuth() {
     const [queryParams] = useSearchParams();
+    const { refresh } = useAuth();
+    const navigate = useNavigate();
     const [exchangeStatus, setExchangeStatus] = useState('pending');
 
     // Read out here rather than inside the effect: `code` is a string, so the effect depends on the value that
@@ -35,12 +37,15 @@ export default function DiscordAuth() {
                 if (!res.ok) { throw res.statusText; }
                 return res;
             })
+            .then(() => refresh())
             .then(() => {
                 setExchangeStatus('success');
-                authenticateUser(true);
+                // Was window.location.replace(origin), a full page reload — the only way the header could notice a
+                // sign-in before the identity was React state. A router navigation is enough now.
+                navigate('/');
             })
             .catch(() => setExchangeStatus('error'));
-    }, [code]);
+    }, [code, refresh, navigate]);
 
     return (
         <div className={'DiscordAuth'}>
