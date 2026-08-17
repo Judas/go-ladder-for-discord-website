@@ -36,13 +36,11 @@ export default function LeagueSession() {
             <h2 className={'PageTitle PageTitle--standalone'}>Session {session.number}</h2>
             <p className={'LeagueSession__Dates'}>
                 {session.label}
-                <span className={'LeagueSession__Count'}>sur {data.sessionCount} — saison {data.season}</span>
+                <span className={'LeagueSession__Count'}>saison {data.season}</span>
             </p>
 
             <Matches session={session} matches={matches} />
             <Exemptions exemptions={exemptions} />
-
-            <p className={'LeagueSession__Back'}><Link to={'/league'}>Retour à la ligue</Link></p>
         </section>
     );
 }
@@ -129,7 +127,7 @@ function Side({player, colour, winner, edge}) {
     return (
         <Link to={`/player/${player.discordId}`} className={`MatchCard__Side ${edge} ${winner ? 'winner' : ''}`}>
             {player.house
-                ? <Crest slug={player.house.slug} name={player.house.name} size={64} small={true}
+                ? <Crest slug={player.house.slug} name={player.house.name} size={96} small={false}
                          className={'MatchCard__Crest'} />
                 : <span className={'MatchCard__NoCrest'} aria-hidden={true} />}
             <span className={'MatchCard__Identity'}>
@@ -166,7 +164,7 @@ function Exemptions({exemptions}) {
                 ))}
             </ul>
             <p className={'LeagueSession__ExemptNote'}>
-                Une exemption ne rapporte aucun point ; elle garde seulement le bonus de saison complète atteignable.
+                Une exemption ne rapporte aucun point, elle permet seulement de garder le bonus de saison complète.
             </p>
         </>
     );

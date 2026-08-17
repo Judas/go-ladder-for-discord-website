@@ -66,7 +66,7 @@ export default function House() {
             <SeasonBanner period={data.period} season={data.season} />
 
             <header className={'House__Identity'}>
-                <Crest slug={house.slug} name={house.name} size={148} className={'House__Crest'} />
+                <Crest slug={house.slug} name={house.name} size={256} className={'House__Crest'} />
                 <p className={'House__Tagline'}>{house.tagline}</p>
                 <dl className={'House__Figures'}>
                     <div>

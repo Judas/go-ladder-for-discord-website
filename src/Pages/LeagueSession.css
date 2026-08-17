@@ -81,13 +81,14 @@
 
 /* Keeps the identity where it sits when a player has no house, so the two sides stay aligned. */
 .MatchCard__NoCrest {
-    width: 64px;
+    width: 128px;
     height: 64px;
     flex: none;
 }
 
 .MatchCard__Crest {
     flex: none;
+    width: 128px;
 }
 
 .MatchCard__Identity img,

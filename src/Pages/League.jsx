@@ -115,7 +115,7 @@ function Standings({standings, sessionCount}) {
                         <RowElement>
                             <ColHeaderElement className={'League__Rank'}><span className={'ReaderOnly'}>Rang</span></ColHeaderElement>
                             <ColHeaderElement className={'League__Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
-                            <ColHeaderElement className={'League__Player'}>Joueur</ColHeaderElement>
+                            <ColHeaderElement className={'League__Player'}><span className={'ReaderOnly'}>Joueur</span></ColHeaderElement>
                             <ColHeaderElement className={'League__Crest'}><span className={'ReaderOnly'}>Maison</span></ColHeaderElement>
                             <ColHeaderElement className={'League__Figure'} title={'Matchs joués'}><span className={'ReaderOnly'}>Matchs joués</span>J</ColHeaderElement>
                             <ColHeaderElement className={'League__Figure'} title={'Victoires'}><span className={'ReaderOnly'}>Victoires</span>V</ColHeaderElement>
