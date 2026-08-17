@@ -58,7 +58,7 @@ The backend listens on the port set by the `gold.api.port` config key; the front
 
 Some states cannot be seen without seeding: houses and league are empty on the dev database, and the period is whatever the calendar says.
 
-⚠ **`fg_dev` and `fg_prod` are two schemas on the same server. Never write to `fg_prod`.** `fg_dev` is also a snapshot of production and is **not anonymised** — it holds real Discord ids, names and avatars, and none of that may reach a commit, a fixture or a log line. Seed with synthetic players instead (`9000000000000000xx` ids, invented names); that is what `doc/seed-houses-dev.sql` does, and its header carries the connection command and the rollback. Clean up when you are done.
+⚠ **`fg_dev` and `fg_prod` are two schemas on the same server. Never write to `fg_prod`.** `fg_dev` is also a snapshot of production and is **not anonymised** — it holds real Discord ids, names and avatars, and none of that may reach a commit, a fixture or a log line. Seed with synthetic players instead (`9000000000000000xx` ids, invented names); that is what `doc/seed-houses-dev.sql` and `doc/seed-league-dev.sql` do, and their headers carry the connection command and the rollback. The league seed needs the house one first: a league member has to be in a house. Clean up when you are done.
 
 It exposes more than this site consumes today — notably `/gold/api/houses*` and `/gold/api/league*`.
 

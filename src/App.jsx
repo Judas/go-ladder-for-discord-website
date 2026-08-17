@@ -10,6 +10,8 @@ import Game from "./Pages/Game";
 import Health from './Pages/Health.jsx';
 import House from './Pages/House.jsx';
 import Houses from './Pages/Houses.jsx';
+import League from './Pages/League.jsx';
+import LeagueSession from './Pages/LeagueSession.jsx';
 import PlayerList from './Pages/PlayerList.jsx';
 import PlayerProfile from './Pages/PlayerProfile.jsx';
 import RecentGames from "./Pages/RecentGames.jsx";
@@ -36,6 +38,9 @@ export default function App() {
                     <Route path="/houses" element={<Houses/>}/>
                     {/* Mirrors the API's /gold/api/house/{slug}; the cards on /houses link here. */}
                     <Route path="/house/:slug" element={<House/>}/>
+                    {/* /league is imposed by the server too: LeagueNotifier.LEAGUE_PATH, already in Discord posts. */}
+                    <Route path="/league" element={<League/>}/>
+                    <Route path="/league/session/:number" element={<LeagueSession/>}/>
                 </Routes>
             </main>
             <Footer />

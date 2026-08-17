@@ -356,9 +356,26 @@ les 7 colonnes du barème plus le `total` :
 
 ---
 
-## Itération 6 — Page ligue
+## Itération 6 — Page ligue ✅
 
 La plus grosse. Deux routes API, deux vues.
+
+**Faite.** `/league` et `/league/session/:number`, entrée « Ligue » dans la nav, 20 tests, fixtures capturées après
+`doc/seed-league-dev.sql`. Écarts et confirmations :
+
+- **Le calendrier est une grille de 16 tuiles cliquables**, pas un sélecteur : les seize arrivent dans la même
+  réponse, autant les montrer. Les deux trous se lisent par absence — la session 6 finit le 14 décembre, la 7
+  commence le 1<sup>er</sup> janvier, et la numérotation ne saute pas. Vérifié en vrai.
+- **`currentSession` est nul** aujourd'hui (août) et la page le dit au lieu de n'afficher rien.
+- **Les trois états de `result` sont distingués** : `À jouer` (nul, session en cours), `Non jouée` (`"unplayed"`,
+  réglée sans avoir été jouée), `Terminée`. Un quatrième cas existe et est traité : nul dans une session **réglée**,
+  soit « sans résultat ».
+- **Aucun lien joueur n'est rendu.** Un test échoue si la chaîne `invite` apparaît dans le DOM.
+- **Les inactifs restent au classement** avec leur renommée, marqués « a quitté la ligue ».
+- **`sessionCount` vient de la réponse**, jamais 16 en dur — un test le prouve en servant 12.
+
+Le seed est construit autour de ces cas : trois sessions réglées, une en cours, une jamais tirée, deux exemptions
+`ODD`, deux membres inactifs dont un qui n'a jamais joué, et une égalité en tête à 16 points.
 
 ### 6.1 Vue principale — `GET /api/league`
 

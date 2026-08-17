@@ -1,4 +1,4 @@
-import { FaUsers, FaDiscord, FaShieldHalved } from 'react-icons/fa6';
+import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy } from 'react-icons/fa6';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { TbGoGame } from 'react-icons/tb';
 import { Link, NavLink } from 'react-router-dom';
@@ -54,6 +54,13 @@ export default function Header() {
                     <span className={'NavButton'}>
                         <FaShieldHalved />
                         <span className={'NavButtonText'}>Maisons</span>
+                    </span>
+                </NavLink>
+
+                <NavLink to={'/league'} className={'NavLink'}>
+                    <span className={'NavButton'}>
+                        <FaTrophy />
+                        <span className={'NavButtonText'}>Ligue</span>
                     </span>
                 </NavLink>
 

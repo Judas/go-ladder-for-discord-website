@@ -1,0 +1,572 @@
+{
+  "league": {
+    "season": "2025-2026",
+    "period": "VACATION",
+    "sessionCount": 16,
+    "currentSession": null,
+    "sessions": [
+      {
+        "number": 1,
+        "label": "15 – 30 septembre",
+        "start": "2025-09-15T00:00:00+02:00",
+        "end": "2025-10-01T00:00:00+02:00",
+        "drawn": true,
+        "settled": true
+      },
+      {
+        "number": 2,
+        "label": "1 – 14 octobre",
+        "start": "2025-10-01T00:00:00+02:00",
+        "end": "2025-10-15T00:00:00+02:00",
+        "drawn": true,
+        "settled": true
+      },
+      {
+        "number": 3,
+        "label": "15 – 31 octobre",
+        "start": "2025-10-15T00:00:00+02:00",
+        "end": "2025-11-01T00:00:00+01:00",
+        "drawn": true,
+        "settled": true
+      },
+      {
+        "number": 4,
+        "label": "1 – 14 novembre",
+        "start": "2025-11-01T00:00:00+01:00",
+        "end": "2025-11-15T00:00:00+01:00",
+        "drawn": true,
+        "settled": false
+      },
+      {
+        "number": 5,
+        "label": "15 – 30 novembre",
+        "start": "2025-11-15T00:00:00+01:00",
+        "end": "2025-12-01T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 6,
+        "label": "1 – 14 décembre",
+        "start": "2025-12-01T00:00:00+01:00",
+        "end": "2025-12-15T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 7,
+        "label": "1 – 14 janvier",
+        "start": "2026-01-01T00:00:00+01:00",
+        "end": "2026-01-15T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 8,
+        "label": "15 – 31 janvier",
+        "start": "2026-01-15T00:00:00+01:00",
+        "end": "2026-02-01T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 9,
+        "label": "1 – 14 février",
+        "start": "2026-02-01T00:00:00+01:00",
+        "end": "2026-02-15T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 10,
+        "label": "15 – 28 février",
+        "start": "2026-02-15T00:00:00+01:00",
+        "end": "2026-03-01T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 11,
+        "label": "1 – 14 mars",
+        "start": "2026-03-01T00:00:00+01:00",
+        "end": "2026-03-15T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 12,
+        "label": "15 – 31 mars",
+        "start": "2026-03-15T00:00:00+01:00",
+        "end": "2026-04-01T00:00:00+02:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 13,
+        "label": "1 – 14 avril",
+        "start": "2026-04-01T00:00:00+02:00",
+        "end": "2026-04-15T00:00:00+02:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 14,
+        "label": "15 – 30 avril",
+        "start": "2026-04-15T00:00:00+02:00",
+        "end": "2026-05-01T00:00:00+02:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 15,
+        "label": "1 – 14 mai",
+        "start": "2026-05-01T00:00:00+02:00",
+        "end": "2026-05-15T00:00:00+02:00",
+        "drawn": false,
+        "settled": false
+      },
+      {
+        "number": 16,
+        "label": "15 – 31 mai",
+        "start": "2026-05-15T00:00:00+02:00",
+        "end": "2026-06-01T00:00:00+02:00",
+        "drawn": false,
+        "settled": false
+      }
+    ],
+    "standings": [
+      {
+        "discordId": "900000000000000001",
+        "discordName": "Test Boreale",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+        "house": {
+          "slug": "FILS_DU_FROID",
+          "name": "Fils du Froid",
+          "color": "#aa0001"
+        },
+        "active": true,
+        "rank": 1,
+        "played": 3,
+        "won": 2,
+        "lost": 1,
+        "exempted": 0,
+        "renown": {
+          "playedPoints": 6,
+          "victoryPoints": 10,
+          "perfectBonus": 0,
+          "total": 16
+        }
+      },
+      {
+        "discordId": "900000000000000006",
+        "discordName": "Test Croissant",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+        "house": {
+          "slug": "LUNAIRES_AETHER",
+          "name": "Lunaires d’Æther",
+          "color": "#b85209"
+        },
+        "active": true,
+        "rank": 1,
+        "played": 3,
+        "won": 2,
+        "lost": 1,
+        "exempted": 0,
+        "renown": {
+          "playedPoints": 6,
+          "victoryPoints": 10,
+          "perfectBonus": 0,
+          "total": 16
+        }
+      },
+      {
+        "discordId": "900000000000000002",
+        "discordName": "Test Givre",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+        "house": {
+          "slug": "FILS_DU_FROID",
+          "name": "Fils du Froid",
+          "color": "#aa0001"
+        },
+        "active": true,
+        "rank": 3,
+        "played": 2,
+        "won": 2,
+        "lost": 0,
+        "exempted": 0,
+        "renown": {
+          "playedPoints": 4,
+          "victoryPoints": 10,
+          "perfectBonus": 0,
+          "total": 14
+        }
+      },
+      {
+        "discordId": "900000000000000004",
+        "discordName": "Test Quartz",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+        "house": {
+          "slug": "NEXUS_ALPHA",
+          "name": "Nexus Alpha",
+          "color": "#7dfffc"
+        },
+        "active": true,
+        "rank": 4,
+        "played": 2,
+        "won": 1,
+        "lost": 1,
+        "exempted": 1,
+        "renown": {
+          "playedPoints": 4,
+          "victoryPoints": 5,
+          "perfectBonus": 0,
+          "total": 9
+        }
+      },
+      {
+        "discordId": "900000000000000005",
+        "discordName": "Test Obsidienne",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+        "house": {
+          "slug": "NEXUS_ALPHA",
+          "name": "Nexus Alpha",
+          "color": "#7dfffc"
+        },
+        "active": true,
+        "rank": 5,
+        "played": 3,
+        "won": 0,
+        "lost": 3,
+        "exempted": 1,
+        "renown": {
+          "playedPoints": 6,
+          "victoryPoints": 0,
+          "perfectBonus": 0,
+          "total": 6
+        }
+      },
+      {
+        "discordId": "900000000000000007",
+        "discordName": "Test Nebuleuse",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+        "house": {
+          "slug": "LUNAIRES_AETHER",
+          "name": "Lunaires d’Æther",
+          "color": "#b85209"
+        },
+        "active": false,
+        "rank": 6,
+        "played": 1,
+        "won": 0,
+        "lost": 1,
+        "exempted": 0,
+        "renown": {
+          "playedPoints": 2,
+          "victoryPoints": 0,
+          "perfectBonus": 0,
+          "total": 2
+        }
+      },
+      {
+        "discordId": "900000000000000003",
+        "discordName": "Test Frimas",
+        "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
+        "house": {
+          "slug": "FILS_DU_FROID",
+          "name": "Fils du Froid",
+          "color": "#aa0001"
+        },
+        "active": false,
+        "rank": 7,
+        "played": 0,
+        "won": 0,
+        "lost": 0,
+        "exempted": 0,
+        "renown": {
+          "playedPoints": 0,
+          "victoryPoints": 0,
+          "perfectBonus": 0,
+          "total": 0
+        }
+      }
+    ]
+  },
+  "session": {
+    "settled": {
+      "season": "2025-2026",
+      "period": "VACATION",
+      "sessionCount": 16,
+      "session": {
+        "number": 1,
+        "label": "15 – 30 septembre",
+        "start": "2025-09-15T00:00:00+02:00",
+        "end": "2025-10-01T00:00:00+02:00",
+        "drawn": true,
+        "settled": true
+      },
+      "matches": [
+        {
+          "black": {
+            "discordId": "900000000000000001",
+            "discordName": "Test Boreale",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "FILS_DU_FROID",
+              "name": "Fils du Froid",
+              "color": "#aa0001"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000004",
+            "discordName": "Test Quartz",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000001",
+          "result": "black",
+          "winnerDiscordId": "900000000000000001"
+        },
+        {
+          "black": {
+            "discordId": "900000000000000002",
+            "discordName": "Test Givre",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+            "house": {
+              "slug": "FILS_DU_FROID",
+              "name": "Fils du Froid",
+              "color": "#aa0001"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000007",
+            "discordName": "Test Nebuleuse",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+            "house": {
+              "slug": "LUNAIRES_AETHER",
+              "name": "Lunaires d’Æther",
+              "color": "#b85209"
+            },
+            "active": false
+          },
+          "spectatorLink": "https://online-go.com/game/90000003",
+          "result": "unplayed",
+          "winnerDiscordId": null
+        },
+        {
+          "black": {
+            "discordId": "900000000000000005",
+            "discordName": "Test Obsidienne",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000006",
+            "discordName": "Test Croissant",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "LUNAIRES_AETHER",
+              "name": "Lunaires d’Æther",
+              "color": "#b85209"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000002",
+          "result": "white",
+          "winnerDiscordId": "900000000000000006"
+        }
+      ],
+      "exemptions": []
+    },
+    "exempted": {
+      "season": "2025-2026",
+      "period": "VACATION",
+      "sessionCount": 16,
+      "session": {
+        "number": 3,
+        "label": "15 – 31 octobre",
+        "start": "2025-10-15T00:00:00+02:00",
+        "end": "2025-11-01T00:00:00+01:00",
+        "drawn": true,
+        "settled": true
+      },
+      "matches": [
+        {
+          "black": {
+            "discordId": "900000000000000001",
+            "discordName": "Test Boreale",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "FILS_DU_FROID",
+              "name": "Fils du Froid",
+              "color": "#aa0001"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000005",
+            "discordName": "Test Obsidienne",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000007",
+          "result": "black",
+          "winnerDiscordId": "900000000000000001"
+        },
+        {
+          "black": {
+            "discordId": "900000000000000006",
+            "discordName": "Test Croissant",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "LUNAIRES_AETHER",
+              "name": "Lunaires d’Æther",
+              "color": "#b85209"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000002",
+            "discordName": "Test Givre",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+            "house": {
+              "slug": "FILS_DU_FROID",
+              "name": "Fils du Froid",
+              "color": "#aa0001"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000008",
+          "result": "white",
+          "winnerDiscordId": "900000000000000002"
+        }
+      ],
+      "exemptions": [
+        {
+          "discordId": "900000000000000004",
+          "discordName": "Test Quartz",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+          "house": {
+            "slug": "NEXUS_ALPHA",
+            "name": "Nexus Alpha",
+            "color": "#7dfffc"
+          },
+          "reason": "ODD"
+        }
+      ]
+    },
+    "running": {
+      "season": "2025-2026",
+      "period": "VACATION",
+      "sessionCount": 16,
+      "session": {
+        "number": 4,
+        "label": "1 – 14 novembre",
+        "start": "2025-11-01T00:00:00+01:00",
+        "end": "2025-11-15T00:00:00+01:00",
+        "drawn": true,
+        "settled": false
+      },
+      "matches": [
+        {
+          "black": {
+            "discordId": "900000000000000002",
+            "discordName": "Test Givre",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+            "house": {
+              "slug": "FILS_DU_FROID",
+              "name": "Fils du Froid",
+              "color": "#aa0001"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000006",
+            "discordName": "Test Croissant",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "LUNAIRES_AETHER",
+              "name": "Lunaires d’Æther",
+              "color": "#b85209"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000010",
+          "result": null,
+          "winnerDiscordId": null
+        },
+        {
+          "black": {
+            "discordId": "900000000000000004",
+            "discordName": "Test Quartz",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "white": {
+            "discordId": "900000000000000001",
+            "discordName": "Test Boreale",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "FILS_DU_FROID",
+              "name": "Fils du Froid",
+              "color": "#aa0001"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000009",
+          "result": null,
+          "winnerDiscordId": null
+        }
+      ],
+      "exemptions": [
+        {
+          "discordId": "900000000000000005",
+          "discordName": "Test Obsidienne",
+          "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+          "house": {
+            "slug": "NEXUS_ALPHA",
+            "name": "Nexus Alpha",
+            "color": "#7dfffc"
+          },
+          "reason": "ODD"
+        }
+      ]
+    },
+    "undrawn": {
+      "season": "2025-2026",
+      "period": "VACATION",
+      "sessionCount": 16,
+      "session": {
+        "number": 5,
+        "label": "15 – 30 novembre",
+        "start": "2025-11-15T00:00:00+01:00",
+        "end": "2025-12-01T00:00:00+01:00",
+        "drawn": false,
+        "settled": false
+      },
+      "matches": [],
+      "exemptions": []
+    }
+  }
+}

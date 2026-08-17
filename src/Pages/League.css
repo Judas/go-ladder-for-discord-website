@@ -1,0 +1,182 @@
+.League {
+    color: var(--white-87);
+    padding-bottom: 4rem;
+}
+
+.League__SectionTitle {
+    margin: 2rem 0 1rem 0;
+    font-family: var(--accent-font);
+    font-size: 2rem;
+    color: var(--sun);
+    text-align: center;
+}
+
+.League__NoSession,
+.League__Empty {
+    text-align: center;
+    font-style: italic;
+    opacity: .6;
+}
+
+.League__Current {
+    display: grid;
+    justify-items: center;
+    gap: .25rem;
+    padding: 1.5rem;
+    background: var(--mine-shaft);
+    border: .2rem solid var(--sun);
+    border-radius: .5rem;
+    text-decoration: none;
+    color: var(--white-87);
+}
+
+.League__CurrentLabel {
+    font-family: var(--accent-font);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--sun);
+}
+
+.League__CurrentDates {
+    font-size: 1.125rem;
+}
+
+.League__CurrentState,
+.League__SessionState {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    opacity: .6;
+}
+
+.League__Calendar {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: .5rem;
+}
+
+.League__Session {
+    display: grid;
+    justify-items: center;
+    gap: .125rem;
+    padding: .5rem;
+    background: var(--tundora);
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    text-decoration: none;
+    color: var(--white-87);
+    height: 100%;
+}
+
+.League__Session:hover {
+    background: var(--emperor);
+}
+
+.League__Session.current {
+    border-color: var(--sun);
+}
+
+.League__SessionNumber {
+    font-family: var(--accent-font);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--sun);
+}
+
+.League__SessionLabel {
+    font-size: .8rem;
+    text-align: center;
+}
+
+/* The standings carry nine columns, so they scroll sideways on a phone rather than being squeezed. */
+.League__StandingsScroll {
+    overflow-x: auto;
+}
+
+.League__Standings {
+    display: grid;
+    min-width: 32rem;
+}
+
+.League__StandingsHead .Row,
+.League__Row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem 2.5rem minmax(6rem, 1fr) 2rem repeat(4, 2rem) 5rem;
+    gap: .5rem;
+    align-items: center;
+    padding: .5rem .75rem;
+}
+
+.League__StandingsHead .Row {
+    font-family: var(--accent-font);
+    font-size: 1.25rem;
+    background: var(--mine-shaft);
+    border-radius: .5rem .5rem 0 0;
+}
+
+.League__Row {
+    background: var(--tundora);
+}
+
+.League__StandingsBody > .Row:nth-of-type(even) {
+    background: var(--mine-shaft);
+}
+
+.League__StandingsBody > .Row:last-child {
+    border-radius: 0 0 .5rem .5rem;
+}
+
+.League__Row > a {
+    position: absolute;
+    inset: 0;
+}
+
+.League__Row:hover,
+.League__Row:focus-within {
+    background: var(--sun-20);
+}
+
+/* Still ranked, still holding their renown — just no longer drawn. */
+.League__Row.inactive {
+    opacity: .55;
+}
+
+.League__Inactive {
+    display: block;
+    font-size: .7rem;
+    font-style: italic;
+    opacity: .8;
+}
+
+.League__Rank {
+    font-family: var(--accent-font);
+    font-size: 1.5rem;
+    color: var(--sun);
+    text-align: center;
+}
+
+.League__Player {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.League__Figure {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.League__Renown {
+    font-family: var(--accent-font);
+    font-size: 1.5rem;
+    text-align: right;
+}
+
+.League__Scale {
+    margin: 1rem auto 0 auto;
+    max-width: 42rem;
+    font-size: .8rem;
+    font-style: italic;
+    opacity: .6;
+    text-align: center;
+}
