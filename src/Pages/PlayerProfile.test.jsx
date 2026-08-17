@@ -42,27 +42,42 @@ describe('PlayerProfile', () => {
     });
 
     describe('rank', () => {
-        it('shows every tier with the player\'s one picked out, and warns about nothing', async () => {
+        /** Two tiers either side of the player's own, and nothing else of the ladder. */
+        it('shows the player\'s tier with two neighbours either side, and warns about nothing', async () => {
             await expectNoConsoleErrors(async () => {
                 render(withHouseAndLeague);
                 await screen.findByText(withHouseAndLeague.tierName);
             });
 
-            const scale = screen.getByRole('list', { name: '' }) ?? null;
-            expect(scale).toBeTruthy();
-            for (const tier of tiers) {
-                expect(screen.getAllByAltText(tier.name).length).toBeGreaterThan(0);
-            }
+            const current = withHouseAndLeague.tierRank;
+            const shown = tiers.filter(t => Math.abs(t.rank - current) <= 2);
+            const hidden = tiers.filter(t => Math.abs(t.rank - current) > 2);
+            expect(shown.length, 'the fixture player should sit away from both ends').toBe(5);
+            expect(hidden.length).toBeGreaterThan(0);
+
+            for (const tier of shown) { expect(screen.getByAltText(tier.name)).toBeInTheDocument(); }
+            for (const tier of hidden) { expect(screen.queryByAltText(tier.name)).not.toBeInTheDocument(); }
             expect(screen.getByText('(palier actuel)')).toBeInTheDocument();
         });
 
-        /** The count comes from /api/tiers; a ninth tier would appear here without a code change. */
-        it('draws the scale from the served tiers, not from a hardcoded eight', async () => {
-            const nine = [...tiers, { rank: 9, name: 'Mythique', min: 2400, max: 2600 }];
-            render(withHouseAndLeague, { '/api/tiers': nine });
-            await screen.findByText(withHouseAndLeague.tierName);
+        /** At the top of the ladder there is nothing above, so the window is simply shorter. */
+        it('shortens the window at the end of the ladder', async () => {
+            const top = tiers[tiers.length - 1];
+            render({ ...withHouseAndLeague, tierRank: top.rank, tierName: top.name });
+            await screen.findByText(top.name);
 
-            expect(screen.getAllByAltText('Mythique').length).toBeGreaterThan(0);
+            expect(screen.getByAltText(top.name)).toBeInTheDocument();
+            expect(screen.getByAltText(tiers[tiers.length - 3].name)).toBeInTheDocument();
+            expect(screen.queryByAltText(tiers[tiers.length - 4].name)).not.toBeInTheDocument();
+        });
+
+        /** The ladder comes from /api/tiers; a ninth tier is reachable without a code change. */
+        it('follows the served tiers rather than a hardcoded eight', async () => {
+            const mythique = { rank: 9, name: 'Mythique', min: 2400, max: 2600 };
+            render({ ...withHouseAndLeague, tierRank: 9, tierName: 'Mythique' }, { '/api/tiers': [...tiers, mythique] });
+            await screen.findByText('Mythique');
+
+            expect(screen.getByAltText('Mythique')).toBeInTheDocument();
         });
 
         it('keeps the tier name and the rating', async () => {
@@ -72,12 +87,17 @@ describe('PlayerProfile', () => {
             expect(screen.getByText(String(Math.round(withHouseAndLeague.rating)))).toBeInTheDocument();
         });
 
-        /** tierRank 0 matches no tier, so nothing is picked out and the ladder just shows what there is to climb. */
-        it('picks nothing out for an unranked player', async () => {
+        /**
+         * tierRank 0 matches no tier at all, so nothing is picked out and the window anchors at the bottom of the
+         * ladder — what an unranked player has ahead of them.
+         */
+        it('picks nothing out for an unranked player, and shows the foot of the ladder', async () => {
             render(unranked);
 
             expect(await screen.findByText('[Non classé]')).toBeInTheDocument();
             expect(screen.queryByText('(palier actuel)')).not.toBeInTheDocument();
+            expect(screen.getByAltText(tiers[0].name)).toBeInTheDocument();
+            expect(screen.queryByAltText(tiers[tiers.length - 1].name)).not.toBeInTheDocument();
         });
     });
 

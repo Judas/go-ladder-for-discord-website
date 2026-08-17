@@ -58,19 +58,6 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
     return (
         <>
             <div className={'PlayerProfile__LeftColumn'}>
-                <div className={'CardHighlighted'}>
-                    <h2 className={'CardHeader'}><span>{player.discordName}</span></h2>
-                    <Avatar src={player.discordAvatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.discordName}`} hidden={true}/>
-                    
-                    <div className={'CardContent'}>
-                        <div className={'PlayerProfile__Tier'}>
-                            <TierScale player={player} tiers={tiers} />
-                            <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
-                            { playerRating }
-                        </div>
-                    </div>
-                </div>
-
                 <div className={'Card'}>
                     <h2 className={'CardHeader'}><span>Parties récentes</span></h2>
                     <GameList player={player} />
@@ -88,6 +75,19 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
             </div>
 
             <div className={'PlayerProfile__RightColumn'}>
+                <div className={'CardHighlighted'}>
+                    <h2 className={'CardHeader'}><span>{player.discordName}</span></h2>
+                    <Avatar src={player.discordAvatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.discordName}`} hidden={true}/>
+
+                    <div className={'CardContent'}>
+                        <div className={'PlayerProfile__Tier'}>
+                            <TierScale player={player} tiers={tiers} />
+                            <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
+                            { playerRating }
+                        </div>
+                    </div>
+                </div>
+
                 <div className={'Card'}>
                     <h2 className={'CardHeader'}><span>Comptes</span></h2>
                     <AccountList player={player} />
@@ -270,20 +270,30 @@ function Action({path, body, label, hint, reload}) {
     );
 }
 
+/** How many tiers to show either side of the player's own. */
+const TIER_WINDOW = 2;
+
 /**
- * The whole ladder, with the player's tier picked out.
+ * The player's tier and its neighbours: two below, two above, fewer at the ends of the ladder.
  *
  * Replaces the progress bar between two tiers, which disappeared entirely at the top tier and for an unranked
- * player — the two cases it was least able to explain. The scale is drawn from `/api/tiers`, never from a hardcoded
- * eight: the server owns how many there are, and a ninth would appear here on its own.
+ * player — the two cases it was least able to explain. Drawn from `/api/tiers` rather than a hardcoded eight: the
+ * server owns how many there are, and the window follows whatever it sends.
  *
- * An unranked player has `tierRank: 0`, which matches nothing, so no shield is picked out and the ladder simply
- * shows what there is to climb.
+ * An unranked player has `tierRank: 0`, which matches no tier. The window then anchors at the bottom of the ladder,
+ * which is what they have ahead of them, and nothing is picked out.
  */
+function tierWindow(tiers, tierRank) {
+    const index = tiers.findIndex(tier => tier.rank === tierRank);
+    const anchor = index === -1 ? 0 : index;
+
+    return tiers.slice(Math.max(0, anchor - TIER_WINDOW), anchor + TIER_WINDOW + 1);
+}
+
 function TierScale({player, tiers}) {
     return (
         <ol className={'PlayerProfile__TierScale NoBulletList'}>
-            {tiers.map(tier => (
+            {tierWindow(tiers, player.tierRank).map(tier => (
                 <li key={tier.rank}>
                     <span
                         className={`PlayerProfile__TierStep ${tier.rank === player.tierRank ? 'current' : ''}`}
