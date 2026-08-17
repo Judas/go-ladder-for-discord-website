@@ -54,16 +54,44 @@
 .MatchCard.unplayed { border-left-color: var(--punch); }
 .MatchCard.draw { border-left-color: var(--emperor); }
 
+/*
+ * The crest is pushed to the outer edge of the card — left for black, right for white — so the two houses face each
+ * other across the outcome. The DOM order is crest-first on both sides; only the direction is mirrored, so a screen
+ * reader gets the two sides in the same order.
+ */
 .MatchCard__Side {
-    display: grid;
-    justify-items: center;
-    gap: .25rem;
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+    justify-content: flex-start;
     text-decoration: none;
     color: var(--white-87);
 }
 
-.MatchCard__Side img,
-.MatchCard__Side picture {
+.MatchCard__Side.white {
+    flex-direction: row-reverse;
+}
+
+.MatchCard__Identity {
+    display: grid;
+    justify-items: center;
+    gap: .25rem;
+    min-width: 0;
+}
+
+/* Keeps the identity where it sits when a player has no house, so the two sides stay aligned. */
+.MatchCard__NoCrest {
+    width: 64px;
+    height: 64px;
+    flex: none;
+}
+
+.MatchCard__Crest {
+    flex: none;
+}
+
+.MatchCard__Identity img,
+.MatchCard__Identity picture {
     border-radius: 50%;
 }
 
@@ -72,10 +100,13 @@
     font-weight: bold;
 }
 
+/* nowrap was missing, so the ellipsis never fired and a long name pushed the crest off its edge instead. */
 .MatchCard__Name {
+    max-width: 100%;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .MatchCard__Colour {

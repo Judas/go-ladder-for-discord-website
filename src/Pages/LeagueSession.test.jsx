@@ -70,6 +70,29 @@ describe('LeagueSession', () => {
         expect(screen.getByText(winnerName).closest('a')).toHaveClass('winner');
     });
 
+    /**
+     * The crest sits on the outer edge of each side — the mirroring is done in CSS, so the DOM order stays the same
+     * on both and a screen reader reads them the same way round.
+     */
+    it('gives each side its house crest, in the small drawing', async () => {
+        const match = sessionSettled.matches.find(m => m.black.house && m.white.house);
+        expect(match, 'the captured session should still hold a match with two housed players').toBeDefined();
+
+        render(sessionSettled);
+        await screen.findByRole('heading', { name: `Session ${sessionSettled.session.number}` });
+
+        // The spectator link sits between the two sides, so the sides are picked by name rather than by position.
+        const card = cardOf(match.black.discordName);
+        const sideOf = player => within(card).getByText(player.discordName).closest('a');
+
+        expect(sideOf(match.black)).toHaveClass('black');
+        expect(sideOf(match.white)).toHaveClass('white');
+        for (const player of [match.black, match.white]) {
+            expect(within(sideOf(player)).getByAltText(player.house.name))
+                .toHaveAttribute('src', `/crests/${player.house.slug}_SMALL.svg`);
+        }
+    });
+
     /** ⚠ Only the spectator link ever leaves the server; the two invite links never do, on any route. */
     it('offers the spectator link and nothing else', async () => {
         render(sessionSettled);

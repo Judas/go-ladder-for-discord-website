@@ -80,7 +80,7 @@ function Match({match, settled}) {
 
     return (
         <article className={`MatchCard ${outcome.modifier}`}>
-            <Side player={match.black} colour={'Noir'} winner={match.winnerDiscordId === match.black.discordId} />
+            <Side player={match.black} colour={'Noir'} edge={'black'} winner={match.winnerDiscordId === match.black.discordId} />
             <div className={'MatchCard__Middle'}>
                 <span className={'MatchCard__Outcome'}>{outcome.label}</span>
                 {/*
@@ -94,7 +94,7 @@ function Match({match, settled}) {
                     </a>
                 )}
             </div>
-            <Side player={match.white} colour={'Blanc'} winner={match.winnerDiscordId === match.white.discordId} />
+            <Side player={match.white} colour={'Blanc'} edge={'white'} winner={match.winnerDiscordId === match.white.discordId} />
         </article>
     );
 }
@@ -114,13 +114,29 @@ function outcomeOf(match, settled) {
     return { label: 'Terminée', modifier: 'played' };
 }
 
-function Side({player, colour, winner}) {
+/**
+ * One player of a pairing.
+ *
+ * `edge` is which half of the card this side occupies, and the crest is pushed to that outer edge — left for black,
+ * right for white — so the two houses face each other across the outcome. The DOM order is the same on both sides,
+ * crest first; the mirroring is `flex-direction: row-reverse` in the stylesheet, so a screen reader reads the two
+ * sides the same way round.
+ *
+ * The small crest, despite the size: it is the simplified drawing, and it is what holds up when a house has to be
+ * recognised at a glance rather than studied.
+ */
+function Side({player, colour, winner, edge}) {
     return (
-        <Link to={`/player/${player.discordId}`} className={`MatchCard__Side ${winner ? 'winner' : ''}`}>
-            <Avatar src={player.discordAvatar} size={48} alt={''} hidden={true} />
-            <span className={'MatchCard__Name'}>{player.discordName ?? player.discordId}</span>
-            <span className={'MatchCard__Colour'}>{colour}</span>
-            {player.house && <Crest slug={player.house.slug} name={player.house.name} size={20} />}
+        <Link to={`/player/${player.discordId}`} className={`MatchCard__Side ${edge} ${winner ? 'winner' : ''}`}>
+            {player.house
+                ? <Crest slug={player.house.slug} name={player.house.name} size={64} small={true}
+                         className={'MatchCard__Crest'} />
+                : <span className={'MatchCard__NoCrest'} aria-hidden={true} />}
+            <span className={'MatchCard__Identity'}>
+                <Avatar src={player.discordAvatar} size={48} alt={''} hidden={true} />
+                <span className={'MatchCard__Name'}>{player.discordName ?? player.discordId}</span>
+                <span className={'MatchCard__Colour'}>{colour}</span>
+            </span>
         </Link>
     );
 }
