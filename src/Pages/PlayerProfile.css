@@ -585,3 +585,55 @@
     opacity: .5;
     cursor: default;
 }
+
+/* Leaving the league. Possible in season, unlike a house — so it lives with the figures, not behind a date. */
+.PlayerProfile__Leave {
+    display: grid;
+    gap: .5rem;
+    justify-items: center;
+    padding-top: .5rem;
+    border-top: 1px solid var(--emperor);
+}
+
+.PlayerProfile__LeaveWarning {
+    margin: 0;
+    font-size: .75rem;
+    text-align: center;
+    color: var(--white-87);
+    opacity: .8;
+}
+
+.PlayerProfile__LeaveActions {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.PlayerProfile__LeaveButton {
+    padding: .5rem 1rem;
+    font-family: var(--default-font);
+    font-size: .875rem;
+    color: var(--white-87);
+    background: none;
+    border: 2px solid var(--emperor);
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.PlayerProfile__LeaveButton:hover:not(:disabled) {
+    border-color: var(--punch);
+    color: var(--punch);
+}
+
+/* Only the confirmation is dressed as a warning; the first click just opens the question. */
+.PlayerProfile__LeaveButton.confirm {
+    color: var(--punch);
+    border-color: var(--punch);
+    background: var(--punch-20);
+}
+
+.PlayerProfile__LeaveButton:disabled {
+    opacity: .5;
+    cursor: default;
+}

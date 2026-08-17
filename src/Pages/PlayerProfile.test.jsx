@@ -19,8 +19,8 @@ const render = (profile, { period = 'VACATION', ...overrides } = {}) => {
         '/api/league/join': {},
         ...overrides,
     });
-    renderAt(<PlayerProfile />, { path: `/player/${profile.discordId}`, route: '/player/:playerId' });
-    return fetchStub;
+    const view = renderAt(<PlayerProfile />, { path: `/player/${profile.discordId}`, route: '/player/:playerId' });
+    return Object.assign(fetchStub, { unmount: view.unmount });
 };
 
 /** Signs the visitor in as `discordId`, the way AuthProfile stores it. */
@@ -304,6 +304,76 @@ describe('PlayerProfile', () => {
             await screen.findByText(withHouseOnly.tierName);
 
             expect(within(sectionNamed('Ligue')).queryByRole('button')).not.toBeInTheDocument();
+        });
+
+        /**
+         * Leaving is possible **in season**, unlike a house — there is nothing to protect against out of season, and
+         * refusing would leave someone who wants out waiting until September. So no period condition here.
+         */
+        it('offers the way out to an active member, in season and out of it', async () => {
+            signInAs(withHouseAndLeague.discordId);
+
+            for (const period of ['SEASON', 'VACATION']) {
+                const view = render(withHouseAndLeague, { period });
+                await screen.findByText(withHouseAndLeague.tierName);
+
+                expect(
+                    within(sectionNamed('Ligue')).getByRole('button', { name: 'Quitter la ligue' }),
+                    `should be offered during ${period}`,
+                ).toBeInTheDocument();
+
+                view.unmount();
+            }
+        });
+
+        it('asks before leaving, and names what does not come back', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const fetchStub = render(withHouseAndLeague, { '/api/league/leave': {} });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            await userEvent.click(screen.getByRole('button', { name: 'Quitter la ligue' }));
+
+            // A drawn match stays to be played, and counts as unplayed if it is not — the one thing leaving costs.
+            expect(screen.getByText(/match déjà tiré reste à jouer/)).toBeInTheDocument();
+            expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/league/leave'))).toBe(false);
+
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+
+            const posted = await waitFor(() => {
+                const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/league/leave'));
+                expect(call).toBeDefined();
+                return call;
+            });
+            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withHouseAndLeague.discordId });
+        });
+
+        it('backs out of the confirmation', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const fetchStub = render(withHouseAndLeague);
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            await userEvent.click(screen.getByRole('button', { name: 'Quitter la ligue' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+
+            expect(screen.getByRole('button', { name: 'Quitter la ligue' })).toBeInTheDocument();
+            expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/league/leave'))).toBe(false);
+        });
+
+        it('offers no way out on somebody else\'s profile', async () => {
+            render(withHouseAndLeague);
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            expect(screen.queryByRole('button', { name: 'Quitter la ligue' })).not.toBeInTheDocument();
+        });
+
+        /** Already inactive: there is nothing left to leave, and the server would answer on a row already at 0. */
+        it('offers no way out to a member who has already left', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const inactive = { ...withHouseAndLeague, league: { ...withHouseAndLeague.league, active: false } };
+            render(inactive);
+            await screen.findByText(inactive.tierName);
+
+            expect(screen.queryByRole('button', { name: 'Quitter la ligue' })).not.toBeInTheDocument();
         });
 
         it('marks a member who is no longer drawn', async () => {

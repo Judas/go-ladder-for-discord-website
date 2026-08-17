@@ -162,6 +162,62 @@ function HouseSection({player, period, reload}) {
 }
 
 /**
+ * Leaving the league.
+ *
+ * Unlike a house, this is possible **during** the season — there is nothing to protect against out of season, and
+ * refusing would leave someone who wants out waiting until September. So no period condition, only membership.
+ *
+ * Nothing is withdrawn: the renown already earned stays, and rejoining lands on the same row with `active` back to
+ * 1. What does not come back is a match already drawn — it stays to be played, and the unplayed rule applies to it
+ * like any other. That is the one consequence worth a confirmation step.
+ */
+function LeaveLeague({player, reload}) {
+    const [state, setState] = useState('idle');
+
+    const leave = () => {
+        setState('pending');
+        post('/api/league/leave', { discordId: player.discordId })
+            .then(() => {
+                setState('idle');
+                reload();
+            })
+            .catch(() => setState('error'));
+    };
+
+    if (state !== 'confirming') {
+        return (
+            <div className={'PlayerProfile__Leave'}>
+                <button
+                    type={'button'}
+                    className={'PlayerProfile__LeaveButton'}
+                    disabled={state === 'pending'}
+                    onClick={() => setState('confirming')}>
+                    {state === 'pending' ? 'En cours…' : 'Quitter la ligue'}
+                </button>
+                {state === 'error' && <p className={'Error'}>Le retrait a échoué.</p>}
+            </div>
+        );
+    }
+
+    return (
+        <div className={'PlayerProfile__Leave'}>
+            <p className={'PlayerProfile__LeaveWarning'}>
+                Votre renommée reste acquise, et vous pourrez revenir. En revanche, un match déjà tiré reste à jouer :
+                non joué, il comptera comme tel.
+            </p>
+            <div className={'PlayerProfile__LeaveActions'}>
+                <button type={'button'} className={'PlayerProfile__LeaveButton confirm'} onClick={leave}>
+                    Confirmer
+                </button>
+                <button type={'button'} className={'PlayerProfile__LeaveButton'} onClick={() => setState('idle')}>
+                    Annuler
+                </button>
+            </div>
+        </div>
+    );
+}
+
+/**
  * What the member wants for next season. Only during the break, and only on one's own profile.
  *
  * The three intentions are the whole of `house_members.pending_action`'s vocabulary. Nothing is applied on the spot —
@@ -275,6 +331,7 @@ function LeagueSection({player, period, reload}) {
                     {' '}· {league.exempted} exempté{league.exempted > 1 ? 's' : ''}
                 </p>
                 {!league.active && <p className={'PlayerProfile__Empty'}>Inactif : plus tiré au sort cette saison.</p>}
+                {league.active && isOwnProfile(player) && <LeaveLeague player={player} reload={reload} />}
             </div>
         );
     }
