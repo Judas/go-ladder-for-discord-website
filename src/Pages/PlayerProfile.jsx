@@ -10,6 +10,7 @@ import ColHeaderElement from "../Components/Table/ColHeaderElement.jsx";
 import CellElement from "../Components/Table/CellElement.jsx";
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
+import Crest from "../Components/Crest.jsx";
 import useApi from "../hooks/useApi.js";
 
 import './PlayerProfile.css'
@@ -19,14 +20,19 @@ export default function PlayerProfile() {
 
     const [tooltipVisible, setTooltipVisible] = useState(false);
 
-    // Two requests, deliberately: the profile changes with the route, the tier scale does not.
-    const { status: playerFetchStatus, data: player } = useApi(`/api/player/${playerId}`);
+    // Three requests, deliberately: the profile changes with the route, the tier scale does not, and the calendar
+    // is not on the profile at all.
+    const { status: playerFetchStatus, data: player, reload } = useApi(`/api/player/${playerId}`);
     const { status: tiersFetchStatus, data: tiers } = useApi('/api/tiers');
+    // ⚠ `period` rides on the `house` and `league` blocks — and both are null exactly when the join buttons are
+    // needed, so a profile alone cannot say whether the season is open. /api/houses always carries it.
+    const { data: calendar } = useApi('/api/houses');
 
     if (playerFetchStatus === 'success' && tiersFetchStatus === 'success') {
         return (
             <article className={'PlayerProfile'}>
-                <Profile player={player} tiers={tiers} tooltipHandler={() => setTooltipVisible(true)} />
+                <Profile player={player} tiers={tiers} period={calendar?.period} reload={reload}
+                         tooltipHandler={() => setTooltipVisible(true)} />
                 {tooltipVisible && (
                     <div className={'Tooltip'}>
                         <button className={'CallToAction'} onClick={() => setTooltipVisible(false)}>
@@ -44,7 +50,7 @@ export default function PlayerProfile() {
     }
 }
 
-function Profile({player, tiers, tooltipHandler}) {
+function Profile({player, tiers, period, reload, tooltipHandler}) {
     let playerRating = player.rating > 0 
         ? <h2 className={'PlayerProfile__Rating'}>{Math.round(player.rating)}</h2>
         : <h2 className={'PlayerProfile__Unranked'}>[Non classé]</h2>
@@ -59,7 +65,7 @@ function Profile({player, tiers, tooltipHandler}) {
                     <div className={'CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
                             <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
-                            <TierProgression player={player} tiers={tiers} />
+                            <TierScale player={player} tiers={tiers} />
                             <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
                             { playerRating }
                         </div>
@@ -85,47 +91,210 @@ function Profile({player, tiers, tooltipHandler}) {
                     </h2>
                     <Stability player={player} />
                 </div>
+
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Maison</span></h2>
+                    <HouseSection player={player} period={period} reload={reload} />
+                </div>
+
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Ligue</span></h2>
+                    <LeagueSection player={player} period={period} reload={reload} />
+                </div>
             </div>
         </>
     );
 }
 
-function TierProgression({player, tiers}) {
-    var currentTier = tiers.filter(tier => tier.rank === player.tierRank)[0];
-    const lastTierRank = Math.max.apply(null, tiers.map(tier => tier.rank));
+/**
+ * Whether the visitor is looking at their own profile.
+ *
+ * The API authenticates nothing — a join carries the Discord id in its body and takes it as it comes — so this is
+ * about not offering a button that acts on somebody else, not about security. Read straight from localStorage, as
+ * the header does.
+ */
+function isOwnProfile(player) {
+    return hasValidProfile() && getProfile().discordId === player.discordId;
+}
 
-    // If player is not ranked yet
-    if (currentTier == null) {
-        return null;
+/**
+ * The house block, or the way into one.
+ *
+ * `house` is null for a player in none. Joining is refused outside the season — the server answers 403, and the
+ * choices of the summer are what move people — so the button is replaced by the date it reopens rather than left to
+ * fail. `period` comes from /api/houses, never from a date computed here.
+ */
+function HouseSection({player, period, reload}) {
+    const house = player.house;
+
+    if (house == null) {
+        return <JoinHouse player={player} period={period} reload={reload} />;
     }
-
-    // If last tier, do not display the progress bar
-    if (currentTier.rank === lastTierRank) {
-        return null;
-    }
-
-    const total = currentTier.max - currentTier.min;
-    const progress = Math.round(player.rating) - currentTier.min;
-    const ratio = 100 * progress / total;
-
-    const tierNamed = rank => tiers.filter(tier => tier.rank === rank)[0]?.name ?? '';
-
-    // At the first tier there is no shield to the left, only the space one would take.
-    const previousShield = currentTier.rank === 1
-        ? (<div style={{ width: "64px", height: "64px", margin: "0 0.5rem 0 0" }} />)
-        : (<img width="64" height="64" style={{ margin: "0 0.5rem 0 0" }} alt={tierNamed(currentTier.rank - 1)}
-                src={`/shields/shield-${currentTier.rank - 1}.svg`} />);
 
     return (
-        <div className={'PlayerProfile__TierContainer'}>
-            {previousShield}
-            <div className={'PlayerProfile__ProgressBarContainer'}>
-                <div className={'PlayerProfile__ProgressBar'} style={{width: `${ratio}%`}} />
-                <span className={'PlayerProfile__ProgressBarLabel'}>{progress} / {total}</span>
-            </div>
-            <img width="64" height="64" style={{ margin: "0 0 0 0.5rem" }} alt={tierNamed(currentTier.rank + 1)}
-                src={`/shields/shield-${currentTier.rank + 1}.svg`} />
+        <div className={'PlayerProfile__House'} style={{'--house-color': house.color}}>
+            <Link to={`/house/${house.slug}`} className={'PlayerProfile__HouseIdentity'}>
+                <Crest slug={house.slug} name={house.name} size={72} small={true} />
+                <span className={'PlayerProfile__HouseName'}>{house.name}</span>
+                <span className={'PlayerProfile__HouseTagline'}>{house.tagline}</span>
+            </Link>
+
+            <dl className={'PlayerProfile__Figures'}>
+                <div>
+                    <dt>Rang</dt>
+                    <dd>{house.rank}</dd>
+                </div>
+                <div>
+                    <dt>Points</dt>
+                    <dd>{house.points.total}</dd>
+                </div>
+            </dl>
         </div>
+    );
+}
+
+function JoinHouse({player, period, reload}) {
+    if (!isOwnProfile(player)) {
+        return <p className={'PlayerProfile__Empty'}>Ce joueur n'appartient à aucune maison.</p>;
+    }
+
+    if (period === 'VACATION') {
+        return (
+            <p className={'PlayerProfile__Empty'}>
+                Vous pourrez rejoindre une maison à partir du 1<sup>er</sup> septembre.
+            </p>
+        );
+    }
+
+    return (
+        <Action
+            path={'/api/house/join'}
+            body={{ discordId: player.discordId }}
+            label={'Rejoindre une maison'}
+            hint={"La maison est tirée au sort parmi les moins peuplées."}
+            reload={reload} />
+    );
+}
+
+/**
+ * The league block, the way into it, or why the way is closed.
+ *
+ * The server refuses a join with 404 when any of its three conditions fails — known, in a house, OGS account linked —
+ * without saying which. The site knows two of them from the profile it already has, so it says so before letting
+ * anyone click.
+ */
+function LeagueSection({player, period, reload}) {
+    const league = player.league;
+
+    if (league != null) {
+        return (
+            <div className={'PlayerProfile__League'}>
+                <dl className={'PlayerProfile__Figures'}>
+                    <div>
+                        <dt>Rang</dt>
+                        <dd>{league.rank}</dd>
+                    </div>
+                    <div>
+                        <dt>Renommée</dt>
+                        <dd>{league.renown.total}</dd>
+                    </div>
+                </dl>
+                <p className={'PlayerProfile__LeagueRecord'}>
+                    {league.played} joué{league.played > 1 ? 's' : ''} · {league.won} gagné{league.won > 1 ? 's' : ''}
+                    {' '}· {league.exempted} exempté{league.exempted > 1 ? 's' : ''} sur {league.sessionCount} sessions
+                </p>
+                {!league.active && <p className={'PlayerProfile__Empty'}>Inactif : plus tiré au sort cette saison.</p>}
+            </div>
+        );
+    }
+
+    if (player.house == null) {
+        return <p className={'PlayerProfile__Empty'}>Il faut appartenir à une maison pour rejoindre la ligue.</p>;
+    }
+
+    if (!isOwnProfile(player)) {
+        return <p className={'PlayerProfile__Empty'}>Ce joueur n'a pas rejoint la ligue.</p>;
+    }
+
+    if (period === 'VACATION') {
+        return (
+            <p className={'PlayerProfile__Empty'}>
+                Les académies se forment à la rentrée : rendez-vous le 1<sup>er</sup> septembre.
+            </p>
+        );
+    }
+
+    return (
+        <Action
+            path={'/api/league/join'}
+            body={{ discordId: player.discordId }}
+            label={'Rejoindre la ligue'}
+            hint={"Un compte OGS lié est nécessaire."}
+            reload={reload} />
+    );
+}
+
+/**
+ * A button that POSTs and then makes the page read itself again.
+ *
+ * The refetch is the point: the profile is what says whether the player is in a house, so nothing else would show
+ * the result of a join. `useApi` cannot serve this — it is a GET hook — so the request is written out here.
+ */
+function Action({path, body, label, hint, reload}) {
+    const [state, setState] = useState('idle');
+
+    const submit = () => {
+        setState('pending');
+        fetch(path, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        })
+            .then(res => {
+                if (!res.ok) { throw res.status; }
+                setState('idle');
+                reload();
+            })
+            .catch(status => setState(status === 403 ? 'forbidden' : status === 409 ? 'conflict' : 'error'));
+    };
+
+    return (
+        <div className={'PlayerProfile__Action'}>
+            <button type={'button'} className={'PlayerProfile__ActionButton'} onClick={submit} disabled={state === 'pending'}>
+                {state === 'pending' ? 'En cours…' : label}
+            </button>
+            <p className={'PlayerProfile__ActionHint'}>{hint}</p>
+            {state === 'forbidden' && <p className={'Error'}>Ce n'est pas la période pour ça.</p>}
+            {state === 'conflict' && <p className={'Error'}>C'est déjà fait.</p>}
+            {state === 'error' && <p className={'Error'}>L'inscription a échoué. Vérifiez qu'un compte est bien lié.</p>}
+        </div>
+    );
+}
+
+/**
+ * The whole ladder, with the player's tier picked out.
+ *
+ * Replaces the progress bar between two tiers, which disappeared entirely at the top tier and for an unranked
+ * player — the two cases it was least able to explain. The scale is drawn from `/api/tiers`, never from a hardcoded
+ * eight: the server owns how many there are, and a ninth would appear here on its own.
+ *
+ * An unranked player has `tierRank: 0`, which matches nothing, so no shield is picked out and the ladder simply
+ * shows what there is to climb.
+ */
+function TierScale({player, tiers}) {
+    return (
+        <ol className={'PlayerProfile__TierScale NoBulletList'}>
+            {tiers.map(tier => (
+                <li key={tier.rank}>
+                    <span
+                        className={`PlayerProfile__TierStep ${tier.rank === player.tierRank ? 'current' : ''}`}
+                        title={`${tier.name} — ${tier.min} à ${tier.max}`}>
+                        <img width="48" height="48" src={`/shields/shield-${tier.rank}.svg`} alt={tier.name} />
+                        {tier.rank === player.tierRank && <span className={'ReaderOnly'}>(palier actuel)</span>}
+                    </span>
+                </li>
+            ))}
+        </ol>
     );
 }
 

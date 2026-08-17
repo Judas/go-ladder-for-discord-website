@@ -419,7 +419,31 @@ saison sont joués ou exemptés.
 
 ---
 
-## Itération 7 — Refonte de la page joueur
+## Itération 7 — Refonte de la page joueur ✅
+
+**Faite**, sur les précisions données en cours de route, plus étroites que 7.2/7.3 ci-dessous : sections Comptes,
+Validation FGC et Parties inchangées ; section Rang revue ; sections Maison et Ligue ajoutées. 14 tests.
+
+- **La barre de progression est remplacée par l'échelle complète**, palier courant mis en évidence. Elle disparaissait
+  entièrement au dernier palier et pour un joueur non classé — les deux cas qu'elle expliquait le moins bien.
+  L'échelle est tirée de `/api/tiers`, jamais d'un 8 en dur : un neuvième palier apparaîtrait tout seul, et un test
+  le vérifie.
+- ⚠ **Découverte : un profil ne porte pas la période.** `period` voyage sur les blocs `house` et `league`, et les
+  deux sont nuls **exactement** quand le CTA « Rejoindre une maison » est nécessaire. La page lit donc la période sur
+  `/api/houses`, qui la porte toujours. Sans ça, le bouton s'affichait pendant les vacances et le serveur répondait
+  403.
+- **Les conditions connues sont dites avant le clic.** Le serveur refuse une inscription à la ligue par un 404 muet
+  quand l'une de ses trois conditions manque ; le site en connaît une (la maison) depuis le profil, donc il l'écrit
+  au lieu de laisser cliquer.
+- **Un POST réussi relance la lecture du profil** (`reload` de `useApi`) : c'est le profil qui dit si le joueur est
+  dans une maison, donc rien d'autre ne montrerait le résultat.
+
+**Hors périmètre, sur demande** : les choix d'intersaison (`STAY` / `CHANGE` / `LEAVE`, `POST /api/house/choice`) et
+le retrait de la ligue (`POST /api/league/leave`). Le serveur les expose, la page ne les propose pas.
+
+⚠ **Le refactor d'auth de 7.4 n'est pas fait.** `hasValidProfile()` est toujours lu pendant le rendu ; ça suffit ici
+parce que l'identité ne change pas pendant la consultation, et le `reload` couvre la partie données. Un contexte
+d'auth reste à écrire.
 
 Elle arrive en dernier : elle consomme les blocs `house` et `league` que `GET /api/player/{id}` sert déjà, et réutilise
 les composants des itérations 4 à 6.

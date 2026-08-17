@@ -1,0 +1,377 @@
+{
+  "withHouseAndLeague": {
+    "discordId": "900000000000000001",
+    "discordName": "Test Boreale",
+    "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+    "accounts": [
+      {
+        "server": "OGS",
+        "id": "99000001",
+        "name": "test-boreale",
+        "rank": "5k",
+        "link": "https://online-go.com/player/99000001"
+      }
+    ],
+    "rating": 1720.4,
+    "tierRank": 5,
+    "tierName": "Maître",
+    "totalRankedGames": 0,
+    "goldRankedGames": 0,
+    "games": [],
+    "house": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "slug": "FILS_DU_FROID",
+      "name": "Fils du Froid",
+      "tagline": "Le meilleur coup est celui qui brise.",
+      "color": "#aa0001",
+      "points": {
+        "played": 3,
+        "goldOpponent": 4,
+        "rivalHouse": 6,
+        "longGame": 4,
+        "victory": 4,
+        "evenGame": 2,
+        "ranked": 2,
+        "total": 25
+      },
+      "rank": 1,
+      "pendingAction": null
+    },
+    "league": {
+      "season": "2025-2026",
+      "period": "VACATION",
+      "sessionCount": 16,
+      "active": true,
+      "rank": 1,
+      "played": 4,
+      "won": 2,
+      "lost": 2,
+      "exempted": 0,
+      "renown": {
+        "playedPoints": 8,
+        "victoryPoints": 10,
+        "perfectBonus": 0,
+        "total": 18
+      },
+      "matches": [
+        {
+          "session": 1,
+          "color": "black",
+          "opponent": {
+            "discordId": "900000000000000004",
+            "discordName": "Test Quartz",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000001",
+          "result": "black",
+          "won": true
+        },
+        {
+          "session": 2,
+          "color": "white",
+          "opponent": {
+            "discordId": "900000000000000006",
+            "discordName": "Test Croissant",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "LUNAIRES_AETHER",
+              "name": "Lunaires d’Æther",
+              "color": "#b85209"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000004",
+          "result": "black",
+          "won": false
+        },
+        {
+          "session": 3,
+          "color": "black",
+          "opponent": {
+            "discordId": "900000000000000005",
+            "discordName": "Test Obsidienne",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000007",
+          "result": "black",
+          "won": true
+        },
+        {
+          "session": 4,
+          "color": "white",
+          "opponent": {
+            "discordId": "900000000000000004",
+            "discordName": "Test Quartz",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000009",
+          "result": "black",
+          "won": false
+        }
+      ]
+    }
+  },
+  "withHouseOnly": {
+    "discordId": "900000000000000001",
+    "discordName": "Test Boreale",
+    "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+    "accounts": [
+      {
+        "server": "OGS",
+        "id": "99000001",
+        "name": "test-boreale",
+        "rank": "5k",
+        "link": "https://online-go.com/player/99000001"
+      }
+    ],
+    "rating": 1720.4,
+    "tierRank": 5,
+    "tierName": "Maître",
+    "totalRankedGames": 0,
+    "goldRankedGames": 0,
+    "games": [],
+    "house": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "slug": "FILS_DU_FROID",
+      "name": "Fils du Froid",
+      "tagline": "Le meilleur coup est celui qui brise.",
+      "color": "#aa0001",
+      "points": {
+        "played": 3,
+        "goldOpponent": 4,
+        "rivalHouse": 6,
+        "longGame": 4,
+        "victory": 4,
+        "evenGame": 2,
+        "ranked": 2,
+        "total": 25
+      },
+      "rank": 1,
+      "pendingAction": null
+    },
+    "league": null
+  },
+  "withoutHouse": {
+    "discordId": "900000000000000001",
+    "discordName": "Test Boreale",
+    "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+    "accounts": [
+      {
+        "server": "OGS",
+        "id": "99000001",
+        "name": "test-boreale",
+        "rank": "5k",
+        "link": "https://online-go.com/player/99000001"
+      }
+    ],
+    "rating": 1720.4,
+    "tierRank": 5,
+    "tierName": "Maître",
+    "totalRankedGames": 0,
+    "goldRankedGames": 0,
+    "games": [],
+    "house": null,
+    "league": null
+  },
+  "unranked": {
+    "discordId": "900000000000000001",
+    "discordName": "Test Boreale",
+    "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+    "accounts": [
+      {
+        "server": "OGS",
+        "id": "99000001",
+        "name": "test-boreale",
+        "rank": "5k",
+        "link": "https://online-go.com/player/99000001"
+      }
+    ],
+    "rating": 0,
+    "tierRank": 0,
+    "tierName": null,
+    "totalRankedGames": 0,
+    "goldRankedGames": 0,
+    "games": [],
+    "house": {
+      "period": "VACATION",
+      "season": "2025-2026",
+      "slug": "FILS_DU_FROID",
+      "name": "Fils du Froid",
+      "tagline": "Le meilleur coup est celui qui brise.",
+      "color": "#aa0001",
+      "points": {
+        "played": 3,
+        "goldOpponent": 4,
+        "rivalHouse": 6,
+        "longGame": 4,
+        "victory": 4,
+        "evenGame": 2,
+        "ranked": 2,
+        "total": 25
+      },
+      "rank": 1,
+      "pendingAction": null
+    },
+    "league": {
+      "season": "2025-2026",
+      "period": "VACATION",
+      "sessionCount": 16,
+      "active": true,
+      "rank": 1,
+      "played": 4,
+      "won": 2,
+      "lost": 2,
+      "exempted": 0,
+      "renown": {
+        "playedPoints": 8,
+        "victoryPoints": 10,
+        "perfectBonus": 0,
+        "total": 18
+      },
+      "matches": [
+        {
+          "session": 1,
+          "color": "black",
+          "opponent": {
+            "discordId": "900000000000000004",
+            "discordName": "Test Quartz",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000001",
+          "result": "black",
+          "won": true
+        },
+        {
+          "session": 2,
+          "color": "white",
+          "opponent": {
+            "discordId": "900000000000000006",
+            "discordName": "Test Croissant",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "house": {
+              "slug": "LUNAIRES_AETHER",
+              "name": "Lunaires d’Æther",
+              "color": "#b85209"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000004",
+          "result": "black",
+          "won": false
+        },
+        {
+          "session": 3,
+          "color": "black",
+          "opponent": {
+            "discordId": "900000000000000005",
+            "discordName": "Test Obsidienne",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000007",
+          "result": "black",
+          "won": true
+        },
+        {
+          "session": 4,
+          "color": "white",
+          "opponent": {
+            "discordId": "900000000000000004",
+            "discordName": "Test Quartz",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "house": {
+              "slug": "NEXUS_ALPHA",
+              "name": "Nexus Alpha",
+              "color": "#7dfffc"
+            },
+            "active": true
+          },
+          "spectatorLink": "https://online-go.com/game/90000009",
+          "result": "black",
+          "won": false
+        }
+      ]
+    }
+  },
+  "tiers": [
+    {
+      "rank": 1,
+      "name": "Novice",
+      "min": 0,
+      "max": 1000
+    },
+    {
+      "rank": 2,
+      "name": "Initié",
+      "min": 1000,
+      "max": 1200
+    },
+    {
+      "rank": 3,
+      "name": "Adepte",
+      "min": 1200,
+      "max": 1400
+    },
+    {
+      "rank": 4,
+      "name": "Elite",
+      "min": 1400,
+      "max": 1600
+    },
+    {
+      "rank": 5,
+      "name": "Maître",
+      "min": 1600,
+      "max": 1800
+    },
+    {
+      "rank": 6,
+      "name": "Grand-Maître",
+      "min": 1800,
+      "max": 2000
+    },
+    {
+      "rank": 7,
+      "name": "Immortel",
+      "min": 2000,
+      "max": 2200
+    },
+    {
+      "rank": 8,
+      "name": "Légendaire",
+      "min": 2200,
+      "max": 3000
+    }
+  ]
+}

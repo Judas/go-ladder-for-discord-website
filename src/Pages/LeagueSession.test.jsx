@@ -74,7 +74,7 @@ describe('LeagueSession', () => {
      * The crest sits on the outer edge of each side — the mirroring is done in CSS, so the DOM order stays the same
      * on both and a screen reader reads them the same way round.
      */
-    it('gives each side its house crest, in the small drawing', async () => {
+    it('gives each side its house crest, on the outer edge', async () => {
         const match = sessionSettled.matches.find(m => m.black.house && m.white.house);
         expect(match, 'the captured session should still hold a match with two housed players').toBeDefined();
 
@@ -87,9 +87,10 @@ describe('LeagueSession', () => {
 
         expect(sideOf(match.black)).toHaveClass('black');
         expect(sideOf(match.white)).toHaveClass('white');
+        // The card is roomy enough for the full drawing here, unlike a standings row.
         for (const player of [match.black, match.white]) {
             expect(within(sideOf(player)).getByAltText(player.house.name))
-                .toHaveAttribute('src', `/crests/${player.house.slug}_SMALL.svg`);
+                .toHaveAttribute('src', `/crests/${player.house.slug}.svg`);
         }
     });
 

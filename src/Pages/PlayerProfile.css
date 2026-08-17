@@ -67,37 +67,34 @@
     font-style: italic;
 }
 
-.PlayerProfile__TierContainer {
-    display: grid;
-    grid-template-columns: min-content 1fr min-content;
-    align-items: center;
-}
-
-.PlayerProfile__ProgressBarContainer {
-    position: relative;
-    width: 100%;
-    height: 32px;
-    border: 2px solid var(--sun);
-    border-radius: 16px;
+/*
+ * The whole ladder, with the current tier picked out — replacing the progress bar between two tiers, which vanished
+ * at the top tier and for an unranked player alike.
+ */
+.PlayerProfile__TierScale {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: .25rem;
     justify-content: center;
-    overflow: hidden;
+    margin: .5rem 0;
 }
 
-.PlayerProfile__ProgressBar {
-    position: absolute;
-    left: 0;
-    top: 0px;
-    height: 100%;
-    background-color: var(--sun);
-    border-radius: 16px;
-    z-index: 2;
+.PlayerProfile__TierStep {
+    display: flex;
+    padding: .25rem;
+    border: 2px solid transparent;
+    border-radius: .5rem;
+    /* Every tier but the player's steps back, so the current one reads without needing a colour of its own. */
+    opacity: .35;
+    filter: grayscale(1);
+    transition: opacity .2s;
 }
 
-.PlayerProfile__ProgressBarLabel {
-    z-index: 2;
-    color: var(--white-87);
+.PlayerProfile__TierStep.current {
+    opacity: 1;
+    filter: none;
+    border-color: var(--sun);
+    background: var(--sun-20);
 }
 
 .NoGame,
@@ -380,4 +377,121 @@
     text-align: center;
     margin: auto;
     font-style: italic;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+ * House and league sections
+ * ------------------------------------------------------------------------------------------------------------ */
+
+.PlayerProfile__House,
+.PlayerProfile__League {
+    display: grid;
+    gap: .75rem;
+    width: 100%;
+    padding: 1rem;
+}
+
+.PlayerProfile__HouseIdentity {
+    display: grid;
+    justify-items: center;
+    gap: .25rem;
+    padding: .75rem;
+    background: var(--mine-shaft);
+    border: .15rem solid var(--house-color);
+    border-radius: .5rem;
+    text-decoration: none;
+    color: var(--white-87);
+    --outlineColor: var(--house-color);
+}
+
+.PlayerProfile__HouseName {
+    font-family: var(--accent-font);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.PlayerProfile__HouseTagline {
+    font-size: .8rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--sun);
+}
+
+.PlayerProfile__Figures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 0;
+    text-align: center;
+}
+
+.PlayerProfile__Figures dt {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--white-87);
+    opacity: .6;
+}
+
+.PlayerProfile__Figures dd {
+    margin: 0;
+    font-family: var(--accent-font);
+    font-size: 2rem;
+    line-height: 1.1;
+    color: var(--sun);
+}
+
+.PlayerProfile__LeagueRecord {
+    margin: 0;
+    font-size: .8rem;
+    text-align: center;
+    color: var(--white-87);
+    opacity: .7;
+}
+
+.PlayerProfile__Empty {
+    margin: 0;
+    padding: 1rem;
+    font-size: .875rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--white-87);
+    opacity: .7;
+}
+
+.PlayerProfile__Action {
+    display: grid;
+    gap: .5rem;
+    justify-items: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.PlayerProfile__ActionButton {
+    padding: .625rem 1.5rem;
+    font-family: var(--default-font);
+    font-size: 1rem;
+    color: var(--cod-gray);
+    background: var(--sun);
+    border: none;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.PlayerProfile__ActionButton:hover:not(:disabled) {
+    opacity: .85;
+}
+
+.PlayerProfile__ActionButton:disabled {
+    opacity: .5;
+    cursor: default;
+}
+
+.PlayerProfile__ActionHint {
+    margin: 0;
+    font-size: .75rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--white-87);
+    opacity: .6;
 }
