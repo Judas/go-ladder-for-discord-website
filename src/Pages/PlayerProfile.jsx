@@ -461,7 +461,7 @@ function AccountList({player}) {
     }
 
     let addAccount;
-    if (hasValidProfile() && getProfile().discordId == player.discordId) {
+    if (isOwnProfile(player)) {
         addAccount = (<a href='/link' className={'AddAccount'}>Lier un compte</a>);
     } else {
         addAccount = (<></>);
@@ -519,8 +519,8 @@ function GameList({player}) {
 function GameRow({player, game}) {
     const mainIsBlack = game.black.discordId === player.discordId;
     const opponent = game.black.discordId === player.discordId ? game.white : game.black;
-    const mainResult = game.result == "jigo" ? 'draw' :
-                    (mainIsBlack && game.result == "black") || (!mainIsBlack && game.result == "white") ? 'victory' :
+    const mainResult = game.result === "jigo" ? 'draw' :
+                    (mainIsBlack && game.result === "black") || (!mainIsBlack && game.result === "white") ? 'victory' :
                     'defeat';
     return (
         <RowElement className={'PlayerProfile__GameItem'}>

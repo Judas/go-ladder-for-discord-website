@@ -29,7 +29,7 @@ yarn test --run -t "name"          # one test by name
 
 Vite writes to `build/`, not `dist/` — `build.outDir` is set so that `server.js` and the Dockerfile keep working unchanged.
 
-`yarn lint` passes with **0 errors and ~21 warnings**. The warnings are deliberate: `eqeqeq` and `react-hooks/set-state-in-effect` are the existing pages' idiom, downgraded in `eslint.config.mjs` rather than silenced. Don't "fix" them file by file — the second disappears when pages move to the planned `useApi` hook.
+`yarn lint` passes **clean — 0 errors, 0 warnings**, and is worth keeping that way. Two rules that spent the migration as warnings are errors now that nothing violates them: `eqeqeq` (with `== null` still allowed, the one case where `==` says something `===` cannot) and `react-hooks/set-state-in-effect`.
 
 Docker: `docker compose -f docker-compose.dev.yml up` runs the dev target (port 3000, `./src` and `index.html` bind-mounted). `Dockerfile` builds the production image (port 8080). Both images are `node:22-alpine`.
 

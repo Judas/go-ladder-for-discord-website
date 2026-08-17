@@ -33,12 +33,12 @@ function GameCard({game}) {
     return (
         <article className={'GameCard'}>
             <h3 className={'GameCard__title'}>
-                <span className={`GameCard__player ${game.result == "black" ? 'winner' : ''}`}>
+                <span className={`GameCard__player ${game.result === "black" ? 'winner' : ''}`}>
                     <Avatar src={game.black.discordAvatar} size={40} alt={game.black.discordName} className={'GameCard__avatar'}/>
                     <span>{game.black.discordName}</span>
                 </span>
                 <span className={'GameCard__vs'}>vs</span>
-                <span className={`GameCard__player ${game.result == "white" ? 'winner' : ''}`}>
+                <span className={`GameCard__player ${game.result === "white" ? 'winner' : ''}`}>
                     <Avatar src={game.white.discordAvatar} size={40} alt={game.white.discordName} className={'GameCard__avatar'}/>
                     <span>{game.white.discordName}</span>
                 </span>

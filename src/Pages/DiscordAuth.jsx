@@ -6,35 +6,41 @@ import Loader from "../Components/Loader.jsx";
 
 export default function DiscordAuth() {
     const [queryParams] = useSearchParams();
-    const [authStatus, setAuthStatus] = useState('pending');
+    const [exchangeStatus, setExchangeStatus] = useState('pending');
+
+    // Read out here rather than inside the effect: `code` is a string, so the effect depends on the value that
+    // actually matters instead of on the params object, which is a new one on every render.
+    const code = queryParams.get('code');
+
+    /*
+     * Derived, not stored. Coming back from Discord with no code in the URL is an error before anything is
+     * attempted, so it needs no effect to establish — and writing it into state from inside one is the cascading
+     * render the hooks rules warn about. Only the exchange itself has a status worth keeping.
+     */
+    const authStatus = code == null ? 'error' : exchangeStatus;
 
     useEffect(() => {
-        setAuthStatus('pending');
+        if (code == null) { return; }
 
-        let code = queryParams.get('code')
-        if (code == null) {
-            setAuthStatus('error');
-        } else {
-            // Send code to backend auth API
-            var goldId = JSON.parse(localStorage.getItem('gold_uuid'));
-            const postOptions = {
-                method: 'POST',
-                headers: { 'Accept': 'application.json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code, goldId: goldId })
-            };
+        // Send code to backend auth API
+        const goldId = JSON.parse(localStorage.getItem('gold_uuid'));
+        const postOptions = {
+            method: 'POST',
+            headers: { 'Accept': 'application.json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, goldId: goldId })
+        };
 
-            fetch('/api/auth', postOptions)
+        fetch('/api/auth', postOptions)
             .then(res => {
                 if (!res.ok) { throw res.statusText; }
                 return res;
             })
             .then(() => {
-                setAuthStatus('success');
+                setExchangeStatus('success');
                 authenticateUser(true);
             })
-            .catch(() => setAuthStatus('error'));
-        }
-    }, []);
+            .catch(() => setExchangeStatus('error'));
+    }, [code]);
 
     return (
         <div className={'DiscordAuth'}>
