@@ -32,6 +32,34 @@ describe('pages', () => {
             }
         });
 
+        /**
+         * `crest` is the list's own field: three fields for a badge. The heavy `house` block is null here and stays
+         * on the profile route — a roster has no use for four houses' worth of RP repeated down it.
+         */
+        it('badges each player with their house, and leaves the houseless bare', async () => {
+            const housed = fixtures.players.filter(p => p.crest);
+            const houseless = fixtures.players.filter(p => !p.crest);
+            expect(housed.length, 'the fixture should hold both cases').toBeGreaterThan(0);
+            expect(houseless.length).toBeGreaterThan(0);
+
+            stubApi();
+            renderAt(<PlayerList />);
+            await screen.findByText(fixtures.players[0].discordName);
+
+            // The house cell is the third: avatar, name, house, tier, FGC.
+            const houseCellOf = name =>
+                within(screen.getByText(name).closest('[role="row"]')).getAllByRole('gridcell')[2];
+
+            for (const player of housed) {
+                expect(within(houseCellOf(player.discordName)).getByAltText(player.crest.name))
+                    .toHaveAttribute('src', `/crests/${player.crest.slug}_SMALL.svg`);
+            }
+
+            for (const player of houseless) {
+                expect(houseCellOf(player.discordName)).toBeEmptyDOMElement();
+            }
+        });
+
         it('shows the error row when the fetch fails', async () => {
             stubApi({ '/api/players': { status: 500 } });
             renderAt(<PlayerList />);

@@ -112,7 +112,7 @@
 .AddAccount {
     display: block;
     color: var(--mine-shaft);
-    border-radius: 0px 0px 0.5rem 0.5rem;
+    border-radius: 0px 0px 0.25rem 0.25rem;
     background: var(--sun);
     margin: 0;
     padding: .75rem;
@@ -418,6 +418,7 @@
 
 .Card.PlayerProfile__HouseCard .CardHeader {
     background: var(--house-color);
+    border-radius: .25rem .25rem 0 0;
 }
 
 .Card.PlayerProfile__HouseCard .CardHeader > span {

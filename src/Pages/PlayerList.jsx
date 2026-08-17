@@ -11,6 +11,7 @@ import ColHeaderElement from "../Components/Table/ColHeaderElement.jsx";
 import CellElement from "../Components/Table/CellElement.jsx";
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
+import Crest from "../Components/Crest.jsx";
 
 import './PlayerList.css'
 
@@ -60,6 +61,7 @@ export default function PlayerList() {
                             <RowElement>
                                 <ColHeaderElement className={'Avatar'}><span className={'ReaderOnly'}>Avatar</span></ColHeaderElement>
                                 <ColHeaderElement className={'Discord'}>Discord</ColHeaderElement>
+                                <ColHeaderElement className={'House'}><span className={'ReaderOnly'}>Maison</span></ColHeaderElement>
                                 <ColHeaderElement className={'Tier'}>Division</ColHeaderElement>
                                 <ColHeaderElement className={'Stability'}>FGC</ColHeaderElement>
                             </RowElement>
@@ -87,11 +89,18 @@ function PlayerRow({player}) {
                 <Avatar size={40} src={player.discordAvatar} alt={`avatar ${player.discordName}`} />
             </CellElement>
             <CellElement colIndex={2} className={'Discord'}>{player.discordName}</CellElement>
-            <CellElement colIndex={3} className={'Tier'}>
+            {/*
+              * `crest` is the list's own field — three fields for a badge. The profile route serves the full `house`
+              * block instead, which is null here and would be far too heavy repeated down a roster.
+              */}
+            <CellElement colIndex={3} className={'House'}>
+                {player.crest && <Crest slug={player.crest.slug} name={player.crest.name} size={32} small={true} />}
+            </CellElement>
+            <CellElement colIndex={4} className={'Tier'}>
                 <img width="48" height="48" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                 <p>{player.tierName}</p>
             </CellElement>
-            <CellElement colIndex={4} className={'Stability'}><span className={ isFgcValid(player) ? 'stable' : 'unstable' } /></CellElement>
+            <CellElement colIndex={5} className={'Stability'}><span className={ isFgcValid(player) ? 'stable' : 'unstable' } /></CellElement>
             <Link to={`/player/${player.discordId}`} />
         </RowElement>
     );
