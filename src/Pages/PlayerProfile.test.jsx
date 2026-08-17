@@ -122,6 +122,39 @@ describe('PlayerProfile', () => {
         });
 
         /**
+         * The card is tinted with the house colour, and the slug modifier is what lets a near-white house switch to
+         * dark ink. Lose the modifier and Nexus Alpha's header goes white-on-cyan — unreadable, and silently so.
+         */
+        it('tints the card with the house colour, keyed by slug', async () => {
+            render(withHouseAndLeague);
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            const card = sectionNamed('Maison');
+            const house = withHouseAndLeague.house;
+            expect(card).toHaveClass(`PlayerProfile__HouseCard--${house.slug}`);
+            expect(card.style.getPropertyValue('--house-color')).toBe(house.color);
+        });
+
+        it('leaves the card untinted when there is no house', async () => {
+            render(withoutHouse);
+            await screen.findByText(withoutHouse.tierName);
+
+            const card = sectionNamed('Maison');
+            expect(card).not.toHaveClass('PlayerProfile__HouseCard');
+            expect(card.style.getPropertyValue('--house-color')).toBe('');
+        });
+
+        /** The full drawing here: there is room, and no row to repeat it down. */
+        it('uses the full crest, not the simplified one', async () => {
+            render(withHouseAndLeague);
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            const house = withHouseAndLeague.house;
+            expect(within(sectionNamed('Maison')).getByAltText(house.name))
+                .toHaveAttribute('src', `/crests/${house.slug}.svg`);
+        });
+
+        /**
          * Joining is refused outside the season — the server answers 403 — so the button is replaced by the date it
          * reopens rather than left to fail.
          */

@@ -58,12 +58,11 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
     return (
         <>
             <div className={'PlayerProfile__LeftColumn'}>
-                <div className={'Card'}>
-                    <h2 className={'CardHeader'}><span>Parties récentes</span></h2>
-                    <GameList player={player} />
-                </div>
-
-                <div className={'Card'}>
+                {/* The header takes the house colour when there is one, so the card is recognisable before it is
+                    read. --house-ink is what keeps the label legible on a near-white house; see PlayerProfile.css. */}
+                <div
+                    className={`Card ${player.house ? `PlayerProfile__HouseCard PlayerProfile__HouseCard--${player.house.slug}` : ''}`}
+                    style={player.house ? {'--house-color': player.house.color} : undefined}>
                     <h2 className={'CardHeader'}><span>Maison</span></h2>
                     <HouseSection player={player} period={period} reload={reload} />
                 </div>
@@ -72,12 +71,17 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
                     <h2 className={'CardHeader'}><span>Ligue</span></h2>
                     <LeagueSection player={player} period={period} reload={reload} />
                 </div>
+
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Parties récentes</span></h2>
+                    <GameList player={player} />
+                </div>
             </div>
 
             <div className={'PlayerProfile__RightColumn'}>
                 <div className={'CardHighlighted'}>
                     <h2 className={'CardHeader'}><span>{player.discordName}</span></h2>
-                    <Avatar src={player.discordAvatar} size={96} className={'PlayerProfile__Avatar'} alt={`avatar ${player.discordName}`} hidden={true}/>
+                    <Avatar src={player.discordAvatar} size={72} className={'PlayerProfile__Avatar'} alt={`avatar ${player.discordName}`} hidden={true}/>
 
                     <div className={'CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
@@ -132,10 +136,13 @@ function HouseSection({player, period, reload}) {
 
     return (
         <div className={'PlayerProfile__House'} style={{'--house-color': house.color}}>
+            {/* The full crest, not the simplified one: there is room here, and no row to repeat it down. */}
             <Link to={`/house/${house.slug}`} className={'PlayerProfile__HouseIdentity'}>
-                <Crest slug={house.slug} name={house.name} size={72} small={true} />
-                <span className={'PlayerProfile__HouseName'}>{house.name}</span>
-                <span className={'PlayerProfile__HouseTagline'}>{house.tagline}</span>
+                <Crest slug={house.slug} name={house.name} size={96} />
+                <span className={'PlayerProfile__HouseText'}>
+                    <span className={'PlayerProfile__HouseName'}>{house.name}</span>
+                    <span className={'PlayerProfile__HouseTagline'}>{house.tagline}</span>
+                </span>
             </Link>
 
             <dl className={'PlayerProfile__Figures'}>
