@@ -391,6 +391,12 @@
     gap: .75rem;
     width: 100%;
     padding: 1rem;
+    border-radius: 0 0 .5rem .5rem;
+    background: var(--mine-shaft);
+}
+
+.PlayerProfile__League {
+    background: var(--emperor);
 }
 
 /*
@@ -402,6 +408,7 @@
 .PlayerProfile__HouseCard {
     /* What to write on the house colour. Light for three of the four. */
     --house-ink: var(--white-87);
+    border: 2px solid var(--house-color) !important;
 }
 
 /* Nexus Alpha's near-white cyan needs dark ink, as it does on every other page. Keyed to the house, not the hex. */
@@ -425,6 +432,7 @@
     text-decoration: none;
     color: var(--white-87);
     --outlineColor: var(--house-color);
+    justify-content: center;
 }
 
 .PlayerProfile__HouseIdentity img {
@@ -471,7 +479,7 @@
     font-family: var(--accent-font);
     font-size: 2rem;
     line-height: 1.1;
-    color: var(--sun);
+    color: white;
 }
 
 .PlayerProfile__LeagueRecord {
@@ -527,4 +535,53 @@
     text-align: center;
     color: var(--white-87);
     opacity: .6;
+}
+
+/* The summer intentions: only shown during the break, and only on one's own profile. */
+.PlayerProfile__Choice {
+    display: grid;
+    gap: .5rem;
+    justify-items: center;
+    padding-top: .5rem;
+    border-top: 1px solid var(--emperor);
+}
+
+.PlayerProfile__ChoiceIntro {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--white-87);
+}
+
+.PlayerProfile__ChoiceButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: center;
+}
+
+.PlayerProfile__ChoiceButton {
+    padding: .5rem 1rem;
+    font-family: var(--default-font);
+    font-size: .875rem;
+    color: var(--white-87);
+    background: var(--mine-shaft);
+    border: 2px solid var(--emperor);
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.PlayerProfile__ChoiceButton:hover:not(:disabled) {
+    border-color: var(--sun);
+}
+
+/* The recorded intention. Nothing is marked until one is made — null means "has not chosen", not "chose to stay". */
+.PlayerProfile__ChoiceButton.chosen {
+    color: var(--cod-gray);
+    background: var(--sun);
+    border-color: var(--sun);
+}
+
+.PlayerProfile__ChoiceButton:disabled {
+    opacity: .5;
+    cursor: default;
 }

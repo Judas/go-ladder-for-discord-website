@@ -138,7 +138,7 @@ function HouseSection({player, period, reload}) {
         <div className={'PlayerProfile__House'} style={{'--house-color': house.color}}>
             {/* The full crest, not the simplified one: there is room here, and no row to repeat it down. */}
             <Link to={`/house/${house.slug}`} className={'PlayerProfile__HouseIdentity'}>
-                <Crest slug={house.slug} name={house.name} size={96} />
+                <Crest slug={house.slug} name={house.name} size={128} />
                 <span className={'PlayerProfile__HouseText'}>
                     <span className={'PlayerProfile__HouseName'}>{house.name}</span>
                     <span className={'PlayerProfile__HouseTagline'}>{house.tagline}</span>
@@ -155,6 +155,71 @@ function HouseSection({player, period, reload}) {
                     <dd>{house.points.total}</dd>
                 </div>
             </dl>
+
+            {period === 'VACATION' && isOwnProfile(player) && <HouseChoice player={player} reload={reload} />}
+        </div>
+    );
+}
+
+/**
+ * What the member wants for next season. Only during the break, and only on one's own profile.
+ *
+ * The three intentions are the whole of `house_members.pending_action`'s vocabulary. Nothing is applied on the spot —
+ * the season transition reads them back on 1 September — so a choice can be changed as often as one likes all
+ * summer, the last one recorded being the one that counts.
+ */
+const CHOICES = [
+    { action: 'STAY', label: 'Rester', hint: 'Rien ne change.' },
+    { action: 'CHANGE', label: 'Changer', hint: 'Vous serez tiré au sort parmi les trois autres maisons.' },
+    { action: 'LEAVE', label: 'Quitter', hint: 'Les points déjà gagnés restent à la maison.' },
+];
+
+function HouseChoice({player, reload}) {
+    const [state, setState] = useState('idle');
+
+    /*
+     * ⚠ Null means "has not chosen", not "chose to stay". The two have the same effect on 1 September, but claiming
+     * a choice nobody made would be a lie about the one thing this block exists to record — so nothing is
+     * pre-selected.
+     */
+    const chosen = player.house.pendingAction;
+
+    const choose = action => {
+        setState('pending');
+        post('/api/house/choice', { discordId: player.discordId, action })
+            .then(() => {
+                setState('idle');
+                reload();
+            })
+            .catch(status => setState(status === 403 ? 'forbidden' : 'error'));
+    };
+
+    return (
+        <div className={'PlayerProfile__Choice'}>
+            <p className={'PlayerProfile__ChoiceIntro'}>À la rentrée, je souhaite :</p>
+
+            <div className={'PlayerProfile__ChoiceButtons'}>
+                {CHOICES.map(choice => (
+                    <button
+                        key={choice.action}
+                        type={'button'}
+                        className={`PlayerProfile__ChoiceButton ${chosen === choice.action ? 'chosen' : ''}`}
+                        aria-pressed={chosen === choice.action}
+                        disabled={state === 'pending'}
+                        onClick={() => choose(choice.action)}>
+                        {choice.label}
+                    </button>
+                ))}
+            </div>
+
+            <p className={'PlayerProfile__ActionHint'}>
+                {chosen
+                    ? CHOICES.find(choice => choice.action === chosen).hint
+                    : "Sans choix de votre part, vous resterez dans cette maison."}
+            </p>
+
+            {state === 'forbidden' && <p className={'Error'}>Les choix ne sont ouverts que pendant l'intersaison.</p>}
+            {state === 'error' && <p className={'Error'}>Le choix n'a pas pu être enregistré.</p>}
         </div>
     );
 }
@@ -207,7 +272,7 @@ function LeagueSection({player, period, reload}) {
                 </dl>
                 <p className={'PlayerProfile__LeagueRecord'}>
                     {league.played} joué{league.played > 1 ? 's' : ''} · {league.won} gagné{league.won > 1 ? 's' : ''}
-                    {' '}· {league.exempted} exempté{league.exempted > 1 ? 's' : ''} sur {league.sessionCount} sessions
+                    {' '}· {league.exempted} exempté{league.exempted > 1 ? 's' : ''}
                 </p>
                 {!league.active && <p className={'PlayerProfile__Empty'}>Inactif : plus tiré au sort cette saison.</p>}
             </div>
@@ -246,18 +311,29 @@ function LeagueSection({player, period, reload}) {
  * The refetch is the point: the profile is what says whether the player is in a house, so nothing else would show
  * the result of a join. `useApi` cannot serve this — it is a GET hook — so the request is written out here.
  */
+/**
+ * POSTs `body` to `path`, and rejects with the status code so a caller can tell 403 from 409.
+ *
+ * No response is parsed: these routes answer 204 with nothing, or a body the site does not need — the profile
+ * refetch is what shows the result.
+ */
+function post(path, body) {
+    return fetch(path, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    }).then(res => {
+        if (!res.ok) { throw res.status; }
+    });
+}
+
 function Action({path, body, label, hint, reload}) {
     const [state, setState] = useState('idle');
 
     const submit = () => {
         setState('pending');
-        fetch(path, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-        })
-            .then(res => {
-                if (!res.ok) { throw res.status; }
+        post(path, body)
+            .then(() => {
                 setState('idle');
                 reload();
             })

@@ -144,6 +144,79 @@ describe('PlayerProfile', () => {
             expect(card.style.getPropertyValue('--house-color')).toBe('');
         });
 
+        /**
+         * The summer intentions. Only during the break — the server answers 403 the rest of the year — and only on
+         * one's own profile, since the body carries the Discord id and nothing authenticates it.
+         */
+        it('offers the three intentions during the break, on one\'s own profile', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            render(withHouseAndLeague, { period: 'VACATION' });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            const section = sectionNamed('Maison');
+            for (const label of ['Rester', 'Changer', 'Quitter']) {
+                expect(within(section).getByRole('button', { name: label })).toBeInTheDocument();
+            }
+        });
+
+        it('offers no intention in season, when the server would refuse anyway', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            render(withHouseAndLeague, { period: 'SEASON' });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            expect(within(sectionNamed('Maison')).queryByRole('button', { name: 'Rester' })).not.toBeInTheDocument();
+        });
+
+        it('offers no intention on somebody else\'s profile', async () => {
+            render(withHouseAndLeague, { period: 'VACATION' });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            expect(within(sectionNamed('Maison')).queryByRole('button', { name: 'Rester' })).not.toBeInTheDocument();
+        });
+
+        it('records an intention and reads the profile again', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const fetchStub = render(withHouseAndLeague, { period: 'VACATION', '/api/house/choice': {} });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            const profileCalls = () => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
+            const before = profileCalls();
+            await userEvent.click(screen.getByRole('button', { name: 'Changer' }));
+
+            const posted = await waitFor(() => {
+                const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/house/choice'));
+                expect(call).toBeDefined();
+                return call;
+            });
+            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withHouseAndLeague.discordId, action: 'CHANGE' });
+            await waitFor(() => expect(profileCalls()).toBeGreaterThan(before));
+        });
+
+        it('marks the intention already recorded', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const chosen = { ...withHouseAndLeague, house: { ...withHouseAndLeague.house, pendingAction: 'LEAVE' } };
+            render(chosen, { period: 'VACATION' });
+            await screen.findByText(chosen.tierName);
+
+            expect(screen.getByRole('button', { name: 'Quitter' })).toHaveAttribute('aria-pressed', 'true');
+            expect(screen.getByRole('button', { name: 'Rester' })).toHaveAttribute('aria-pressed', 'false');
+        });
+
+        /**
+         * Null means "has not chosen", not "chose to stay". The two land in the same place on 1 September, but
+         * pre-selecting Rester would claim a choice nobody made.
+         */
+        it('marks nothing when no intention has been recorded', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            expect(withHouseAndLeague.house.pendingAction).toBeNull();
+            render(withHouseAndLeague, { period: 'VACATION' });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            for (const label of ['Rester', 'Changer', 'Quitter']) {
+                expect(screen.getByRole('button', { name: label })).toHaveAttribute('aria-pressed', 'false');
+            }
+        });
+
         /** The full drawing here: there is room, and no row to repeat it down. */
         it('uses the full crest, not the simplified one', async () => {
             render(withHouseAndLeague);
