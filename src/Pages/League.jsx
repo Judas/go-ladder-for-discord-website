@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import Loader from "../Components/Loader.jsx";
+import LoreEpilogue from "../Components/LoreEpilogue.jsx";
 import SeasonBanner from "../Components/SeasonBanner.jsx";
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
@@ -34,6 +35,14 @@ export default function League() {
             <h2 className={'PageTitle'}>Ligue</h2>
 
             <SeasonBanner period={data.period} season={data.season} />
+
+            {/*
+              * The same closing paragraphs that end the story on /houses. They open the league because the league is
+              * that story's present tense: the four houses still settling it, one goban at a time.
+              */}
+            <div className={'League__Lore'}>
+                <LoreEpilogue />
+            </div>
 
             <Calendar sessions={data.sessions} current={data.currentSession} />
             <Standings standings={data.standings} sessionCount={data.sessionCount} />

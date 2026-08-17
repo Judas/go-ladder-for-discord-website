@@ -3,6 +3,13 @@
     padding-bottom: 4rem;
 }
 
+/* The lore sits between the banner and the calendar, set apart from the figures below it. */
+.League__Lore {
+    margin: 0 0 2rem 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--emperor);
+}
+
 .League__SectionTitle {
     margin: 2rem 0 1rem 0;
     font-family: var(--accent-font);

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
+import LoreEpilogue from "../Components/LoreEpilogue.jsx";
 import Loader from "../Components/Loader.jsx";
 import useApi from "../hooks/useApi.js";
 import SeasonBanner from "../Components/SeasonBanner.jsx";
@@ -170,15 +171,8 @@ function Lore() {
                 Et les Lunaires d'Æther, errants et insaisissables, s'élancèrent vers les îles célestes, là où les
                 constellations prennent forme.
             </p>
-            <p>
-                Depuis lors, les quatre clans s'affrontent dans des parties cérémonielles et des duels secrets, chacun
-                croyant incarner la volonté originelle de Gold. Certains disent que lorsque le Jeu d'Or sera joué à
-                nouveau dans sa forme parfaite — un plateau, quatre esprits, une vérité — Gold reviendra.
-            </p>
-            <p className={'Houses__LoreBreak'}>
-                Mais jusqu'à ce jour, la fracture demeure.<br/>
-                Et sur le Goban, c'est la guerre des âmes qui se poursuit.
-            </p>
+            {/* The last two paragraphs are shared with /league, where they open the page — same war, same words. */}
+            <LoreEpilogue />
         </div>
     );
 }

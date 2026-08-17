@@ -192,6 +192,24 @@ describe('League', () => {
         expect(await screen.findByText(/Personne n'a encore rejoint la ligue/)).toBeInTheDocument();
     });
 
+    /**
+     * The closing of the framing story opens this page: the league is that story's present tense. Shared with
+     * /houses through one component, so the two cannot drift apart.
+     */
+    it('opens on the lore, above the calendar', async () => {
+        stubApi({ '/api/league': league });
+        renderAt(<League />, { path: '/league' });
+        await screen.findByRole('heading', { name: 'Calendrier' });
+
+        const lore = screen.getByText(/la guerre des âmes qui se poursuit/);
+        expect(lore).toBeInTheDocument();
+        expect(screen.getByText(/parties cérémonielles et des duels secrets/)).toBeInTheDocument();
+
+        // Above the calendar, not below it.
+        const calendar = screen.getByRole('heading', { name: 'Calendrier' });
+        expect(lore.compareDocumentPosition(calendar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
     it('shows an error when the route fails', async () => {
         stubApi({ '/api/league': { status: 500 } });
         renderAt(<League />, { path: '/league' });

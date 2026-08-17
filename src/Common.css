@@ -158,6 +158,21 @@
     }
 }
 
+/* The closing of the framing story, shown on /houses and again above the league calendar. */
+.LoreEpilogue {
+    max-width: 42rem;
+    margin: 0 auto 1rem auto;
+    line-height: 1.7;
+    color: var(--white-87);
+}
+
+.LoreEpilogue--break {
+    text-align: center;
+    font-style: italic;
+    color: var(--sun);
+    opacity: .9;
+}
+
 /* Shared utility: a list that keeps its semantics and loses its bullets. Lived in RecentGames.css until Houses
    needed it too. */
 .NoBulletList {

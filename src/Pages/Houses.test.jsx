@@ -165,6 +165,8 @@ describe('Houses', () => {
 
         expect(await screen.findByRole('heading', { name: "La chute de l'Harmonie" })).toBeInTheDocument();
         expect(screen.getByText(/Partie des Ruptures/)).toBeInTheDocument();
+        // The closing paragraphs come from the component /league shares, so this page must still show them.
+        expect(screen.getByText(/la guerre des âmes qui se poursuit/)).toBeInTheDocument();
     });
 
     it('shows an error when the route fails', async () => {
