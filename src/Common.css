@@ -289,7 +289,15 @@ a:focus-visible {
     width: 100%;
 }
 
+/*
+ * The avatar above is shifted up 48px by `position: relative; bottom: 48px`, so the bottom half of its 96px box is
+ * visually empty. This reclaims exactly that half and nothing more.
+ *
+ * It used to be -96px, which pulled the content up behind the avatar entirely — deliberate while a 192px tier shield
+ * sat there and was meant to overlap. With that shield gone the tier scale ended up underneath the avatar instead of
+ * below it.
+ */
 .CardContent {
-    margin-top: -96px;
+    margin-top: -48px;
     width: 100%;
 }

@@ -198,7 +198,19 @@ describe('PlayerProfile', () => {
             expect(screen.getByText('Comptes')).toBeInTheDocument();
             expect(screen.getByText('Validation FGC')).toBeInTheDocument();
             expect(screen.getByText('Parties récentes')).toBeInTheDocument();
-            expect(screen.getByText(`${withHouseAndLeague.totalRankedGames}/4`)).toBeInTheDocument();
+        });
+
+        /**
+         * The threshold is only worth printing while it is a target. Once met, "5/4" reads like a cap that has been
+         * exceeded rather than a condition that is satisfied.
+         */
+        it('drops the threshold from an FGC counter that has been met', async () => {
+            render({ ...withHouseAndLeague, totalRankedGames: 2, goldRankedGames: 5 });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            expect(screen.getByText('2/4')).toBeInTheDocument();
+            expect(screen.getByText('5')).toBeInTheDocument();
+            expect(screen.queryByText('5/2')).not.toBeInTheDocument();
         });
     });
 });

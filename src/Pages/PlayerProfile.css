@@ -49,9 +49,11 @@
     margin: 1rem 0 0 0;
 }
 
+/* The top padding is the air between the avatar and the ladder; the negative margin above only reclaims the
+   avatar's empty half. */
 .PlayerProfile__Tier {
     width: 100%;
-    padding: 0 2rem 1rem 2rem;
+    padding: 1rem 2rem 1rem 2rem;
 }
 
 .PlayerProfile__Rating,

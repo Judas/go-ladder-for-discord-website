@@ -64,7 +64,6 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
                     
                     <div className={'CardContent'}>
                         <div className={'PlayerProfile__Tier'}>
-                            <img className={'PlayerProfile__TierShield'} width="192" height="192" src={`/shields/shield-${player.tierRank}.svg`} alt={player.tierName}/>
                             <TierScale player={player} tiers={tiers} />
                             <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
                             { playerRating }
@@ -75,6 +74,16 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
                 <div className={'Card'}>
                     <h2 className={'CardHeader'}><span>Parties récentes</span></h2>
                     <GameList player={player} />
+                </div>
+
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Maison</span></h2>
+                    <HouseSection player={player} period={period} reload={reload} />
+                </div>
+
+                <div className={'Card'}>
+                    <h2 className={'CardHeader'}><span>Ligue</span></h2>
+                    <LeagueSection player={player} period={period} reload={reload} />
                 </div>
             </div>
 
@@ -90,16 +99,6 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
                         <span className={'TootipIcon'} onClick={tooltipHandler}><FaCircleInfo /></span>
                     </h2>
                     <Stability player={player} />
-                </div>
-
-                <div className={'Card'}>
-                    <h2 className={'CardHeader'}><span>Maison</span></h2>
-                    <HouseSection player={player} period={period} reload={reload} />
-                </div>
-
-                <div className={'Card'}>
-                    <h2 className={'CardHeader'}><span>Ligue</span></h2>
-                    <LeagueSection player={player} period={period} reload={reload} />
                 </div>
             </div>
         </>
@@ -389,30 +388,28 @@ function GameRow({player, game}) {
     );
 }
 
+/**
+ * The two FGC counters.
+ *
+ * The threshold is only worth printing while it is still a target: "2/4" says what is missing, but once the count is
+ * met "5/4" reads like a cap that has been exceeded rather than a condition that is satisfied.
+ */
 function Stability({player}) {
     return (
         <div className={'PlayerProfile__Stability'}>
-            <StabilityItem
-                valid={player.totalRankedGames >= 4} 
-                highlight={`${player.totalRankedGames}/4`}
-                text={`parties`}
-                goldSpan={false}
-            />
-            <StabilityItem
-                valid={player.goldRankedGames >= 2}
-                highlight={`${player.goldRankedGames}/2`}
-                text={`parties`}
-                goldSpan={true}
-            />
+            <StabilityItem count={player.totalRankedGames} threshold={4} text={`parties`} goldSpan={false} />
+            <StabilityItem count={player.goldRankedGames} threshold={2} text={`parties`} goldSpan={true} />
         </div>
     );
 }
 
-function StabilityItem({valid, highlight, text, goldSpan}) {
+function StabilityItem({count, threshold, text, goldSpan}) {
+    const valid = count >= threshold;
+
     return (
         <div className={'PlayerProfile__StabilityItem'}>
             <span className={valid ? 'valid' : 'invalid'} />
-            <p className={'PlayerProfile__StabilityHighlight'}>{highlight}</p>
+            <p className={'PlayerProfile__StabilityHighlight'}>{valid ? count : `${count}/${threshold}`}</p>
             <p className={'PlayerProfile__StabilityText'}>
                 {text}
                 {goldSpan && <span> GOLD</span>}

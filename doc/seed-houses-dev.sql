@@ -38,7 +38,10 @@ INSERT INTO discord_user_info (discord_id, discord_name, discord_avatar, updated
   ('900000000000000005', 'Test Obsidienne', 'https://cdn.discordapp.com/embed/avatars/4.png', NOW(), 0, NULL),
   ('900000000000000006', 'Test Croissant',  'https://cdn.discordapp.com/embed/avatars/0.png', NOW(), 0, NULL),
   ('900000000000000007', 'Test Nebuleuse',  'https://cdn.discordapp.com/embed/avatars/1.png', NOW(), 0, NULL),
-  ('900000000000000008', 'Test Ronin',      'https://cdn.discordapp.com/embed/avatars/2.png', NOW(), 0, NULL);
+  ('900000000000000008', 'Test Ronin',      'https://cdn.discordapp.com/embed/avatars/2.png', NOW(), 0, NULL),
+  -- Deliberately left out of doc/seed-league-dev.sql: this is the "in a house, not in the league" profile, the one
+  -- state the league join button is for. Ronin above is the other end — in neither.
+  ('900000000000000009', 'Test Aspirant',   'https://cdn.discordapp.com/embed/avatars/3.png', NOW(), 0, NULL);
 
 -- Test Ronin is deliberately absent: their points stay in the register, their membership does not.
 INSERT INTO house_members (discord_id, house_id, joined, pending_action) VALUES
@@ -48,7 +51,8 @@ INSERT INTO house_members (discord_id, house_id, joined, pending_action) VALUES
   ('900000000000000004', 2, '2025-09-01 08:00:00', NULL),
   ('900000000000000005', 2, '2025-09-01 08:00:00', NULL),
   ('900000000000000006', 4, '2025-09-01 08:00:00', NULL),
-  ('900000000000000007', 4, '2025-09-01 08:00:00', NULL);
+  ('900000000000000007', 4, '2025-09-01 08:00:00', NULL),
+  ('900000000000000009', 3, '2025-09-01 08:00:00', NULL);
 
 -- played, gold_opponent, rival_house, long_game, victory, even_game, ranked
 INSERT INTO house_points
@@ -77,7 +81,9 @@ INSERT INTO house_points
   -- with Lunaires d'Aether. That tie is the point of the whole fixture: it is why ApiHouses attaches no rank.
   -- Credited to a non-member on purpose -- adding it to Quartz or Obsidienne would break their 17-all tie inside
   -- the house, and that one is what proves the competition ranks.
-  ('TEST_H_017', '900000000000000008', 2, '2025-2026', 1, 0, 0, 0, 0, 0, 0, '2025-10-20 12:00:00');
+  ('TEST_H_017', '900000000000000008', 2, '2025-2026', 1, 0, 0, 0, 0, 0, 0, '2025-10-20 12:00:00'),
+  -- Sabre Silencieux gains its one member, so that house stops being the no-member case on the list page.
+  ('TEST_H_018', '900000000000000009', 3, '2025-2026', 1, 2, 0, 0, 2, 0, 1, '2025-11-18 12:00:00');
 
 COMMIT;
 
