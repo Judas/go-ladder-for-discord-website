@@ -587,6 +587,106 @@
     cursor: default;
 }
 
+/*
+ * Where a `CHANGE` goes. Only shown once « Changer » is pressed: the destination is the second half of the choice, not
+ * a fourth option beside the three.
+ */
+.PlayerProfile__Destinations {
+    display: grid;
+    gap: .5rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.PlayerProfile__Destination {
+    display: flex;
+    gap: .625rem;
+    align-items: center;
+    width: 100%;
+    padding: .375rem .625rem;
+    font-family: var(--default-font);
+    font-size: .875rem;
+    text-align: left;
+    color: var(--white-87);
+    background: var(--cod-gray);
+    border: 2px solid var(--emperor);
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.PlayerProfile__Destination:hover:not(:disabled),
+.PlayerProfile__Destination.chosen {
+    border-color: var(--house-color);
+}
+
+.PlayerProfile__Destination:disabled {
+    opacity: .5;
+    cursor: default;
+}
+
+/* The recorded destination, once the picker is closed: the crest is what makes it read as a place, not a word. */
+.PlayerProfile__Pending {
+    display: flex;
+    gap: .625rem;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: .375rem .625rem;
+    font-size: .875rem;
+    color: var(--white-87);
+    border: 2px solid var(--house-color);
+    border-radius: .25rem;
+}
+
+/*
+ * The way in: the questionnaire, then the house it adds up to.
+ *
+ * ⚠ The verdict is dressed in the house's colour, which is the first time the player sees it — so the crest is the
+ * full one, not the row-sized drawing.
+ */
+.PlayerProfile__Join {
+    display: grid;
+    gap: .5rem;
+    justify-items: center;
+    width: 100%;
+}
+
+.PlayerProfile__JoinIntro {
+    margin: 0;
+    padding: 1rem 1rem 0 1rem;
+    font-size: .875rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--white-87);
+    opacity: .8;
+}
+
+.PlayerProfile__JoinVerdict {
+    margin: 1rem 0 0 0;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--white-87);
+    opacity: .6;
+}
+
+.PlayerProfile__JoinName {
+    margin: 0;
+    font-family: var(--accent-font);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--house-color, var(--sun));
+}
+
+.PlayerProfile__JoinTagline {
+    margin: 0;
+    font-size: .8rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--sun);
+}
+
 /* Leaving the league. Possible in season, unlike a house — so it lives with the figures, not behind a date. */
 .PlayerProfile__Leave {
     display: grid;

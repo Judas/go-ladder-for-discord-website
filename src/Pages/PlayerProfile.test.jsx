@@ -4,23 +4,51 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import PlayerProfile from './PlayerProfile.jsx';
 import { tiers, unranked, withHouseAndLeague, withHouseOnly, withoutHouse } from '../__fixtures__/profile.js';
+import { housesPopulated } from '../__fixtures__/houses.js';
+import { HOUSE_QUIZ_POOL, QUIZ_LENGTH } from '../houseQuiz.js';
 import { expectNoConsoleErrors, renderAt, stubApi } from '../testUtils.jsx';
 
 /**
  * The period is not on the profile — it rides on the `house` and `league` blocks, and both are null exactly when
  * the join buttons are needed — so the page reads it off /api/houses. That stub is not optional here.
+ *
+ * The same response carries the four houses, which both the entry questionnaire and a summer `CHANGE` need to name a
+ * destination: the captured list, so a slug the site writes down and no longer exists shows up as a failure here.
  */
 const render = (profile, { period = 'VACATION', ...overrides } = {}) => {
     const fetchStub = stubApi({
         '/api/player/': profile,
         '/api/tiers': tiers,
-        '/api/houses': { period, season: '2025-2026', houses: [] },
+        '/api/houses': { period, season: '2025-2026', houses: housesPopulated.houses },
         '/api/house/join': {},
         '/api/league/join': {},
         ...overrides,
     });
     const view = renderAt(<PlayerProfile />, { path: `/player/${profile.discordId}`, route: '/player/:playerId' });
     return Object.assign(fetchStub, { unmount: view.unmount });
+};
+
+/** The house lore the page displays comes from /api/houses, so the tests read it from the same place. */
+const houseNamed = slug => housesPopulated.houses.find(house => house.slug === slug);
+
+/**
+ * The question on screen, read back from the pool.
+ *
+ * The site draws ten questions out of the pool and shuffles their answers, so a test cannot know in advance which
+ * question is asked, nor in which order — only that whatever it shows comes from the pool. Matching on the question
+ * text is what gives the answers back, and with them the house each one scores for.
+ */
+const currentQuestion = () => HOUSE_QUIZ_POOL.find(question => screen.queryByText(question.question) != null);
+
+/**
+ * Answers the whole questionnaire towards `slug`: every question offers exactly one answer per house, so ten answers
+ * for the same house make it the winner outright and the draw never runs.
+ */
+const answerEverythingFor = async slug => {
+    for (let asked = 0; asked < QUIZ_LENGTH; asked++) {
+        const answer = currentQuestion().answers.find(candidate => candidate.house === slug);
+        await userEvent.click(screen.getByRole('button', { name: answer.label }));
+    }
 };
 
 /** Signs the visitor in as `discordId`, the way AuthProfile stores it. */
@@ -174,6 +202,7 @@ describe('PlayerProfile', () => {
             expect(within(sectionNamed('Maison')).queryByRole('button', { name: 'Rester' })).not.toBeInTheDocument();
         });
 
+        /** `slug` is left out entirely rather than sent empty: the server ignores it here, and an empty one is a 400. */
         it('records an intention and reads the profile again', async () => {
             signInAs(withHouseAndLeague.discordId);
             const fetchStub = render(withHouseAndLeague, { period: 'VACATION', '/api/house/choice': {} });
@@ -181,15 +210,101 @@ describe('PlayerProfile', () => {
 
             const profileCalls = () => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
             const before = profileCalls();
-            await userEvent.click(screen.getByRole('button', { name: 'Changer' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Rester' }));
 
             const posted = await waitFor(() => {
                 const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/house/choice'));
                 expect(call).toBeDefined();
                 return call;
             });
-            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withHouseAndLeague.discordId, action: 'CHANGE' });
+            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withHouseAndLeague.discordId, action: 'STAY' });
             await waitFor(() => expect(profileCalls()).toBeGreaterThan(before));
+        });
+
+        /**
+         * A `CHANGE` carries its destination now — the draw is gone from the server, which answers 400 to a `CHANGE`
+         * with no slug. So the button opens the picker instead of posting a request that would be refused.
+         */
+        it('asks which house before recording a change, and never posts one without', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const fetchStub = render(withHouseAndLeague, { period: 'VACATION', '/api/house/choice': {} });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            await userEvent.click(screen.getByRole('button', { name: 'Changer' }));
+            expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/house/choice'))).toBe(false);
+
+            const destination = houseNamed('NEXUS_ALPHA');
+            await userEvent.click(screen.getByRole('button', { name: destination.name }));
+
+            const posted = await waitFor(() => {
+                const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/house/choice'));
+                expect(call).toBeDefined();
+                return call;
+            });
+            expect(JSON.parse(posted[1].body)).toEqual({
+                discordId: withHouseAndLeague.discordId,
+                action: 'CHANGE',
+                slug: 'NEXUS_ALPHA',
+            });
+        });
+
+        /** Naming one's own house is a 400 on the server, so offering it would be offering that error. */
+        it('offers the three other houses, never the one the player is in', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            render(withHouseAndLeague, { period: 'VACATION' });
+            await screen.findByText(withHouseAndLeague.tierName);
+
+            await userEvent.click(screen.getByRole('button', { name: 'Changer' }));
+
+            const section = sectionNamed('Maison');
+            const own = withHouseAndLeague.house.slug;
+            const others = housesPopulated.houses.filter(house => house.slug !== own);
+            expect(others).toHaveLength(3);
+
+            for (const house of others) {
+                expect(within(section).getByRole('button', { name: house.name })).toBeInTheDocument();
+            }
+            expect(within(section).queryByRole('button', { name: houseNamed(own).name })).not.toBeInTheDocument();
+        });
+
+        /**
+         * `pendingHouse` is what lets the site name a recorded change back rather than only say that one was asked
+         * for. It rides on the profile, only during the break and only on a `CHANGE`.
+         */
+        it('names the house a recorded change points at', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const destination = houseNamed('LUNAIRES_AETHER');
+            const changing = {
+                ...withHouseAndLeague,
+                house: {
+                    ...withHouseAndLeague.house,
+                    pendingAction: 'CHANGE',
+                    pendingHouse: { slug: destination.slug, name: destination.name, color: destination.color },
+                },
+            };
+            render(changing, { period: 'VACATION' });
+            await screen.findByText(changing.tierName);
+
+            const section = sectionNamed('Maison');
+            expect(within(section).getByText(destination.name)).toBeInTheDocument();
+            expect(within(section).getByText(/rejoindrez cette maison/)).toBeInTheDocument();
+            expect(within(section).getByRole('button', { name: 'Changer' })).toHaveAttribute('aria-pressed', 'true');
+        });
+
+        /**
+         * ⚠ Rows recorded before the server asked for a destination hold a `CHANGE` with none. Reading that as a
+         * house would print an empty crest; it is a change still waiting to be aimed.
+         */
+        it('asks for a destination when a recorded change has none', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const changing = {
+                ...withHouseAndLeague,
+                house: { ...withHouseAndLeague.house, pendingAction: 'CHANGE', pendingHouse: null },
+            };
+            render(changing, { period: 'VACATION' });
+            await screen.findByText(changing.tierName);
+
+            expect(within(sectionNamed('Maison')).getByText(/Désignez la maison/)).toBeInTheDocument();
         });
 
         it('marks the intention already recorded', async () => {
@@ -241,14 +356,31 @@ describe('PlayerProfile', () => {
             expect(within(section).queryByRole('button')).not.toBeInTheDocument();
         });
 
-        it('offers the join button in season, and refetches the profile once it lands', async () => {
+        /**
+         * The server no longer draws a house: `join` takes a slug, so something on this side has to choose. The
+         * questionnaire is that something, and the whole of it — ten questions, four answers, no way past.
+         */
+        it('puts the questionnaire in the way of joining, and posts the house it lands on', async () => {
             signInAs(withoutHouse.discordId);
             const fetchStub = render(withoutHouse, { period: 'SEASON' });
             await screen.findByText(withoutHouse.tierName);
 
             const profileCalls = () => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
             const before = profileCalls();
-            await userEvent.click(screen.getByRole('button', { name: 'Rejoindre une maison' }));
+
+            expect(screen.getByText(`Question 1 sur ${QUIZ_LENGTH}`)).toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Rejoindre cette maison' })).not.toBeInTheDocument();
+            expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/house/join'))).toBe(false);
+
+            await answerEverythingFor('SABRE_SILENCIEUX');
+
+            // The verdict is named with the lore the server serves, not with a copy of it kept in the site.
+            const found = houseNamed('SABRE_SILENCIEUX');
+            expect(screen.getByText(found.name)).toBeInTheDocument();
+            expect(screen.getByText(found.tagline)).toBeInTheDocument();
+            expect(screen.getByAltText(found.name)).toHaveAttribute('src', `/crests/${found.slug}.svg`);
+
+            await userEvent.click(screen.getByRole('button', { name: 'Rejoindre cette maison' }));
 
             const posted = await waitFor(() => {
                 const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/house/join'));
@@ -256,10 +388,64 @@ describe('PlayerProfile', () => {
                 return call;
             });
             expect(posted[1].method).toBe('POST');
-            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withoutHouse.discordId });
+            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withoutHouse.discordId, slug: 'SABRE_SILENCIEUX' });
 
             // The profile is what says whether the player is in a house, so nothing else would show the result.
             await waitFor(() => expect(profileCalls()).toBeGreaterThan(before));
+        });
+
+        /** Ten questions with no way back would let one misclick decide a season. */
+        it('takes back an answer', async () => {
+            signInAs(withoutHouse.discordId);
+            render(withoutHouse, { period: 'SEASON' });
+            await screen.findByText(withoutHouse.tierName);
+
+            const first = currentQuestion();
+            await userEvent.click(screen.getByRole('button', { name: first.answers[0].label }));
+            expect(screen.getByText(`Question 2 sur ${QUIZ_LENGTH}`)).toBeInTheDocument();
+
+            await userEvent.click(screen.getByRole('button', { name: /question précédente/ }));
+            expect(screen.getByText(`Question 1 sur ${QUIZ_LENGTH}`)).toBeInTheDocument();
+
+            // The same question, not a fresh draw: going back has to land where the player was, answers and all.
+            expect(currentQuestion().id).toBe(first.id);
+            expect(screen.getByRole('button', { name: first.answers[0].label })).toBeInTheDocument();
+
+            // Nothing to go back to on the first question, so nothing offers it.
+            expect(screen.queryByRole('button', { name: /question précédente/ })).not.toBeInTheDocument();
+        });
+
+        /** A questionnaire whose scoring is readable on screen is a menu with extra steps. */
+        it('never says which house an answer leads to', async () => {
+            signInAs(withoutHouse.discordId);
+            render(withoutHouse, { period: 'SEASON' });
+            await screen.findByText(withoutHouse.tierName);
+
+            for (let asked = 0; asked < QUIZ_LENGTH; asked++) {
+                const question = currentQuestion();
+                for (const house of housesPopulated.houses) {
+                    expect(screen.queryByText(house.name), `${question.id} names ${house.slug}`).not.toBeInTheDocument();
+                }
+                await userEvent.click(screen.getByRole('button', { name: question.answers[0].label }));
+            }
+        });
+
+        /** Joining is refused during the break, so the questionnaire is not offered then either. */
+        it('does not open the questionnaire during the break', async () => {
+            signInAs(withoutHouse.discordId);
+            render(withoutHouse, { period: 'VACATION' });
+            await screen.findByText(withoutHouse.tierName);
+
+            expect(screen.queryByText(`Question 1 sur ${QUIZ_LENGTH}`)).not.toBeInTheDocument();
+        });
+
+        it('warns about nothing while the questionnaire runs', async () => {
+            signInAs(withoutHouse.discordId);
+            await expectNoConsoleErrors(async () => {
+                render(withoutHouse, { period: 'SEASON' });
+                await screen.findByText(withoutHouse.tierName);
+                await answerEverythingFor('FILS_DU_FROID');
+            });
         });
     });
 

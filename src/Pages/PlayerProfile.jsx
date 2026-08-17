@@ -11,6 +11,7 @@ import CellElement from "../Components/Table/CellElement.jsx";
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
+import HouseQuiz from "../Components/HouseQuiz.jsx";
 import useApi from "../hooks/useApi.js";
 import { FGC_RULES } from "../fgc.js";
 
@@ -27,13 +28,16 @@ export default function PlayerProfile() {
     const { status: tiersFetchStatus, data: tiers } = useApi('/api/tiers');
     // ⚠ `period` rides on the `house` and `league` blocks — and both are null exactly when the join buttons are
     // needed, so a profile alone cannot say whether the season is open. /api/houses always carries it.
+    //
+    // It also carries the four houses themselves, which is what the entry questionnaire and the summer CHANGE need:
+    // both now name a destination, and its name, colour and crest belong to the server, not to a copy kept here.
     const { data: calendar } = useApi('/api/houses');
 
     if (playerFetchStatus === 'success' && tiersFetchStatus === 'success') {
         return (
             <article className={'PlayerProfile'}>
-                <Profile player={player} tiers={tiers} period={calendar?.period} reload={reload}
-                         tooltipHandler={() => setTooltipVisible(true)} />
+                <Profile player={player} tiers={tiers} period={calendar?.period} houses={calendar?.houses}
+                         reload={reload} tooltipHandler={() => setTooltipVisible(true)} />
                 {tooltipVisible && (
                     <div className={'Tooltip'}>
                         <button className={'CallToAction'} onClick={() => setTooltipVisible(false)}>
@@ -51,7 +55,7 @@ export default function PlayerProfile() {
     }
 }
 
-function Profile({player, tiers, period, reload, tooltipHandler}) {
+function Profile({player, tiers, period, houses, reload, tooltipHandler}) {
     let playerRating = player.rating > 0 
         ? <h2 className={'PlayerProfile__Rating'}>{Math.round(player.rating)}</h2>
         : <h2 className={'PlayerProfile__Unranked'}>[Non classé]</h2>
@@ -65,7 +69,7 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
                     className={`Card ${player.house ? `PlayerProfile__HouseCard PlayerProfile__HouseCard--${player.house.slug}` : ''}`}
                     style={player.house ? {'--house-color': player.house.color} : undefined}>
                     <h2 className={'CardHeader'}><span>Maison</span></h2>
-                    <HouseSection player={player} period={period} reload={reload} />
+                    <HouseSection player={player} period={period} houses={houses} reload={reload} />
                 </div>
 
                 <div className={'Card'}>
@@ -117,13 +121,13 @@ function Profile({player, tiers, period, reload, tooltipHandler}) {
  * choices of the summer are what move people — so the button is replaced by the date it reopens rather than left to
  * fail. `period` comes from /api/houses, never from a date computed here.
  */
-function HouseSection({player, period, reload}) {
+function HouseSection({player, period, houses, reload}) {
     // Hooks before any branch: the early return below is exactly what rules-of-hooks is about.
     const isSelf = useIsSelf(player.discordId);
     const house = player.house;
 
     if (house == null) {
-        return <JoinHouse player={player} period={period} reload={reload} />;
+        return <JoinHouse player={player} period={period} houses={houses} reload={reload} />;
     }
 
     return (
@@ -148,7 +152,7 @@ function HouseSection({player, period, reload}) {
                 </div>
             </dl>
 
-            {period === 'VACATION' && isSelf && <HouseChoice player={player} reload={reload} />}
+            {period === 'VACATION' && isSelf && <HouseChoice player={player} houses={houses} reload={reload} />}
         </div>
     );
 }
@@ -215,15 +219,20 @@ function LeaveLeague({player, reload}) {
  * The three intentions are the whole of `house_members.pending_action`'s vocabulary. Nothing is applied on the spot —
  * the season transition reads them back on 1 September — so a choice can be changed as often as one likes all
  * summer, the last one recorded being the one that counts.
+ *
+ * ⚠ `CHANGE` carries a destination now: the draw that used to pick one is gone from the server, which answers 400 to a
+ * `CHANGE` with no slug and 400 again to one naming the house the player is already in. So the button opens a picker
+ * of the three others instead of posting, and only the pick posts.
  */
 const CHOICES = [
     { action: 'STAY', label: 'Rester', hint: 'Rien ne change.' },
-    { action: 'CHANGE', label: 'Changer', hint: 'Vous serez tiré au sort parmi les trois autres maisons.' },
+    { action: 'CHANGE', label: 'Changer', hint: 'Désignez la maison que vous rejoindrez.' },
     { action: 'LEAVE', label: 'Quitter', hint: 'Les points déjà gagnés restent à la maison.' },
 ];
 
-function HouseChoice({player, reload}) {
+function HouseChoice({player, houses, reload}) {
     const [state, setState] = useState('idle');
+    const [picking, setPicking] = useState(false);
 
     /*
      * ⚠ Null means "has not chosen", not "chose to stay". The two have the same effect on 1 September, but claiming
@@ -231,15 +240,47 @@ function HouseChoice({player, reload}) {
      * pre-selected.
      */
     const chosen = player.house.pendingAction;
+    /** The house a recorded `CHANGE` points at — a crest, so it can be named back rather than only counted. */
+    const destination = player.house.pendingHouse;
 
-    const choose = action => {
+    /*
+     * The three others. Naming one's own house is a 400, so offering it would be offering that error.
+     *
+     * `houses` is loaded whenever this block renders: it rides on the same /api/houses response as the `period` that
+     * decides whether the block appears at all. The `?? []` is for the reader, not for a case that happens.
+     */
+    const others = (houses ?? []).filter(house => house.slug !== player.house.slug);
+
+    // `slug` is left out of the body on STAY and LEAVE rather than sent empty — JSON.stringify drops an undefined
+    // value, and the server ignores the field on those two anyway.
+    const choose = (action, slug) => {
         setState('pending');
-        post('/api/house/choice', { discordId: player.discordId, action })
+        post('/api/house/choice', { discordId: player.discordId, action, slug })
             .then(() => {
                 setState('idle');
+                setPicking(false);
                 reload();
             })
             .catch(status => setState(status === 403 ? 'forbidden' : 'error'));
+    };
+
+    /** A `CHANGE` has nowhere to go until a house is picked, so its button opens the picker rather than posting. */
+    const press = action => {
+        if (action === 'CHANGE') {
+            setPicking(!picking);
+            return;
+        }
+        setPicking(false);
+        choose(action);
+    };
+
+    const hint = () => {
+        if (chosen == null) { return "Sans choix de votre part, vous resterez dans cette maison."; }
+        if (chosen !== 'CHANGE') { return CHOICES.find(choice => choice.action === chosen)?.hint; }
+        // A `CHANGE` without a destination is what the rows recorded before the server asked for one look like.
+        return destination
+            ? 'Vous rejoindrez cette maison à la rentrée.'
+            : CHOICES.find(choice => choice.action === 'CHANGE').hint;
     };
 
     return (
@@ -253,18 +294,42 @@ function HouseChoice({player, reload}) {
                         type={'button'}
                         className={`PlayerProfile__ChoiceButton ${chosen === choice.action ? 'chosen' : ''}`}
                         aria-pressed={chosen === choice.action}
+                        aria-expanded={choice.action === 'CHANGE' ? picking : undefined}
                         disabled={state === 'pending'}
-                        onClick={() => choose(choice.action)}>
+                        onClick={() => press(choice.action)}>
                         {choice.label}
                     </button>
                 ))}
             </div>
 
-            <p className={'PlayerProfile__ActionHint'}>
-                {chosen
-                    ? CHOICES.find(choice => choice.action === chosen).hint
-                    : "Sans choix de votre part, vous resterez dans cette maison."}
-            </p>
+            {picking && (
+                <ul className={'PlayerProfile__Destinations NoBulletList'}>
+                    {others.map(house => (
+                        <li key={house.slug}>
+                            <button
+                                type={'button'}
+                                className={`PlayerProfile__Destination ${destination?.slug === house.slug ? 'chosen' : ''}`}
+                                style={{'--house-color': house.color}}
+                                aria-pressed={destination?.slug === house.slug}
+                                disabled={state === 'pending'}
+                                onClick={() => choose('CHANGE', house.slug)}>
+                                {/* The name is in the span beside it, so the crest carries no alt of its own. */}
+                                <Crest slug={house.slug} size={32} small={true} />
+                                <span>{house.name}</span>
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {!picking && chosen === 'CHANGE' && destination && (
+                <p className={'PlayerProfile__Pending'} style={{'--house-color': destination.color}}>
+                    <Crest slug={destination.slug} size={32} small={true} />
+                    <span>{destination.name}</span>
+                </p>
+            )}
+
+            <p className={'PlayerProfile__ActionHint'}>{hint()}</p>
 
             {state === 'forbidden' && <p className={'Error'}>Les choix ne sont ouverts que pendant l'intersaison.</p>}
             {state === 'error' && <p className={'Error'}>Le choix n'a pas pu être enregistré.</p>}
@@ -272,8 +337,23 @@ function HouseChoice({player, reload}) {
     );
 }
 
-function JoinHouse({player, period, reload}) {
-    if (!useIsSelf(player.discordId)) {
+/**
+ * The way into a house: ten questions, and the house they add up to.
+ *
+ * ⚠ The server no longer draws one. `POST /api/house/join` takes a slug and checks that it names a house, so
+ * *something* on this side has to choose — and a bare list of four would make the choice a shrug. The questionnaire
+ * and its scoring live in `src/houseQuiz.js`; nothing here knows a question.
+ *
+ * The verdict is held in state rather than recomputed: `houseFromAnswers` draws lots between tied houses, so a
+ * second run could name a different house than the one on screen — under the very click that accepts it.
+ *
+ * The lore of the house found comes from /api/houses, never from a copy kept here. Only the slug is this side's.
+ */
+function JoinHouse({player, period, houses, reload}) {
+    const isSelf = useIsSelf(player.discordId);
+    const [verdict, setVerdict] = useState(null);
+
+    if (!isSelf) {
         return <p className={'PlayerProfile__Empty'}>Ce joueur n'appartient à aucune maison.</p>;
     }
 
@@ -285,13 +365,33 @@ function JoinHouse({player, period, reload}) {
         );
     }
 
+    if (verdict == null) {
+        return (
+            <div className={'PlayerProfile__Join'}>
+                <p className={'PlayerProfile__JoinIntro'}>
+                    Dix questions, et votre façon de jouer désignera votre maison.
+                </p>
+                <HouseQuiz onResolved={setVerdict} />
+            </div>
+        );
+    }
+
+    const house = houses?.find(candidate => candidate.slug === verdict);
+
     return (
-        <Action
-            path={'/api/house/join'}
-            body={{ discordId: player.discordId }}
-            label={'Rejoindre une maison'}
-            hint={"La maison est tirée au sort parmi les moins peuplées."}
-            reload={reload} />
+        <div className={'PlayerProfile__Join'} style={house ? {'--house-color': house.color} : undefined}>
+            <p className={'PlayerProfile__JoinVerdict'}>Votre voie vous mène chez :</p>
+            <Crest slug={verdict} name={house?.name ?? verdict} size={128} />
+            <p className={'PlayerProfile__JoinName'}>{house?.name ?? verdict}</p>
+            {house?.tagline && <p className={'PlayerProfile__JoinTagline'}>{house.tagline}</p>}
+
+            <Action
+                path={'/api/house/join'}
+                body={{ discordId: player.discordId, slug: verdict }}
+                label={'Rejoindre cette maison'}
+                hint={"Une appartenance est figée jusqu'à la fin de la saison."}
+                reload={reload} />
+        </div>
     );
 }
 

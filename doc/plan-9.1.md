@@ -475,6 +475,9 @@ CTA pilotés par `period` :
 | Avec maison, `SEASON` | Le bloc, sans action : une appartenance est figée pendant la saison |
 | Avec maison, `VACATION` | Trois choix pour la rentrée : « Rester » (`STAY`, défaut), « Changer de maison » (`CHANGE`, tirage parmi les 3 autres), « Quitter » (`LEAVE`). `POST /api/house/choice {discordId, action}` |
 
+⚠ **Les deux lignes portant un tirage au sort sont périmées.** Le serveur ne tire plus : `join` et un `CHANGE`
+prennent tous deux un `slug`. Voir l'itération 8, qui les remplace.
+
 `pendingAction` est le choix déjà enregistré, et il est **null hors vacances comme pour un membre qui n'a pas encore
 choisi** — `period` est ce qui distingue les deux. Un choix se change autant de fois qu'on veut tout l'été, le dernier
 gagne.
@@ -509,6 +512,67 @@ Un CTA qui mute l'état force à sortir du `hasValidProfile()` lu pendant le ren
 doit refléter le nouvel état sans `window.location.replace`. Minimum viable : refetch du profil joueur après chaque
 mutation réussie, et l'identité en état React plutôt qu'en lecture directe de `localStorage`. Un contexte d'auth est
 la version propre ; à arbitrer ici, pas avant.
+
+---
+
+## Itération 8 — Le choix de la maison ✅
+
+Le serveur a retiré le tirage au sort. `POST /api/house/join` prend `{discordId, slug}` et répond 400 sans l'un des
+deux, 404 quand aucune maison ne porte ce slug (loggé à part du 404 joueur), le reste inchangé. `POST
+/api/house/choice` prend `{discordId, action, slug}` : le slug est **obligatoire sur `CHANGE`**, ignoré sur `STAY` et
+`LEAVE`, et nommer sa propre maison est un 400 — un changement qui ne change rien n'est pas un changement. L'ordre des
+contrôles est inchangé jusqu'au 409, donc un joueur qui a déjà une maison est renvoyé sur son 409 sans qu'on regarde
+son slug.
+
+`GET /api/player/{id}` porte en plus un `pendingHouse` (blason : `slug`, `name`, `color`) à côté de `pendingAction`,
+rempli **seulement en vacances et seulement sur un `CHANGE`**. L'id interne de maison ne sort pas.
+
+### 8.1 Le `CHANGE` désigne sa destination
+
+Le bouton « Changer » n'envoie plus rien : il ouvre la liste des **trois autres** maisons, et c'est le clic sur l'une
+d'elles qui poste `{discordId, action: 'CHANGE', slug}`. Sa propre maison n'est pas offerte, puisque le serveur la
+refuse par un 400. `slug` est absent du corps sur `STAY` et `LEAVE` plutôt qu'envoyé vide — `JSON.stringify` laisse
+tomber une valeur `undefined`, et le serveur ignore le champ sur ces deux actions.
+
+Une fois enregistré, le `pendingHouse` est affiché (blason simplifié + nom) : le site nomme la destination au lieu de
+dire seulement qu'un changement a été demandé.
+
+⚠ **Un `CHANGE` sans destination reste possible en base** — les lignes écrites avant que le serveur exige un slug. Le
+site le lit comme un changement encore à viser (« Désignez la maison que vous rejoindrez »), pas comme une maison
+vide ; un test le fixe.
+
+### 8.2 L'entrée passe par un questionnaire
+
+Puisque le serveur ne tire plus, il faut que quelque chose choisisse de ce côté-ci — et une liste de quatre boutons
+ferait du choix un haussement d'épaules. Donc **dix questions, quatre réponses chacune, une par maison**, et le score
+le plus haut désigne la maison ; tirage au sort entre les maisons à égalité, et seulement entre elles.
+
+- `src/houseQuiz.js` : le vivier des questions, le tirage (`drawQuiz`) et le dépouillement (`tally`, `leaders`,
+  `houseFromAnswers`). ⚠ **Ce fichier est la règle du site, pas celle du serveur**, exactement comme `src/fgc.js` pour
+  les seuils FGC. Le serveur prend un slug et ne pose aucune question.
+- **Les dix questions posées sont tirées d'un vivier de vingt-deux**, et les quatre réponses de chacune sont mélangées.
+  Deux joueurs ne passent donc pas le même questionnaire. Toucher au vivier touche ce seul fichier :
+  `Components/HouseQuiz.jsx` ne connaît que la forme, et les tests ne vérifient que les invariants — un vivier plus
+  grand que le questionnaire, des identifiants uniques, exactement une réponse par maison, un texte partout.
+- ⚠ **Le tirage est fait une fois, à l'ouverture** (`useState(drawQuiz)`). Refait au rendu, il changerait les questions
+  sous le joueur et le retour arrière ne ramènerait pas celle qu'il vient de quitter ; un test le fixe.
+- `Components/HouseQuiz.jsx` : une question à la fois, jauge d'avancement, retour arrière (dix questions sans retour,
+  c'est un clic malheureux qui décide d'une saison). Il ne rejoint rien : il appelle `onResolved(slug)`, et le profil
+  affiche la maison trouvée puis réutilise son bouton `Action` avec ses états 403 / 409 / erreur.
+- ⚠ **Une réponse ne dit jamais quelle maison elle vise** — ni couleur, ni blason, ni nom. Un questionnaire dont on
+  lit le barème est un menu avec des étapes en plus. Un test parcourt les dix questions posées et vérifie qu'aucun nom
+  de maison n'apparaît.
+- ⚠ **Le verdict est gardé en état, pas recalculé.** `houseFromAnswers` tire au sort entre les égalités : un second
+  passage pourrait nommer une autre maison que celle affichée, sous le clic même qui l'accepte.
+- L'ordre des réponses est mélangé à chaque tirage, sinon cliquer toujours la première désignerait la même maison à
+  coup sûr. Le vivier, lui, les garde dans l'ordre de `HOUSE_SLUGS` : c'est ce qui rend le fichier relisible.
+
+Le lore de la maison trouvée (nom, devise, couleur) vient de `/api/houses`, jamais d'une copie gardée dans le site.
+Seul le slug est de ce côté-ci. C'est aussi ce qui alimente la liste des trois autres maisons en 8.1 : la même réponse
+porte déjà `period`, donc elle est chargée dès que le bloc s'affiche.
+
+⚠ **Non vérifié en navigateur contre un backend à jour** : le serveur local n'écoutait pas sur 4567 au moment de
+l'écriture. Les tests couvrent les corps postés et les états affichés, pas les codes réellement renvoyés.
 
 ---
 
