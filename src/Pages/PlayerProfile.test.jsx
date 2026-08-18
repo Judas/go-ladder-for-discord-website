@@ -357,10 +357,47 @@ describe('PlayerProfile', () => {
         });
 
         /**
-         * The server no longer draws a house: `join` takes a slug, so something on this side has to choose. The
-         * questionnaire is that something, and the whole of it — ten questions, four answers, no way past.
+         * The server no longer draws a house: `join` takes a slug, so something on this side has to name one. The
+         * questionnaire is what leads there — the whole of it, ten questions, before any house is on offer — and what
+         * it produces is a bilan: an affinity for each of the four, each with its own way in.
          */
-        it('puts the questionnaire in the way of joining, and posts the house it lands on', async () => {
+        it('puts the questionnaire in the way, then shows an affinity and a button for each house', async () => {
+            signInAs(withoutHouse.discordId);
+            render(withoutHouse, { period: 'SEASON' });
+            await screen.findByText(withoutHouse.tierName);
+
+            expect(screen.getByText(`Question 1 sur ${QUIZ_LENGTH}`)).toBeInTheDocument();
+            for (const house of housesPopulated.houses) {
+                expect(screen.queryByRole('button', { name: `Rejoindre ${house.name}` })).not.toBeInTheDocument();
+            }
+
+            await answerEverythingFor('SABRE_SILENCIEUX');
+
+            // Every house is named with the lore the server serves, not with a copy of it kept in the site.
+            const section = sectionNamed('Maison');
+            for (const house of housesPopulated.houses) {
+                expect(within(section).getByText(house.name)).toBeInTheDocument();
+                expect(within(section).getByText(house.tagline)).toBeInTheDocument();
+                expect(within(section).getByRole('button', { name: `Rejoindre ${house.name}` })).toBeInTheDocument();
+                expect(section.querySelector(`img[src="/crests/${house.slug}.svg"]`)).toBeInTheDocument();
+            }
+
+            // Ten answers for one house is a hundred per cent of them, and nothing at all for the other three.
+            const found = houseNamed('SABRE_SILENCIEUX');
+            expect(within(section).getByText(/^100 % d'affinité/)).toBeInTheDocument();
+            expect(within(section).getAllByText(/^0 % d'affinité/)).toHaveLength(3);
+
+            // The house the answers point to is marked, in the order the bilan is read: strongest first.
+            expect(within(section).getByText('la plus forte').closest('li'))
+                .toHaveTextContent(found.name);
+            expect([...section.querySelectorAll('.PlayerProfile__AffinityName')][0]).toHaveTextContent(found.name);
+        });
+
+        /**
+         * ⚠ The bilan guides, it does not decide: the button under any crest joins that house, including one the
+         * answers did not point to. A quiz that only offered its own verdict would be a gate with extra steps.
+         */
+        it('joins whichever house is clicked, not the one the answers point to', async () => {
             signInAs(withoutHouse.discordId);
             const fetchStub = render(withoutHouse, { period: 'SEASON' });
             await screen.findByText(withoutHouse.tierName);
@@ -368,19 +405,11 @@ describe('PlayerProfile', () => {
             const profileCalls = () => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
             const before = profileCalls();
 
-            expect(screen.getByText(`Question 1 sur ${QUIZ_LENGTH}`)).toBeInTheDocument();
-            expect(screen.queryByRole('button', { name: 'Rejoindre cette maison' })).not.toBeInTheDocument();
+            await answerEverythingFor('SABRE_SILENCIEUX');
             expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/house/join'))).toBe(false);
 
-            await answerEverythingFor('SABRE_SILENCIEUX');
-
-            // The verdict is named with the lore the server serves, not with a copy of it kept in the site.
-            const found = houseNamed('SABRE_SILENCIEUX');
-            expect(screen.getByText(found.name)).toBeInTheDocument();
-            expect(screen.getByText(found.tagline)).toBeInTheDocument();
-            expect(screen.getByAltText(found.name)).toHaveAttribute('src', `/crests/${found.slug}.svg`);
-
-            await userEvent.click(screen.getByRole('button', { name: 'Rejoindre cette maison' }));
+            const other = houseNamed('LUNAIRES_AETHER');
+            await userEvent.click(screen.getByRole('button', { name: `Rejoindre ${other.name}` }));
 
             const posted = await waitFor(() => {
                 const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/house/join'));
@@ -388,7 +417,7 @@ describe('PlayerProfile', () => {
                 return call;
             });
             expect(posted[1].method).toBe('POST');
-            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withoutHouse.discordId, slug: 'SABRE_SILENCIEUX' });
+            expect(JSON.parse(posted[1].body)).toEqual({ discordId: withoutHouse.discordId, slug: other.slug });
 
             // The profile is what says whether the player is in a house, so nothing else would show the result.
             await waitFor(() => expect(profileCalls()).toBeGreaterThan(before));

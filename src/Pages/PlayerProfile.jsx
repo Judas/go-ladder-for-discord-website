@@ -14,6 +14,7 @@ import Crest from "../Components/Crest.jsx";
 import HouseQuiz from "../Components/HouseQuiz.jsx";
 import useApi from "../hooks/useApi.js";
 import { FGC_RULES } from "../fgc.js";
+import { affinities, leaders } from "../houseQuiz.js";
 
 import './PlayerProfile.css'
 
@@ -338,20 +339,22 @@ function HouseChoice({player, houses, reload}) {
 }
 
 /**
- * The way into a house: ten questions, and the house they add up to.
+ * The way into a house: ten questions, then the four houses ranked by how close the answers came to each.
  *
- * ⚠ The server no longer draws one. `POST /api/house/join` takes a slug and checks that it names a house, so
- * *something* on this side has to choose — and a bare list of four would make the choice a shrug. The questionnaire
- * and its scoring live in `src/houseQuiz.js`; nothing here knows a question.
+ * ⚠ The questionnaire **guides, it does not decide**. `POST /api/house/join` takes a slug and checks that it names a
+ * house, so something on this side has to name one — but a bare list of four would make the choice a shrug, and a
+ * single verdict would make the quiz a gate. So the answers are tallied into an affinity per house, the strongest
+ * first, and every one of them carries a button: the player is told where their play points, and joins whom they want.
  *
- * The verdict is held in state rather than recomputed: `houseFromAnswers` draws lots between tied houses, so a
- * second run could name a different house than the one on screen — under the very click that accepts it.
+ * The answers are held in state rather than the verdict, since there is no verdict to hold any more — no lottery
+ * either, which is what used to make the result something that could not be recomputed under the accepting click.
  *
- * The lore of the house found comes from /api/houses, never from a copy kept here. Only the slug is this side's.
+ * The questionnaire and its scoring live in `src/houseQuiz.js`; nothing here knows a question. The lore of each house
+ * comes from /api/houses, never from a copy kept here. Only the slug is this side's.
  */
 function JoinHouse({player, period, houses, reload}) {
     const isSelf = useIsSelf(player.discordId);
-    const [verdict, setVerdict] = useState(null);
+    const [answers, setAnswers] = useState(null);
 
     if (!isSelf) {
         return <p className={'PlayerProfile__Empty'}>Ce joueur n'appartient à aucune maison.</p>;
@@ -365,32 +368,68 @@ function JoinHouse({player, period, houses, reload}) {
         );
     }
 
-    if (verdict == null) {
+    if (answers == null) {
         return (
             <div className={'PlayerProfile__Join'}>
                 <p className={'PlayerProfile__JoinIntro'}>
-                    Dix questions, et votre façon de jouer désignera votre maison.
+                    Dix questions, et votre façon de jouer vous dira quelle maison vous ressemble.
                 </p>
-                <HouseQuiz onResolved={setVerdict} />
+                <HouseQuiz onCompleted={setAnswers} />
             </div>
         );
     }
 
-    const house = houses?.find(candidate => candidate.slug === verdict);
+    // Ex æquo at the top are all marked as such: nothing here breaks a tie, the player does.
+    const strongest = leaders(answers);
 
     return (
-        <div className={'PlayerProfile__Join'} style={house ? {'--house-color': house.color} : undefined}>
-            <p className={'PlayerProfile__JoinVerdict'}>Votre voie vous mène chez :</p>
-            <Crest slug={verdict} name={house?.name ?? verdict} size={128} />
-            <p className={'PlayerProfile__JoinName'}>{house?.name ?? verdict}</p>
-            {house?.tagline && <p className={'PlayerProfile__JoinTagline'}>{house.tagline}</p>}
+        <div className={'PlayerProfile__Join'}>
+            <p className={'PlayerProfile__JoinVerdict'}>Vos affinités :</p>
 
-            <Action
-                path={'/api/house/join'}
-                body={{ discordId: player.discordId, slug: verdict }}
-                label={'Rejoindre cette maison'}
-                hint={"Une appartenance est figée jusqu'à la fin de la saison."}
-                reload={reload} />
+            <ul className={'PlayerProfile__Affinities NoBulletList'}>
+                {affinities(answers).map(affinity => {
+                    const house = houses?.find(candidate => candidate.slug === affinity.slug);
+                    const name = house?.name ?? affinity.slug;
+
+                    return (
+                        <li
+                            key={affinity.slug}
+                            className={`PlayerProfile__Affinity PlayerProfile__Affinity--${affinity.slug}`}
+                            style={house ? {'--house-color': house.color} : undefined}>
+                            {/* The name is in the text beside it, so the crest carries no alt of its own. */}
+                            <Crest slug={affinity.slug} size={64} />
+
+                            <div className={'PlayerProfile__AffinityText'}>
+                                <p className={'PlayerProfile__AffinityName'}>{name}</p>
+                                {house?.tagline && <p className={'PlayerProfile__AffinityTagline'}>{house.tagline}</p>}
+                                <p className={'PlayerProfile__AffinityScore'}>
+                                    {affinity.percent} % d'affinité
+                                    {strongest.includes(affinity.slug) && (
+                                        <span className={'PlayerProfile__AffinityLead'}>la plus forte</span>
+                                    )}
+                                </p>
+                                {/* The figure is written above; the bar only makes it comparable at a glance. */}
+                                <div
+                                    className={'PlayerProfile__AffinityGauge'}
+                                    style={{'--affinity': `${affinity.percent}%`}}
+                                    aria-hidden={true} />
+                            </div>
+
+                            <Action
+                                path={'/api/house/join'}
+                                body={{ discordId: player.discordId, slug: affinity.slug }}
+                                label={`Rejoindre ${name}`}
+                                className={'PlayerProfile__AffinityJoin'}
+                                reload={reload} />
+                        </li>
+                    );
+                })}
+            </ul>
+
+            <p className={'PlayerProfile__ActionHint'}>
+                Le questionnaire ne fait que vous orienter : la maison reste votre choix. Une appartenance est figée
+                jusqu'à la fin de la saison.
+            </p>
         </div>
     );
 }
@@ -477,7 +516,11 @@ function post(path, body) {
     });
 }
 
-function Action({path, body, label, hint, reload}) {
+/**
+ * `className` is what lets the house buttons of the affinity bilan be dressed in their house's colour without a second
+ * copy of the POST-and-refetch dance; `hint` is optional because that bilan carries one hint for the four of them.
+ */
+function Action({path, body, label, hint, reload, className}) {
     const [state, setState] = useState('idle');
 
     const submit = () => {
@@ -491,11 +534,11 @@ function Action({path, body, label, hint, reload}) {
     };
 
     return (
-        <div className={'PlayerProfile__Action'}>
+        <div className={`PlayerProfile__Action ${className ?? ''}`}>
             <button type={'button'} className={'PlayerProfile__ActionButton'} onClick={submit} disabled={state === 'pending'}>
                 {state === 'pending' ? 'En cours…' : label}
             </button>
-            <p className={'PlayerProfile__ActionHint'}>{hint}</p>
+            {hint && <p className={'PlayerProfile__ActionHint'}>{hint}</p>}
             {state === 'forbidden' && <p className={'Error'}>Ce n'est pas la période pour ça.</p>}
             {state === 'conflict' && <p className={'Error'}>C'est déjà fait.</p>}
             {state === 'error' && <p className={'Error'}>L'inscription a échoué. Vérifiez qu'un compte est bien lié.</p>}

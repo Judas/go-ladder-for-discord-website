@@ -543,12 +543,21 @@ vide ; un test le fixe.
 
 ### 8.2 L'entrée passe par un questionnaire
 
-Puisque le serveur ne tire plus, il faut que quelque chose choisisse de ce côté-ci — et une liste de quatre boutons
-ferait du choix un haussement d'épaules. Donc **dix questions, quatre réponses chacune, une par maison**, et le score
-le plus haut désigne la maison ; tirage au sort entre les maisons à égalité, et seulement entre elles.
+Puisque le serveur ne tire plus, il faut que quelque chose mène le joueur à une maison de ce côté-ci — et une liste de
+quatre boutons ferait du choix un haussement d'épaules. Donc **dix questions, quatre réponses chacune, une par maison**.
+
+⚠ **Le questionnaire oriente, il ne choisit pas** (révisé le 18 août 2026 ; la première version désignait une maison et
+la faisait rejoindre). À la fin, il affiche un **bilan** : les quatre maisons classées par affinité, avec leur
+pourcentage, et **sous chaque blason un bouton, dans la couleur de la maison**. Le joueur rejoint celle qu'il veut, y
+compris une que ses réponses ne désignaient pas. D'où deux conséquences :
+
+- **Plus aucun tirage au sort au dépouillement.** Deux maisons ex æquo sont deux maisons proposées, marquées « la plus
+  forte » toutes les deux — la réponse honnête, là où un tirage trancherait à la place du joueur.
+- L'ordre du bilan est stable : `affinities` part de `HOUSE_SLUGS` et `sort` est stable, donc les ex æquo sortent
+  toujours dans le même ordre, sans que l'ordre des clics ni le hasard s'en mêlent.
 
 - `src/houseQuiz.js` : le vivier des questions, le tirage (`drawQuiz`) et le dépouillement (`tally`, `leaders`,
-  `houseFromAnswers`). ⚠ **Ce fichier est la règle du site, pas celle du serveur**, exactement comme `src/fgc.js` pour
+  `affinities`). ⚠ **Ce fichier est la règle du site, pas celle du serveur**, exactement comme `src/fgc.js` pour
   les seuils FGC. Le serveur prend un slug et ne pose aucune question.
 - **Les dix questions posées sont tirées d'un vivier de vingt-deux**, et les quatre réponses de chacune sont mélangées.
   Deux joueurs ne passent donc pas le même questionnaire. Toucher au vivier touche ce seul fichier :
@@ -557,17 +566,23 @@ le plus haut désigne la maison ; tirage au sort entre les maisons à égalité,
 - ⚠ **Le tirage est fait une fois, à l'ouverture** (`useState(drawQuiz)`). Refait au rendu, il changerait les questions
   sous le joueur et le retour arrière ne ramènerait pas celle qu'il vient de quitter ; un test le fixe.
 - `Components/HouseQuiz.jsx` : une question à la fois, jauge d'avancement, retour arrière (dix questions sans retour,
-  c'est un clic malheureux qui décide d'une saison). Il ne rejoint rien : il appelle `onResolved(slug)`, et le profil
-  affiche la maison trouvée puis réutilise son bouton `Action` avec ses états 403 / 409 / erreur.
+  c'est un clic malheureux qui décide d'une saison). Il ne dépouille rien et ne rejoint rien : il appelle
+  `onCompleted(answers)` avec un slug par question posée, et le profil en tire le bilan puis réutilise son bouton
+  `Action` — un par maison, avec ses états 403 / 409 / erreur — habillé de la couleur de la maison via `className`.
 - ⚠ **Une réponse ne dit jamais quelle maison elle vise** — ni couleur, ni blason, ni nom. Un questionnaire dont on
   lit le barème est un menu avec des étapes en plus. Un test parcourt les dix questions posées et vérifie qu'aucun nom
-  de maison n'apparaît.
-- ⚠ **Le verdict est gardé en état, pas recalculé.** `houseFromAnswers` tire au sort entre les égalités : un second
-  passage pourrait nommer une autre maison que celle affichée, sous le clic même qui l'accepte.
+  de maison n'apparaît. Le bilan de la fin, lui, les nomme toutes les quatre : c'est là que le choix se fait.
+- ⚠ **Ce sont les réponses qui sont gardées en état**, pas un verdict. Rien ne tire au sort, donc le bilan est le même
+  à chaque rendu — c'était le seul problème que l'état résolvait dans la version d'avant.
+- ⚠ **La barre d'affinité a un contour clair sur sa partie remplie.** Deux des quatre couleurs de maison sont aussi
+  sombres que n'importe quel fond que la barre pourrait avoir — le vert de Sabre Silencieux y disparaissait — et le
+  contour est ce qui fait lire un remplissage comme une longueur. Le pourcentage est écrit à côté de toute façon.
+- ⚠ **Le nom de la maison n'est pas écrit dans sa couleur** dans le bilan, pour la même raison : la couleur vit dans la
+  bordure, la jauge et le bouton, où elle est posée sur elle-même et reste lisible (`--house-ink`, comme ailleurs).
 - L'ordre des réponses est mélangé à chaque tirage, sinon cliquer toujours la première désignerait la même maison à
   coup sûr. Le vivier, lui, les garde dans l'ordre de `HOUSE_SLUGS` : c'est ce qui rend le fichier relisible.
 
-Le lore de la maison trouvée (nom, devise, couleur) vient de `/api/houses`, jamais d'une copie gardée dans le site.
+Le lore des maisons proposées (nom, devise, couleur) vient de `/api/houses`, jamais d'une copie gardée dans le site.
 Seul le slug est de ce côté-ci. C'est aussi ce qui alimente la liste des trois autres maisons en 8.1 : la même réponse
 porte déjà `period`, donc elle est chargée dès que le bloc s'affiche.
 

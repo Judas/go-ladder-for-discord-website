@@ -1,10 +1,14 @@
 /**
- * Le questionnaire d'entrée dans une maison, et la façon d'en tirer une.
+ * Le questionnaire d'entrée dans une maison, et le bilan d'affinités qu'il produit.
  *
  * ⚠ Tout ce fichier est **la règle du site**, pas celle du serveur. `POST /api/house/join` prend un slug et ne pose
  * aucune question : il vérifie la période, le joueur, l'absence de maison, et que le slug nomme bien une maison. Le
- * tirage au sort d'avant a disparu du serveur — c'est désormais le site qui désigne la maison, et c'est ici qu'il le
- * fait. Personne d'autre ne lit ces questions.
+ * tirage au sort d'avant a disparu du serveur — c'est donc le site qui mène le joueur à une maison, et c'est ici qu'il
+ * le fait. Personne d'autre ne lit ces questions.
+ *
+ * ⚠ Le questionnaire **ne choisit pas** : il classe. Il rend une affinité par maison, les quatre, et c'est le joueur
+ * qui clique celle qu'il rejoint. Rien ici ne tire au sort, donc, y compris en cas d'égalité au sommet : deux maisons
+ * ex æquo sont deux maisons proposées, ce qui est la réponse honnête, là où un tirage trancherait à la place du joueur.
  *
  * Le questionnaire posé n'est pas la liste écrite ici : `drawQuiz()` tire `QUIZ_LENGTH` questions au sort dans le vivier
  * et mélange les réponses de chacune. Deux joueurs ne passent donc pas le même questionnaire, et le même joueur qui
@@ -324,7 +328,11 @@ export function tally(answers) {
     return counts;
 }
 
-/** Les maisons à égalité au sommet, dans l'ordre de `HOUSE_SLUGS`. Vide sans réponse : rien ne mène nulle part. */
+/**
+ * Les maisons à égalité au sommet, dans l'ordre de `HOUSE_SLUGS`. Vide sans réponse : rien ne mène nulle part.
+ *
+ * Elles sont montrées comme telles, plusieurs quand elles sont plusieurs — c'est ce qui remplace le tirage au sort.
+ */
 export function leaders(answers) {
     const counts = tally(answers);
     const best = Math.max(...Object.values(counts));
@@ -332,14 +340,21 @@ export function leaders(answers) {
 }
 
 /**
- * La maison désignée par une série de réponses : le score le plus haut, tiré au sort entre les maisons à égalité.
+ * Le bilan : les quatre maisons, de la plus proche à la plus lointaine, avec leur part des réponses.
  *
- * Le tirage est injectable pour être testable — `Math.random` par défaut, et rien d'autre ne doit le remplacer en
- * production. Null quand il n'y a aucune réponse, ce qui n'arrive pas depuis le composant mais reste la réponse
- * honnête à une question qu'on n'a pas posée.
+ * Le pourcentage se lit sur les réponses données, pas sur `QUIZ_LENGTH` : les deux valent pareil pour un
+ * questionnaire terminé, et seul le premier a un sens sur un questionnaire interrompu.
+ *
+ * `sort` est stable en JavaScript et le tableau part de `HOUSE_SLUGS` : deux maisons à égalité sortent donc toujours
+ * dans le même ordre, sans que le hasard ni l'ordre des clics du joueur s'en mêlent.
  */
-export function houseFromAnswers(answers, random = Math.random) {
-    const tied = leaders(answers);
-    if (tied.length === 0) { return null; }
-    return tied[Math.min(Math.floor(random() * tied.length), tied.length - 1)];
+export function affinities(answers) {
+    const counts = tally(answers);
+    return HOUSE_SLUGS
+        .map(slug => ({
+            slug,
+            score: counts[slug],
+            percent: answers.length === 0 ? 0 : Math.round((counts[slug] / answers.length) * 100),
+        }))
+        .sort((one, other) => other.score - one.score);
 }

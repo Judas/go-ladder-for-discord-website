@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { HOUSE_QUIZ_POOL, HOUSE_SLUGS, QUIZ_LENGTH, drawQuiz, houseFromAnswers, leaders, tally } from './houseQuiz.js';
+import { HOUSE_QUIZ_POOL, HOUSE_SLUGS, QUIZ_LENGTH, affinities, drawQuiz, leaders, tally } from './houseQuiz.js';
 import { housesPopulated } from './__fixtures__/houses.js';
 
 /**
@@ -114,40 +114,56 @@ describe('dépouillement', () => {
         });
     });
 
-    it('désigne la maison la plus citée', () => {
-        const answers = ['NEXUS_ALPHA', 'FILS_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX'];
-        expect(leaders(answers)).toEqual(['NEXUS_ALPHA']);
-        expect(houseFromAnswers(answers)).toBe('NEXUS_ALPHA');
+    it('nomme la maison la plus citée', () => {
+        expect(leaders(['NEXUS_ALPHA', 'FILS_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX'])).toEqual(['NEXUS_ALPHA']);
     });
 
-    /** Le seul cas où le hasard intervient, et le seul que la fonction ne peut pas trancher seule. */
-    it('tire au sort entre les maisons à égalité, et seulement entre elles', () => {
+    /**
+     * Une égalité au sommet n'est plus tranchée : elle est rendue telle quelle, et c'est le joueur qui choisit. Un
+     * tirage au sort ici déciderait à sa place, ce que le questionnaire ne fait plus.
+     */
+    it('rend toutes les maisons à égalité au sommet, sans en tirer une', () => {
         const answers = ['FILS_DU_FROID', 'LUNAIRES_AETHER', 'NEXUS_ALPHA'];
         expect(leaders(answers)).toEqual(['FILS_DU_FROID', 'NEXUS_ALPHA', 'LUNAIRES_AETHER']);
-
-        expect(houseFromAnswers(answers, () => 0)).toBe('FILS_DU_FROID');
-        expect(houseFromAnswers(answers, () => 0.5)).toBe('NEXUS_ALPHA');
-        expect(houseFromAnswers(answers, () => 0.99)).toBe('LUNAIRES_AETHER');
-    });
-
-    /** Une maison en tête, même d'un point, ne se joue pas aux dés. */
-    it('ne tire pas au sort quand il y a un vainqueur net', () => {
-        const answers = ['FILS_DU_FROID', 'FILS_DU_FROID', 'NEXUS_ALPHA'];
-        for (const draw of [0, 0.5, 0.99]) {
-            expect(houseFromAnswers(answers, () => draw)).toBe('FILS_DU_FROID');
-        }
     });
 
     it('ne désigne rien sans réponse', () => {
         expect(leaders([])).toEqual([]);
-        expect(houseFromAnswers([])).toBeNull();
+    });
+});
+
+describe('bilan d’affinités', () => {
+    /** Les quatre maisons sont proposées, y compris celles que le joueur n'a jamais citées : le bilan est un classement,
+     * pas une sélection. */
+    it('classe les quatre maisons, de la plus proche à la plus lointaine', () => {
+        expect(affinities(['NEXUS_ALPHA', 'FILS_DU_FROID', 'NEXUS_ALPHA', 'NEXUS_ALPHA'])).toEqual([
+            { slug: 'NEXUS_ALPHA', score: 3, percent: 75 },
+            { slug: 'FILS_DU_FROID', score: 1, percent: 25 },
+            { slug: 'SABRE_SILENCIEUX', score: 0, percent: 0 },
+            { slug: 'LUNAIRES_AETHER', score: 0, percent: 0 },
+        ]);
     });
 
-    /** Dix questions, une réponse chacune : le total est dix, quelle que soit la répartition. */
-    it('répartit dix points sur un questionnaire complet', () => {
+    /** Deux maisons ex æquo doivent sortir dans le même ordre à chaque appel, sans quoi le bilan sauterait sous le
+     * joueur au moindre rendu — l'ordre est celui de `HOUSE_SLUGS`, pas celui des clics. */
+    it('ordonne les ex æquo comme HOUSE_SLUGS, quel que soit l’ordre des réponses', () => {
+        const ordered = affinities(['LUNAIRES_AETHER', 'NEXUS_ALPHA']).map(affinity => affinity.slug);
+        expect(ordered).toEqual(['NEXUS_ALPHA', 'LUNAIRES_AETHER', 'FILS_DU_FROID', 'SABRE_SILENCIEUX']);
+        expect(affinities(['NEXUS_ALPHA', 'LUNAIRES_AETHER']).map(affinity => affinity.slug)).toEqual(ordered);
+    });
+
+    it('ne prête aucune affinité sans réponse', () => {
+        expect(affinities([]).map(affinity => affinity.percent)).toEqual([0, 0, 0, 0]);
+    });
+
+    /** Dix questions, une réponse chacune : dix points répartis, donc cent pour cent d'affinité répartis. */
+    it('répartit dix points, soit cent pour cent, sur un questionnaire complet', () => {
         const answers = drawQuiz(seeded(11)).map(question => question.answers[0].house);
         const counts = tally(answers);
         expect(Object.values(counts).reduce((sum, count) => sum + count, 0)).toBe(QUIZ_LENGTH);
-        expect(HOUSE_SLUGS).toContain(houseFromAnswers(answers));
+
+        const bilan = affinities(answers);
+        expect(bilan.map(affinity => affinity.slug).sort()).toEqual([...HOUSE_SLUGS].sort());
+        expect(bilan.reduce((sum, affinity) => sum + affinity.percent, 0)).toBe(100);
     });
 });
