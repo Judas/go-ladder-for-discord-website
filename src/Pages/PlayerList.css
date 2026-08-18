@@ -219,13 +219,13 @@ div[role="gridcell"] {
     padding-bottom: 0 !important;
 }
 
-.House img {
+.Row .House img {
     width: 2rem;
     height: 2rem;
 }
 
 @media only screen and (max-width: 980px) {
-    .House img {
+    .Row .House img {
         width: 1.75rem;
         height: 1.75rem;
     }
