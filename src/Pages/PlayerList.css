@@ -211,7 +211,7 @@ div[role="gridcell"] {
 }
 
 /* The badge only; the house it names is one tap away on the player's profile. */
-.House {
+.Row .House {
     grid-area: house;
     display: flex;
     align-items: center;
