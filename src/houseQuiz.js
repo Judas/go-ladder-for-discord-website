@@ -162,10 +162,10 @@ export const HOUSE_QUIZ_POOL = [
         id: 'hobbies',
         question: 'D’autres hobbies que le Go ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Mortal Kombat, GTA, CS…' },
-            { house: 'NEXUS_ALPHA', label: 'Je suis surtout un joueur d’échecs en fait ; d’ailleurs, j’ai codé mon propre bot' },
-            { house: 'SABRE_SILENCIEUX', label: 'La peinture, le piano et me tenir en forme physique' },
-            { house: 'LUNAIRES_AETHER', label: 'Minecraft, Animal Crossing et Dota' },
+            { house: 'FILS_DU_FROID', label: 'Smash Bros, GTA, CS…' },
+            { house: 'NEXUS_ALPHA', label: 'Echecs, Rubik’s Cube, Shogi…' },
+            { house: 'SABRE_SILENCIEUX', label: 'Peinture, Musique, Théâtre, Lecture…' },
+            { house: 'LUNAIRES_AETHER', label: 'Curling, Spéléologie, Quidditch' },
         ],
     },
     {
@@ -187,7 +187,7 @@ export const HOUSE_QUIZ_POOL = [
         answers: [
             { house: 'FILS_DU_FROID', label: 'Je défonce la porte, c’est chez moi ici' },
             { house: 'NEXUS_ALPHA', label: 'Je cherche la clé sous le paillasson ou le pot de fleurs' },
-            { house: 'SABRE_SILENCIEUX', label: 'Je frappe à la porte, il y a peut-être quelqu’un' },
+            { house: 'SABRE_SILENCIEUX', label: 'J’appelle mon voisin à qui j’ai laissé une clé de rechange' },
             { house: 'LUNAIRES_AETHER', label: 'J’essaie de crocheter la serrure' },
         ],
     },

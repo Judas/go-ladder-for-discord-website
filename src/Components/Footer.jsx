@@ -5,12 +5,13 @@ import './Footer.css';
 export default function Footer() {
     return (
         <footer className={'Footer'}>
-            <p>Developed for <a href="https://fulgurogo.be/">FulguroGo</a> by <br/><a
-            href="/player/236813095207436289">Drooxi</a> <a
-            href="/player/324122154742317056">Jiroh</a> <a
-            href="/player/453473841252007937">Judas</a> <a
-            href="/player/178869205557313536">Kirwiisp</a> <a
-            href="https://theworldasastage.com/">NicoTupe</a> <a
+            <p>Developed for <a href="https://fulgurogo.be/">FulguroGo</a> by <a
+            href="/player/453473841252007937">Judas</a> with the help of<br /><a
+            href="/player/236813095207436289">Drooxi</a>, <a
+            href="/player/324122154742317056">Jiroh</a>, <a
+            href="/player/178869205557313536">Kirwiisp</a>, <a
+            href="https://theworldasastage.com">NicoTupe</a>, <a
+            href="/player/268028935764312064">RenG</a> & <a
             href="/player/119456225724334081">Valloa</a>
             </p>
             <p className={'Footer__Health'}><Link to="/health">État des services</Link></p>
