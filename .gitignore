@@ -24,3 +24,6 @@ yarn-error.log*
 
 # vite
 .vite/
+
+# Graphify generated knowledge graph
+graphify-out/
