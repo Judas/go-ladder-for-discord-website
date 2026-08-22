@@ -154,6 +154,15 @@ describe('pages', () => {
             });
         });
 
+        it('renders a FOX account without a fake profile link', async () => {
+            const foxAccount = { server: 'FOX', id: '123456', name: 'FoxExample', rank: '3d', link: null };
+            stubApi({ '/api/player/': { ...fixtures.profile, accounts: [...fixtures.profile.accounts, foxAccount] } });
+            renderAt(<PlayerProfile />, { path: `/player/${fixtures.profile.discordId}`, route: '/player/:playerId' });
+
+            const foxName = await screen.findByText(foxAccount.name);
+            expect(within(foxName.closest('[role="row"]')).queryByRole('link')).not.toBeInTheDocument();
+        });
+
         it('renders a first-tier profile, and warns about nothing', async () => {
             // The fixture player is tier 7. Tier 1 is the branch that draws no previous shield, and tier 8 the one
             // that draws no progress bar at all — neither is reachable from the captured profile.

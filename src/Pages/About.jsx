@@ -11,7 +11,7 @@ export default function About() {
 
             <p lang={'fr-FR'} className={'About__text'}>
                 GO Ladder for Discord (GOLD) est l'outil de la communauté <a href="https://discord.gg/fulgurogo">FulguroGo</a>.
-                Les membres peuvent ajouter leurs compte KGS & OGS afin d'être réparti dans une Division de l'échelle interne.
+                Les membres peuvent ajouter leurs comptes KGS, OGS et FOX afin d'être répartis dans une Division de l'échelle interne.
             </p>
 
             <span className={'About__tiers'}>

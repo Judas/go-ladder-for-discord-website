@@ -623,7 +623,7 @@ function AccountRow({account}) {
             <CellElement className={'PlayerProfile__AccountServer'}>{account.server}</CellElement>
             <CellElement className={'PlayerProfile__AccountPseudo'}>{account.name}</CellElement>
             <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
-            <a href={account.link ?? "#"} target='_blank' />
+            {account.link && <a href={account.link} target='_blank' rel='noreferrer' />}
         </RowElement>
     );
 }
