@@ -39,10 +39,10 @@ export default function AuthProvider({children}) {
         // The uuid has to exist even for a visitor who never signs in: it is what a later login is filed under.
         ensureUserId();
 
-        // Nothing stored, or what was stored has expired. Asking costs one request and is the normal first visit.
-        // `profile` is deliberately absent from the dependencies: re-running whenever it changed would ask the
-        // server again the moment it answered null, in a loop.
-        if (readStoredProfile() == null) { refresh(); }
+        // Always refresh once at boot. The stored profile still prevents a signed-in flash, while the request updates
+        // live Discord attributes such as admin roles that may have changed since the previous visit.
+        // `profile` is deliberately absent from the dependencies: re-running whenever it changed would loop.
+        refresh();
     }, [refresh]);
 
     return (

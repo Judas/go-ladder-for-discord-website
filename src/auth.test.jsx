@@ -81,13 +81,20 @@ describe('auth', () => {
         vi.stubGlobal('fetch', serves(null));
 
         renderProbe();
-        // Stored and valid, so nothing is asked at boot and the visitor stays signed in.
+        // The stored identity is used for the first paint, then the boot refresh revokes it.
         expect(screen.getByTestId('signed')).toHaveTextContent('true');
-
-        screen.getByRole('button', { name: 'refresh' }).click();
 
         await waitFor(() => expect(screen.getByTestId('signed')).toHaveTextContent('false'));
         expect(localStorage.getItem('user_profile')).toBeNull();
+    });
+
+    it('refreshes Discord roles for a stored profile at boot', async () => {
+        localStorage.setItem('user_profile', JSON.stringify({ ...PROFILE, admin: false }));
+        vi.stubGlobal('fetch', serves({ ...PROFILE, admin: true }));
+
+        renderProbe();
+
+        await waitFor(() => expect(JSON.parse(localStorage.getItem('user_profile')).admin).toBe(true));
     });
 
     it('refuses to be used outside a provider', () => {

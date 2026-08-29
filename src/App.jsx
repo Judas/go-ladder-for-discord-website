@@ -5,6 +5,7 @@ import Footer from './Components/Footer.jsx';
 
 import About from './Pages/About.jsx';
 import AccountLink from './Pages/AccountLink.jsx';
+import AdminLogs from './Pages/AdminLogs.jsx';
 import DiscordAuth from './Pages/DiscordAuth.jsx';
 import Game from "./Pages/Game";
 import Health from './Pages/Health.jsx';
@@ -32,6 +33,7 @@ export default function App() {
                     <Route path="/game/:gameId" element={<Game/>}/>
                     <Route path="/auth/discord" element={<DiscordAuth/>}/>
                     <Route path="/link" element={<AccountLink/>}/>
+                    <Route path="/admin" element={<AdminLogs/>}/>
                     <Route path="/health" element={<Health/>}/>
                     {/* /houses is imposed by the server: HouseNotifier.HOUSES_PATH, and Discord announcements
                         already link to it. */}

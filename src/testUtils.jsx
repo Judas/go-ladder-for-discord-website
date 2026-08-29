@@ -15,6 +15,7 @@ export { fixtures };
  * `overrides` maps a path fragment to either a payload or `{status, body}`, for the failure branches.
  */
 export function stubApi(overrides = {}) {
+    const hasAuthProfileOverride = Object.prototype.hasOwnProperty.call(overrides, '/api/auth/profile');
     const routes = {
         '/api/players': fixtures.players,
         '/api/tiers': fixtures.tiers,
@@ -37,7 +38,11 @@ export function stubApi(overrides = {}) {
 
         if (key === undefined) return Promise.reject(new Error(`no stub for ${url}`));
 
-        const entry = routes[key];
+        let entry = routes[key];
+        if (key === '/api/auth/profile' && !hasAuthProfileOverride) {
+            const storedProfile = localStorage.getItem('user_profile');
+            entry = storedProfile ? JSON.parse(storedProfile) : { status: 404 };
+        }
         const { status = 200, body = entry } = entry?.status ? entry : {};
         return Promise.resolve({
             ok: status >= 200 && status < 300,
