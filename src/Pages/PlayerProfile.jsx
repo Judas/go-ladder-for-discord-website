@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 import { FaCircleInfo } from "react-icons/fa6";
 
-import { useIsSelf } from '../auth.js';
+import { useAuth, useIsSelf } from '../auth.js';
+import { ensureUserId } from '../AuthProfile.js';
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
 import RowElement from "../Components/Table/RowElement.jsx";
@@ -100,7 +101,7 @@ function Profile({player, tiers, period, houses, reload, tooltipHandler}) {
 
                 <div className={'Card'}>
                     <h2 className={'CardHeader'}><span>Comptes</span></h2>
-                    <AccountList player={player} />
+                    <AccountList player={player} reload={reload} />
                 </div>
 
                 <div className={'Card TootipIconParent'}>
@@ -583,14 +584,75 @@ function TierScale({player, tiers}) {
     );
 }
 
-function AccountList({player}) {
+function AccountList({player, reload}) {
+    const { profile, refresh } = useAuth();
+    const [accountToUnlink, setAccountToUnlink] = useState(null);
+    const [unlinkStatus, setUnlinkStatus] = useState('idle');
+
+    const openUnlinkConfirmation = account => {
+        setUnlinkStatus('idle');
+        setAccountToUnlink(account);
+    };
+
+    const closeUnlinkConfirmation = () => {
+        if (unlinkStatus !== 'pending') { setAccountToUnlink(null); }
+    };
+
+    const unlinkAccount = async () => {
+        if (accountToUnlink == null) { return; }
+        setUnlinkStatus('pending');
+        try {
+            const response = await fetch('/api/admin/unlink', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Gold-Id': ensureUserId(),
+                },
+                body: JSON.stringify({
+                    discordId: player.discordId,
+                    account: accountToUnlink.server,
+                    accountId: accountToUnlink.id,
+                }),
+            });
+
+            if (response.ok) {
+                setAccountToUnlink(null);
+                setUnlinkStatus('idle');
+                reload();
+                return;
+            }
+
+            const status = response.status === 401
+                ? 'unauthorized'
+                : response.status === 403
+                    ? 'forbidden'
+                    : response.status === 404
+                        ? 'missing'
+                        : response.status === 503
+                            ? 'unavailable'
+                            : 'error';
+            setUnlinkStatus(status);
+            if (response.status === 403) { await refresh(); }
+        } catch {
+            setUnlinkStatus('error');
+        }
+    };
+
     let accountList;
     if (player.accounts.length === 0) {
         accountList = (<p className={'NoAccount'}>Aucun compte lié</p>);
     } else {
         accountList = (
             <RowGroupElement className={'PlayerProfile__AccountListContent'}>
-                {player.accounts.map(account => <AccountRow key={`${account.server}-${account.id}`} account={account} />)}
+                {player.accounts.map(account => (
+                    <AccountRow
+                        key={`${account.server}-${account.id}`}
+                        account={account}
+                        canUnlink={profile?.admin === true}
+                        onUnlink={() => openUnlinkConfirmation(account)}
+                    />
+                ))}
             </RowGroupElement>
         );
     }
@@ -603,28 +665,95 @@ function AccountList({player}) {
     }
 
     return (
-        <TableElement className={'PlayerProfile__AccountList'}>
-            <RowGroupElement className={'ReaderOnly'}>
-                <RowElement>
-                    <ColHeaderElement>Serveur</ColHeaderElement>
-                    <ColHeaderElement>Pseudo</ColHeaderElement>
-                    <ColHeaderElement>Rang</ColHeaderElement>
-                </RowElement>
-            </RowGroupElement>
-            {accountList}
-            {addAccount}
-        </TableElement>
+        <>
+            <TableElement className={'PlayerProfile__AccountList'}>
+                <RowGroupElement className={'ReaderOnly'}>
+                    <RowElement>
+                        <ColHeaderElement>Serveur</ColHeaderElement>
+                        <ColHeaderElement>Pseudo</ColHeaderElement>
+                        <ColHeaderElement>Rang</ColHeaderElement>
+                        {profile?.admin === true && <ColHeaderElement>Administration</ColHeaderElement>}
+                    </RowElement>
+                </RowGroupElement>
+                {accountList}
+                {addAccount}
+            </TableElement>
+            {accountToUnlink && (
+                <UnlinkAccountDialog
+                    player={player}
+                    account={accountToUnlink}
+                    status={unlinkStatus}
+                    onCancel={closeUnlinkConfirmation}
+                    onConfirm={unlinkAccount}
+                />
+            )}
+        </>
     );
 }
 
-function AccountRow({account}) {
+function AccountRow({account, canUnlink, onUnlink}) {
     return (
         <RowElement className={'PlayerProfile__AccountItem'}>
             <CellElement className={'PlayerProfile__AccountServer'}>{account.server}</CellElement>
             <CellElement className={'PlayerProfile__AccountPseudo'}>{account.name}</CellElement>
             <CellElement className={'PlayerProfile__AccountRank'}>{account.rank}</CellElement>
+            {canUnlink && (
+                <CellElement className={'PlayerProfile__AccountAdmin'}>
+                    <button type="button" className={'PlayerProfile__AccountUnlink'} onClick={onUnlink}>
+                        Délier
+                    </button>
+                </CellElement>
+            )}
             {account.link && <a href={account.link} target='_blank' rel='noreferrer' />}
         </RowElement>
+    );
+}
+
+const UNLINK_ERRORS = {
+    unauthorized: 'Votre session a expiré. Reconnectez-vous avec Discord.',
+    forbidden: 'Votre accès administrateur a été retiré.',
+    missing: 'Ce compte est déjà délié ou a été remplacé.',
+    unavailable: 'Le service Discord est temporairement indisponible.',
+    error: 'Impossible de délier ce compte. Réessayez plus tard.',
+};
+
+function UnlinkAccountDialog({player, account, status, onCancel, onConfirm}) {
+    const pending = status === 'pending';
+    const confirmButton = useRef(null);
+
+    useEffect(() => {
+        confirmButton.current?.focus();
+        const closeOnEscape = event => {
+            if (event.key === 'Escape' && !pending) { onCancel(); }
+        };
+        window.addEventListener('keydown', closeOnEscape);
+        return () => window.removeEventListener('keydown', closeOnEscape);
+    }, [onCancel, pending]);
+
+    return (
+        <div className={'PlayerProfile__UnlinkOverlay'}>
+            <div
+                className={'PlayerProfile__UnlinkDialog'}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="unlink-account-title">
+                <h3 id="unlink-account-title">Délier un compte</h3>
+                <p>
+                    Délier le compte <strong>{account.server}</strong> de <strong>{player.discordName}</strong> ?
+                </p>
+                <dl>
+                    <div><dt>Pseudo</dt><dd>{account.name ?? 'Inconnu'}</dd></div>
+                    <div><dt>Identifiant</dt><dd>{account.id}</dd></div>
+                </dl>
+                {UNLINK_ERRORS[status] && <p className={'Error'} role="alert">{UNLINK_ERRORS[status]}</p>}
+                <div className={'PlayerProfile__UnlinkActions'}>
+                    <button type="button" onClick={onCancel} disabled={pending}>Annuler</button>
+                    <button type="button" onClick={onConfirm} disabled={pending} ref={confirmButton}>
+                        {pending ? 'Déliaison…' : 'Confirmer la déliaison'}
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
 
