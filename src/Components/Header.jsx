@@ -1,4 +1,4 @@
-import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy } from 'react-icons/fa6';
+import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy, FaUserShield } from 'react-icons/fa6';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { TbGoGame } from 'react-icons/tb';
 import { Link, NavLink } from 'react-router-dom';
@@ -71,6 +71,14 @@ export default function Header() {
                         <span className={'NavButtonText'}>À propos</span>
                     </span>
                 </NavLink>
+
+                {profile?.admin === true &&
+                    <NavLink to={'/admin'} className={'NavLink'}>
+                        <span className={'NavButton'}>
+                            <FaUserShield />
+                            <span className={'NavButtonText'}>Admin</span>
+                        </span>
+                    </NavLink>}
 
                 {authButton}
         </nav>

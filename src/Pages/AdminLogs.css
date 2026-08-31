@@ -1,0 +1,92 @@
+.AdminLogs {
+    min-width: 0;
+    max-width: 100%;
+    color: var(--white-87);
+    padding-bottom: 4rem;
+}
+
+.AdminLogs__Toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--mine-shaft);
+    border-radius: .5rem .5rem 0 0;
+}
+
+.AdminLogs__Toolbar > div {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.AdminLogs__State {
+    padding: .2rem .5rem;
+    border-radius: 1rem;
+    background: var(--emperor);
+    font-size: .75rem;
+}
+
+.AdminLogs__State.live {
+    background: var(--eucalyptus);
+    color: var(--cod-gray);
+}
+
+.AdminLogs__Button {
+    padding: .5rem 1.25rem;
+    border: 0;
+    border-radius: .25rem;
+    color: var(--cod-gray);
+    background: var(--sun);
+    font-family: var(--default-font);
+    cursor: pointer;
+}
+
+.AdminLogs__Button:hover {
+    opacity: .85;
+}
+
+.AdminLogs__Output {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 24rem;
+    max-height: 65vh;
+    margin: 0;
+    padding: 1rem;
+    overflow: auto;
+    border: 1px solid var(--emperor);
+    border-radius: 0 0 .5rem .5rem;
+    background: var(--cod-gray);
+    color: var(--white-87);
+    font: .8rem/1.45 monospace;
+    text-align: left;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.AdminLogs__Updated {
+    margin: .5rem 0 0;
+    text-align: right;
+    font-size: .75rem;
+    opacity: .6;
+}
+
+@media only screen and (max-width: 600px) {
+    .AdminLogs__Toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .AdminLogs__Button {
+        width: 100%;
+    }
+
+    .AdminLogs__Output {
+        min-height: 18rem;
+        max-height: 70vh;
+        font-size: .7rem;
+    }
+}

@@ -3,6 +3,11 @@
     min-height:100vh;
 }
 
+/* Grid items default to their content's minimum width. A long unbroken log line must not widen the whole page. */
+.App > main {
+    min-width: 0;
+}
+
 
 @media only screen and (max-width: 980px) {
     .App {

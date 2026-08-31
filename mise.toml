@@ -1,0 +1,23 @@
+[tools]
+node = "22.12.0"
+yarn = "1.22.22"
+
+[tasks.install]
+description = "Installe les dépendances frontend verrouillées"
+run = "yarn install --frozen-lockfile"
+
+[tasks.dev]
+description = "Démarre le site et le proxy API en développement"
+run = "yarn devstart"
+
+[tasks.test]
+description = "Exécute les tests frontend"
+run = "yarn test --run"
+
+[tasks.lint]
+description = "Vérifie le code frontend"
+run = "yarn lint"
+
+[tasks.build]
+description = "Construit le site pour la production"
+run = "yarn build"

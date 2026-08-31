@@ -144,8 +144,8 @@
     position: relative;
     display: grid;
     grid-template:
-            'server pseudo rank' min-content
-            / 4rem 1fr 4rem 0px;
+            'server pseudo rank admin' min-content
+            / 4rem 1fr 4rem auto;
     gap: .5rem;
     padding: 1rem;
     box-shadow: 0 0 0 0 var(--sun);
@@ -177,6 +177,120 @@
 .PlayerProfile__AccountRank {
     grid-area: rank;
     place-self: center;
+}
+
+.PlayerProfile__AccountAdmin {
+    grid-area: admin;
+    place-self: center;
+}
+
+.PlayerProfile__AccountUnlink {
+    position: relative;
+    z-index: 1;
+    padding: .375rem .625rem;
+    border: 1px solid var(--punch);
+    border-radius: .25rem;
+    color: var(--white-87);
+    background: var(--punch-20);
+    cursor: pointer;
+}
+
+.PlayerProfile__AccountUnlink:hover,
+.PlayerProfile__AccountUnlink:focus-visible {
+    background: var(--punch);
+}
+
+.PlayerProfile__UnlinkOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, .75);
+}
+
+.PlayerProfile__UnlinkDialog {
+    width: min(100%, 30rem);
+    padding: 1.5rem;
+    border: 2px solid var(--sun);
+    border-radius: .5rem;
+    color: var(--white-87);
+    background: var(--mine-shaft);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .5);
+}
+
+.PlayerProfile__UnlinkDialog h3 {
+    margin: 0 0 1rem;
+    color: var(--sun);
+    font: 2rem var(--accent-font);
+}
+
+.PlayerProfile__UnlinkDialog dl {
+    display: grid;
+    gap: .5rem;
+    margin: 1rem 0;
+}
+
+.PlayerProfile__UnlinkDialog dl div {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: .5rem;
+}
+
+.PlayerProfile__UnlinkDialog dt {
+    font-weight: bold;
+}
+
+.PlayerProfile__UnlinkDialog dd {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.PlayerProfile__UnlinkDialog .Error {
+    padding: .75rem;
+}
+
+.PlayerProfile__UnlinkActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .75rem;
+    margin-top: 1.5rem;
+}
+
+.PlayerProfile__UnlinkActions button {
+    padding: .625rem 1rem;
+    border: 1px solid var(--emperor);
+    border-radius: .25rem;
+    color: var(--white-87);
+    background: var(--tundora);
+    cursor: pointer;
+}
+
+.PlayerProfile__UnlinkActions button:last-child {
+    border-color: var(--punch);
+    background: var(--punch);
+}
+
+.PlayerProfile__UnlinkActions button:disabled {
+    opacity: .5;
+    cursor: default;
+}
+
+@media only screen and (max-width: 560px) {
+    .PlayerProfile__AccountItem {
+        grid-template:
+            'server pseudo rank' min-content
+            'admin admin admin' min-content
+            / 4rem 1fr 4rem;
+    }
+
+    .PlayerProfile__AccountAdmin,
+    .PlayerProfile__AccountUnlink {
+        width: 100%;
+    }
 }
 
 .PlayerProfile__GameList {

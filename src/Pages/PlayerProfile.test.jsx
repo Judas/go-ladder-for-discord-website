@@ -52,13 +52,15 @@ const answerEverythingFor = async slug => {
 };
 
 /** Signs the visitor in as `discordId`, the way AuthProfile stores it. */
-const signInAs = discordId => {
+const signInAs = (discordId, admin = false) => {
     localStorage.setItem('user_profile', JSON.stringify({
         discordId,
         name: 'Moi',
         avatar: '',
         expirationDate: '2099-01-01T00:00:00Z',
+        admin,
     }));
+    localStorage.setItem('gold_uuid', JSON.stringify('admin-session'));
 };
 
 const sectionNamed = name => screen.getByText(name).closest('.Card');
@@ -67,6 +69,103 @@ describe('PlayerProfile', () => {
     beforeEach(() => {
         localStorage.clear();
         vi.unstubAllGlobals();
+    });
+
+    describe('admin account unlinking', () => {
+        it('shows unlink controls only to an administrator', async () => {
+            const regularView = render(withHouseAndLeague);
+            await screen.findByText(withHouseAndLeague.tierName);
+            expect(screen.queryByRole('button', { name: 'Délier' })).not.toBeInTheDocument();
+            regularView.unmount();
+
+            signInAs(withHouseAndLeague.discordId, true);
+            const adminView = render(withHouseAndLeague);
+            expect(await screen.findByRole('button', { name: 'Délier' })).toBeInTheDocument();
+            adminView.unmount();
+        });
+
+        it('names the player and exact account in the confirmation and can cancel', async () => {
+            signInAs(withHouseAndLeague.discordId, true);
+            render(withHouseAndLeague);
+            await userEvent.click(await screen.findByRole('button', { name: 'Délier' }));
+
+            const dialog = screen.getByRole('dialog', { name: 'Délier un compte' });
+            const account = withHouseAndLeague.accounts[0];
+            expect(within(dialog).getByText(withHouseAndLeague.discordName)).toBeInTheDocument();
+            expect(within(dialog).getByText(account.server)).toBeInTheDocument();
+            expect(within(dialog).getByText(account.name)).toBeInTheDocument();
+            expect(within(dialog).getByText(account.id)).toBeInTheDocument();
+
+            await userEvent.click(within(dialog).getByRole('button', { name: 'Annuler' }));
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        });
+
+        it('sends the protected unlink payload and reloads the profile', async () => {
+            signInAs(withHouseAndLeague.discordId, true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/unlink': {} });
+            await screen.findByText(withHouseAndLeague.tierName);
+            const profileCalls = () => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
+            const before = profileCalls();
+
+            await userEvent.click(screen.getByRole('button', { name: 'Délier' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la déliaison' }));
+            await waitFor(() => expect(profileCalls()).toBeGreaterThan(before));
+
+            const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/admin/unlink'));
+            expect(call[1].headers['X-Gold-Id']).toBe('admin-session');
+            expect(JSON.parse(call[1].body)).toEqual({
+                discordId: withHouseAndLeague.discordId,
+                account: withHouseAndLeague.accounts[0].server,
+                accountId: withHouseAndLeague.accounts[0].id,
+            });
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        });
+
+        it('disables both actions while unlinking', async () => {
+            signInAs(withHouseAndLeague.discordId, true);
+            const baseFetch = render(withHouseAndLeague);
+            let finishUnlink;
+            vi.stubGlobal('fetch', vi.fn((url, options) => {
+                if (String(url).includes('/api/admin/unlink')) {
+                    return new Promise(resolve => { finishUnlink = resolve; });
+                }
+                return baseFetch(url, options);
+            }));
+
+            await userEvent.click(await screen.findByRole('button', { name: 'Délier' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la déliaison' }));
+            expect(screen.getByRole('button', { name: 'Annuler' })).toBeDisabled();
+            expect(screen.getByRole('button', { name: 'Déliaison…' })).toBeDisabled();
+
+            finishUnlink({ ok: true, status: 200 });
+            await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+        });
+
+        it.each([
+            [401, /session a expiré/],
+            [403, /accès administrateur a été retiré/],
+            [404, /déjà délié ou a été remplacé/],
+            [503, /temporairement indisponible/],
+            [500, /Impossible de délier/],
+        ])('shows the dedicated unlink error for HTTP %s', async (status, message) => {
+            signInAs(withHouseAndLeague.discordId, true);
+            render(withHouseAndLeague, { '/api/admin/unlink': { status } });
+            await userEvent.click(await screen.findByRole('button', { name: 'Délier' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la déliaison' }));
+            expect(await screen.findByText(message)).toBeInTheDocument();
+        });
+
+        it('refreshes the authenticated profile when the server revokes admin access', async () => {
+            signInAs(withHouseAndLeague.discordId, true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/unlink': { status: 403 } });
+            await screen.findByRole('button', { name: 'Délier' });
+            const authCalls = () => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/auth/profile')).length;
+            const before = authCalls();
+
+            await userEvent.click(screen.getByRole('button', { name: 'Délier' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la déliaison' }));
+            await waitFor(() => expect(authCalls()).toBeGreaterThan(before));
+        });
     });
 
     describe('rank', () => {
