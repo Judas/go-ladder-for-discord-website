@@ -441,6 +441,12 @@ function JoinHouse({player, period, houses, reload}) {
  * The server refuses a join with 404 when any of its three conditions fails — known, in a house, OGS account linked —
  * without saying which. The site knows two of them from the profile it already has, so it says so before letting
  * anyone click.
+ *
+ * ⚠ The way in belongs to **both** branches, and that is the whole point of the second `Action` below. A member who
+ * left keeps their `league` block — the server keeps the row with `active: false` rather than deleting it, so the
+ * renown they earned stays theirs — so they land in the first branch, where the join button used to be unreachable.
+ * The API has always taken them back: `joinLeague` treats only an *active* membership as a 409, and answers 200 on an
+ * inactive one. It was the site that offered no button.
  */
 function LeagueSection({player, period, reload}) {
     const isSelf = useIsSelf(player.discordId);
@@ -464,6 +470,16 @@ function LeagueSection({player, period, reload}) {
                     {' '}· {league.exempted} exempté{league.exempted > 1 ? 's' : ''}
                 </p>
                 {!league.active && <p className={'PlayerProfile__Empty'}>Inactif : plus tiré au sort cette saison.</p>}
+                {/* Same label and same hint as the first-time button: a return is a join, and the OGS account it
+                    needs can have gone away since — losing it is one of the two things that deactivates a member. */}
+                {!league.active && isSelf && period !== 'VACATION' && (
+                    <Action
+                        path={'/api/league/join'}
+                        body={{ discordId: player.discordId }}
+                        label={'Rejoindre la ligue'}
+                        hint={"Un compte OGS lié est nécessaire."}
+                        reload={reload} />
+                )}
                 {league.active && isSelf && <LeaveLeague player={player} reload={reload} />}
             </div>
         );

@@ -697,6 +697,50 @@ describe('PlayerProfile', () => {
 
             expect(within(sectionNamed('Ligue')).getByText(/plus tiré au sort/)).toBeInTheDocument();
         });
+
+        /**
+         * The way back in. A member who left keeps their `league` block with `active: false`, which used to send them
+         * down the branch that shows figures and nothing else — no button, and no way back from the site at all. The
+         * server takes them back: only an *active* membership is a 409.
+         */
+        it('offers the way back to a member who has left, in season', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const inactive = { ...withHouseAndLeague, league: { ...withHouseAndLeague.league, active: false } };
+            const fetchStub = render(inactive, { period: 'SEASON' });
+            await screen.findByText(inactive.tierName);
+
+            await userEvent.click(
+                within(sectionNamed('Ligue')).getByRole('button', { name: 'Rejoindre la ligue' }),
+            );
+
+            await waitFor(() => {
+                const posted = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/league/join'));
+                expect(posted).toBeDefined();
+                expect(JSON.parse(posted[1].body)).toEqual({ discordId: inactive.discordId });
+            });
+        });
+
+        /** The server answers 403 out of season, so the button is not offered — same rule as a first join. */
+        it('offers no way back out of season', async () => {
+            signInAs(withHouseAndLeague.discordId);
+            const inactive = { ...withHouseAndLeague, league: { ...withHouseAndLeague.league, active: false } };
+            render(inactive, { period: 'VACATION' });
+            await screen.findByText(inactive.tierName);
+
+            expect(
+                within(sectionNamed('Ligue')).queryByRole('button', { name: 'Rejoindre la ligue' }),
+            ).not.toBeInTheDocument();
+        });
+
+        it('offers no way back on somebody else\'s profile', async () => {
+            const inactive = { ...withHouseAndLeague, league: { ...withHouseAndLeague.league, active: false } };
+            render(inactive, { period: 'SEASON' });
+            await screen.findByText(inactive.tierName);
+
+            expect(
+                within(sectionNamed('Ligue')).queryByRole('button', { name: 'Rejoindre la ligue' }),
+            ).not.toBeInTheDocument();
+        });
     });
 
     /** The other three sections are untouched by this iteration and must stay that way. */
