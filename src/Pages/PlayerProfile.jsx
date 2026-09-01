@@ -13,6 +13,7 @@ import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import HouseQuiz from "../Components/HouseQuiz.jsx";
+import Modal from "../Components/Modal.jsx";
 import useApi from "../hooks/useApi.js";
 import { FGC_RULES } from "../fgc.js";
 import { affinities, leaders } from "../houseQuiz.js";
@@ -41,12 +42,9 @@ export default function PlayerProfile() {
                 <Profile player={player} tiers={tiers} period={calendar?.period} houses={calendar?.houses}
                          reload={reload} tooltipHandler={() => setTooltipVisible(true)} />
                 {tooltipVisible && (
-                    <div className={'Tooltip'}>
-                        <button className={'CallToAction'} onClick={() => setTooltipVisible(false)}>
-                            <span className={'ReaderOnly'}>Fermer</span>
-                        </button>
+                    <Modal label={'Validation FGC'} onClose={() => setTooltipVisible(false)}>
                         <Tooltip />
-                    </div>
+                    </Modal>
                 )}
             </article>
         );
