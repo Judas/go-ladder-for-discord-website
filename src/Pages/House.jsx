@@ -5,6 +5,7 @@ import { FaCircleInfo } from "react-icons/fa6";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import Loader from "../Components/Loader.jsx";
+import Modal from "../Components/Modal.jsx";
 import SeasonBanner from "../Components/SeasonBanner.jsx";
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
@@ -20,6 +21,8 @@ import './House.css';
  *
  * The values are printed as a legend only. The figures themselves always come from the server, and so does `total` —
  * re-adding the seven here would make the site wrong the day the scale gains a column while the server stays right.
+ * That day has come and the rule held: the scale is now divided by the board, so `total` is no longer the sum of the
+ * seven and summing them here would print a figure nobody is ranked on. See BOARD_SCALING.
  */
 const SCORING = [
     { key: 'played', emoji: '🎮', worth: 1, label: 'Partie jouée' },
@@ -29,6 +32,19 @@ const SCORING = [
     { key: 'victory', emoji: '🏆', worth: 2, label: 'Victoire' },
     { key: 'evenGame', emoji: '⚖️', worth: 1, label: 'Partie à égalité' },
     { key: 'ranked', emoji: '🎓', worth: 1, label: 'Partie classée' },
+];
+
+/**
+ * What the board does to the total, once the seven columns are added up.
+ *
+ * A legend, like SCORING, and for a sharper reason than usual: this is the only thing on the site that explains why a
+ * ranking row shows seven figures adding up to more than its own Points column. The server divides and rounds up, the
+ * site only says so — nothing here is ever applied to a figure.
+ */
+const BOARD_SCALING = [
+    { size: 19, factor: '×1', label: '19×19 — le total du barème, inchangé' },
+    { size: 13, factor: '÷2', label: '13×13 — la moitié, arrondie au supérieur' },
+    { size: 9, factor: '÷4', label: '9×9 — le quart, arrondi au supérieur' },
 ];
 
 export default function House() {
@@ -96,12 +112,9 @@ export default function House() {
             <Ranking members={members} memberCount={house.memberCount} />
 
             {scoringVisible && (
-                <div className={'Tooltip'}>
-                    <button className={'CallToAction'} onClick={() => setScoringVisible(false)}>
-                        <span className={'ReaderOnly'}>Fermer</span>
-                    </button>
+                <Modal label={'Comment les points sont comptés'} onClose={() => setScoringVisible(false)}>
                     <Scoring />
-                </div>
+                </Modal>
             )}
         </section>
     );
@@ -180,8 +193,12 @@ function MemberRow({member}) {
 }
 
 /**
- * What the overlay says. It is also the only place the header emoji are mapped back to what they count, so it is
- * load-bearing rather than decorative — see the SCORING comment.
+ * What the overlay says. It is also the only place the header emoji are mapped back to what they count, and the only
+ * place the board coefficient is explained at all, so it is load-bearing rather than decorative — see the SCORING and
+ * BOARD_SCALING comments.
+ *
+ * The last paragraph is the one to keep: a player reading the ranking adds the seven columns of their row, finds more
+ * than the Points column, and concludes the site is broken. It is not, and this is where it says so.
  */
 function Scoring() {
     return (
@@ -195,8 +212,25 @@ function Scoring() {
                     </li>
                 ))}
             </ul>
-            <p>Une partie cumule les lignes qu'elle vérifie : une victoire longue et classée contre un membre d'une
-                maison adverse compte pour huit points.</p>
+            <p>Une partie cumule les lignes qu'elle vérifie : une victoire longue, classée et à égalité contre un
+                membre d'une maison adverse compte pour onze points, le maximum.</p>
+
+            <p>Ce total est ensuite divisé selon la taille du goban :</p>
+            {/*
+              * The same list layout minus the emoji column: the factor takes its place, and since `×1`, `÷2` and `÷4`
+              * are all two characters wide the three labels line up on their own, with no rule of their own to add.
+              */}
+            <ul className={'House__ScoringList NoBulletList'}>
+                {BOARD_SCALING.map(board => (
+                    <li key={board.size}>
+                        <span className={'House__ScoringWorth'}>{board.factor}</span>
+                        <span className={'House__ScoringLabel'}>{board.label}</span>
+                    </li>
+                ))}
+            </ul>
+            <p>Les autres tailles de Goban ne sont pas prises en compte.</p>
+
+            <p>Chaque colonnes affiche le détail des points cumulés avant cette division alors que le total de « Points » final est celui après division.</p>
         </>
     );
 }

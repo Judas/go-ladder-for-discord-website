@@ -99,6 +99,34 @@ describe('House', () => {
     });
 
     /**
+     * The same rule, on the payload that can tell the two apart. Every captured member has played 19×19, where the
+     * total happens to equal the sum of the seven columns — so the test above passes just as well against a page that
+     * adds them up. A member who has been playing 13×13 or 9×9 comes back with a total *below* that sum, and this is
+     * the case that fails the day someone decides the Points column can be computed locally.
+     *
+     * Derived rather than captured, like the memberCount case below: seeding fg_dev with small-board games to capture
+     * it would put real member data one query away for a figure this test can state outright.
+     */
+    it('prints a total the seven columns do not add up to', async () => {
+        const [leader, ...rest] = FILS.members;
+        const sum = ['played', 'goldOpponent', 'rivalHouse', 'longGame', 'victory', 'evenGame', 'ranked']
+            .reduce((total, key) => total + leader.points[key], 0);
+
+        // Halved and rounded up, which is what the server does to a 13×13. Necessarily below the sum, since the
+        // captured leader has scored more than nothing.
+        const halved = Math.ceil(sum / 2);
+        expect(halved, 'the captured leader should have something to halve').toBeLessThan(sum);
+
+        const smallBoard = { ...leader, points: { ...leader.points, total: halved } };
+        render('FILS_DU_FROID', { ...FILS, members: [smallBoard, ...rest] });
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        const cells = within(rowOf(leader.discordName)).getAllByRole('gridcell');
+        expect(cells[10]).toHaveTextContent(String(halved));
+        expect(cells[10]).not.toHaveTextContent(String(sum));
+    });
+
+    /**
      * The scale is behind a button now, and it is the only place the header emoji are explained — so a broken toggle
      * does not just hide a nicety, it makes seven columns unreadable.
      */
@@ -116,8 +144,31 @@ describe('House', () => {
         for (const column of ['Partie jouée', 'Victoire', 'Partie classée']) {
             expect(within(panel).getByText(column)).toBeInTheDocument();
         }
-        // All seven columns are explained, not a subset: the emoji headers have no other legend.
-        expect(within(panel).getAllByRole('listitem')).toHaveLength(7);
+
+        // Two lists: the seven columns, then the three boards. All seven are explained, not a subset — the emoji
+        // headers have no other legend — and all three boards, since a missing line reads as a board that scores full.
+        const [columns, boards] = within(panel).getAllByRole('list');
+        expect(within(columns).getAllByRole('listitem')).toHaveLength(7);
+        expect(within(boards).getAllByRole('listitem')).toHaveLength(3);
+    });
+
+    /**
+     * The board coefficient, and why the panel has to name it: it is the only thing on the site that explains a
+     * ranking row whose seven figures add up to more than its own Points column.
+     */
+    it('explains what the board does to a total', async () => {
+        render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
+        const panel = screen.getByRole('button', { name: 'Fermer' }).parentElement;
+
+        for (const board of [/19×19/, /13×13/, /9×9/]) {
+            expect(within(panel).getByText(board)).toBeInTheDocument();
+        }
+        // The sentence the whole panel exists for. Its wording was rewritten in 9b5b1e7 ("fix points explanation")
+        // without the test following, so this matches the shipped copy, not the copy that used to be here.
+        expect(within(panel).getByText(/avant division.*après division/)).toBeInTheDocument();
     });
 
     it('closes the scoring overlay again', async () => {
@@ -128,6 +179,30 @@ describe('House', () => {
         await userEvent.click(screen.getByRole('button', { name: 'Fermer' }));
 
         expect(screen.queryByRole('button', { name: 'Fermer' })).not.toBeInTheDocument();
+    });
+
+    /**
+     * The panel is a real dialog now — centred on the viewport wherever the page is scrolled, over a backdrop. The two
+     * ways out that come with that shape have to work, since the close button is the only other one and it sits at the
+     * top of a panel the reader may have scrolled past.
+     */
+    it('closes the scoring overlay on Escape and on a click outside it', async () => {
+        render('FILS_DU_FROID', FILS);
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        await userEvent.click(screen.getByRole('button', { name: 'Comment les points sont comptés' }));
+        // The backdrop, i.e. the dialog's parent. A click on the panel itself must not close it — selecting a line of
+        // the scale is a click inside.
+        const dialog = screen.getByRole('dialog');
+        await userEvent.click(dialog);
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+        await userEvent.click(dialog.parentElement);
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
     it('does not offer a way back from a house that loaded', async () => {
