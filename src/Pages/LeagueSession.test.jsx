@@ -15,6 +15,9 @@ const render = payload => {
 
 const cardOf = name => screen.getByText(name).closest('article');
 
+/** The lists holding match cards, in document order — the exemptions are a list too, and are not one of these. */
+const matchLists = () => [...new Set(screen.getAllByRole('article').map(card => card.closest('ul')))];
+
 describe('LeagueSession', () => {
     beforeEach(() => {
         localStorage.clear();
@@ -60,14 +63,90 @@ describe('LeagueSession', () => {
     });
 
     /** winnerDiscordId is computed by the server, so the page marks a side rather than deducing one from a colour. */
-    it('marks the winner the server named', async () => {
+    it('marks the winner the server named, and the other side as the loser', async () => {
         const decided = sessionSettled.matches.find(m => m.winnerDiscordId);
-        const winnerName = [decided.black, decided.white].find(p => p.discordId === decided.winnerDiscordId).discordName;
+        const winner = [decided.black, decided.white].find(p => p.discordId === decided.winnerDiscordId);
+        const loser = [decided.black, decided.white].find(p => p.discordId !== decided.winnerDiscordId);
 
         render(sessionSettled);
         await screen.findByRole('heading', { name: `Session ${sessionSettled.session.number}` });
 
-        expect(screen.getByText(winnerName).closest('a')).toHaveClass('winner');
+        expect(screen.getByText(winner.discordName).closest('a')).toHaveClass('winner');
+        expect(screen.getByText(loser.discordName).closest('a')).toHaveClass('loser');
+    });
+
+    /**
+     * Green and red are a verdict, and a match nobody won carries none: the two sides stay gold, whether the game is
+     * still to come or was closed without being played.
+     */
+    it('leaves both sides undecided when no winner was named', async () => {
+        const forfeited = sessionSettled.matches.find(m => m.result === 'unplayed');
+
+        render(sessionSettled);
+        await screen.findByRole('heading', { name: `Session ${sessionSettled.session.number}` });
+
+        for (const player of [forfeited.black, forfeited.white]) {
+            const side = screen.getByText(player.discordName).closest('a');
+            expect(side).toHaveClass('undecided');
+            expect(side).not.toHaveClass('winner');
+            expect(side).not.toHaveClass('loser');
+        }
+    });
+
+    it('leaves both sides of a fixture still to play undecided', async () => {
+        render(sessionRunning);
+        await screen.findByRole('heading', { name: `Session ${sessionRunning.session.number}` });
+
+        const sides = sessionRunning.matches.flatMap(m => [m.black, m.white]);
+        for (const player of sides) {
+            expect(screen.getByText(player.discordName).closest('a')).toHaveClass('undecided');
+        }
+    });
+
+    /**
+     * A schedule and a set of results are read for different reasons, so they are two lists, the closed ones first,
+     * with a rule between them. Nothing is titled: the cards already say which is which.
+     */
+    it('separates the matches played from the ones still to play', async () => {
+        const mixed = {
+            ...sessionRunning,
+            matches: [sessionRunning.matches[0], sessionSettled.matches[0]],
+        };
+        const listOf = match => screen.getByText(match.black.discordName).closest('ul');
+
+        render(mixed);
+        await screen.findByRole('heading', { name: `Session ${mixed.session.number}` });
+
+        const separator = screen.getByRole('separator');
+        const lists = matchLists();
+
+        expect(lists).toHaveLength(2);
+        expect(listOf(sessionSettled.matches[0])).toBe(lists[0]);
+        expect(listOf(sessionRunning.matches[0])).toBe(lists[1]);
+        expect(lists[0].compareDocumentPosition(separator) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(lists[1].compareDocumentPosition(separator) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+    });
+
+    /** One block is one block: the rule only appears where there is something on either side of it. */
+    it('draws no separator when every match is on the same side of it', async () => {
+        render(sessionRunning);
+        await screen.findByRole('heading', { name: `Session ${sessionRunning.session.number}` });
+
+        expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+        expect(matchLists()).toHaveLength(1);
+    });
+
+    it('files a match a settled session never resolved among the finished ones', async () => {
+        const settledWithoutResult = {
+            ...sessionSettled,
+            matches: [{ ...sessionSettled.matches[0], result: null, winnerDiscordId: null }],
+        };
+
+        render(settledWithoutResult);
+        await screen.findByRole('heading', { name: `Session ${sessionSettled.session.number}` });
+
+        expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+        expect(screen.getByText('Sans résultat')).toBeInTheDocument();
     });
 
     /**

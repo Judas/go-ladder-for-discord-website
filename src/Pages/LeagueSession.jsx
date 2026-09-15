@@ -46,10 +46,18 @@ export default function LeagueSession() {
 }
 
 /**
- * The pairings.
+ * The pairings, split in two.
  *
  * An empty list means two different things and the page has to tell them apart: a session that was never drawn has
  * nothing yet, while one drawn with nobody to pair has exemptions instead. `session.drawn` is what separates them.
+ *
+ * A non-empty list is shown as two blocks, because a fixture still to come and a match already closed are read for
+ * different reasons — one is a schedule, the other a result. They are separated by a rule and nothing else: the
+ * cards already say which is which, on their edges and in their label, so a pair of headings would only repeat it.
+ * The rule is an `<hr>` rather than a border, so the break is in the document and not only in the paint.
+ *
+ * `settled` closes everything: once the session is settled, a match without a result will never be played, so it
+ * belongs with the closed ones and not in a list of things to do.
  */
 function Matches({session, matches}) {
     if (matches.length === 0) {
@@ -62,11 +70,31 @@ function Matches({session, matches}) {
         );
     }
 
+    const closed = matches.filter(match => isClosed(match, session.settled));
+    const toPlay = matches.filter(match => !isClosed(match, session.settled));
+
+    return (
+        <>
+            <MatchSection matches={closed} settled={session.settled} />
+            {closed.length > 0 && toPlay.length > 0 && <hr className={'LeagueSession__Separator'} />}
+            <MatchSection matches={toPlay} settled={session.settled} />
+        </>
+    );
+}
+
+/** A match is closed once it has a result, and a settled session closes the ones that never got one. */
+function isClosed(match, settled) {
+    return match.result != null || settled;
+}
+
+function MatchSection({matches, settled}) {
+    if (matches.length === 0) { return null; }
+
     return (
         <ul className={'LeagueSession__Matches NoBulletList'}>
             {matches.map(match => (
                 <li key={`${match.black.discordId}-${match.white.discordId}`}>
-                    <Match match={match} settled={session.settled} />
+                    <Match match={match} settled={settled} />
                 </li>
             ))}
         </ul>
@@ -78,7 +106,7 @@ function Match({match, settled}) {
 
     return (
         <article className={`MatchCard ${outcome.modifier}`}>
-            <Side player={match.black} colour={'Noir'} edge={'black'} winner={match.winnerDiscordId === match.black.discordId} />
+            <Side player={match.black} colour={'Noir'} edge={'black'} outcome={sideOutcomeOf(match, match.black)} />
             <div className={'MatchCard__Middle'}>
                 <span className={'MatchCard__Outcome'}>{outcome.label}</span>
                 {/*
@@ -92,7 +120,7 @@ function Match({match, settled}) {
                     </a>
                 )}
             </div>
-            <Side player={match.white} colour={'Blanc'} edge={'white'} winner={match.winnerDiscordId === match.white.discordId} />
+            <Side player={match.white} colour={'Blanc'} edge={'white'} outcome={sideOutcomeOf(match, match.white)} />
         </article>
     );
 }
@@ -113,6 +141,18 @@ function outcomeOf(match, settled) {
 }
 
 /**
+ * Which edge colour one side of the card wears: green for the winner, red for the loser, gold for neither.
+ *
+ * Only `winnerDiscordId` names a winner, so anything without one — a fixture still to play, a forfeit, a draw, an
+ * annulled game — leaves both sides gold. Gold is the absence of a verdict, not a fourth verdict: nothing is being
+ * said about either player.
+ */
+function sideOutcomeOf(match, player) {
+    if (match.winnerDiscordId == null) { return 'undecided'; }
+    return match.winnerDiscordId === player.discordId ? 'winner' : 'loser';
+}
+
+/**
  * One player of a pairing.
  *
  * `edge` is which half of the card this side occupies, and the crest is pushed to that outer edge — left for black,
@@ -123,9 +163,9 @@ function outcomeOf(match, settled) {
  * The small crest, despite the size: it is the simplified drawing, and it is what holds up when a house has to be
  * recognised at a glance rather than studied.
  */
-function Side({player, colour, winner, edge}) {
+function Side({player, colour, outcome, edge}) {
     return (
-        <Link to={`/player/${player.discordId}`} className={`MatchCard__Side ${edge} ${winner ? 'winner' : ''}`}>
+        <Link to={`/player/${player.discordId}`} className={`MatchCard__Side ${edge} ${outcome}`}>
             {player.house
                 ? <Crest slug={player.house.slug} name={player.house.name} size={96} small={false}
                          className={'MatchCard__Crest'} />
