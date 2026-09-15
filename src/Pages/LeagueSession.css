@@ -81,10 +81,17 @@
 .MatchCard__Side.loser { border-color: var(--punch); }
 .MatchCard__Side.undecided { border-color: var(--sun); }
 
+/*
+ * `flex: 1` is what keeps the avatars on one vertical line from card to card. Left to size itself, the identity is
+ * as wide as the name it holds, and an avatar centred in it sits wherever that name ends — a long name and a short
+ * one put their two avatars at two different x. Taking all the width the crest leaves makes that width the same on
+ * every card, so the centre is the same too.
+ */
 .MatchCard__Identity {
     display: grid;
     justify-items: center;
     gap: .25rem;
+    flex: 1;
     min-width: 0;
 }
 
