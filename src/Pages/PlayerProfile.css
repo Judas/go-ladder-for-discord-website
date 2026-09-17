@@ -200,7 +200,8 @@
     background: var(--punch);
 }
 
-.PlayerProfile__UnlinkOverlay {
+.PlayerProfile__UnlinkOverlay,
+.PlayerProfile__PurgeOverlay {
     position: fixed;
     inset: 0;
     z-index: 1100;
@@ -210,7 +211,8 @@
     background: rgba(0, 0, 0, .75);
 }
 
-.PlayerProfile__UnlinkDialog {
+.PlayerProfile__UnlinkDialog,
+.PlayerProfile__PurgeDialog {
     width: min(100%, 30rem);
     padding: 1.5rem;
     border: 2px solid var(--sun);
@@ -220,39 +222,47 @@
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, .5);
 }
 
-.PlayerProfile__UnlinkDialog h3 {
+.PlayerProfile__UnlinkDialog h3,
+.PlayerProfile__PurgeDialog h3 {
     margin: 0 0 1rem;
     color: var(--sun);
     font: 2rem var(--accent-font);
 }
 
-.PlayerProfile__UnlinkDialog dl {
+.PlayerProfile__UnlinkDialog dl,
+.PlayerProfile__PurgeDialog dl {
     display: grid;
     gap: .5rem;
     margin: 1rem 0;
 }
 
-.PlayerProfile__UnlinkDialog dl div {
+.PlayerProfile__UnlinkDialog dl div,
+.PlayerProfile__PurgeDialog dl div {
     display: grid;
     grid-template-columns: 6rem 1fr;
     gap: .5rem;
 }
 
-.PlayerProfile__UnlinkDialog dt {
+.PlayerProfile__UnlinkDialog dt,
+.PlayerProfile__PurgeDialog dt {
     font-weight: bold;
 }
 
-.PlayerProfile__UnlinkDialog dd {
+.PlayerProfile__UnlinkDialog dd,
+.PlayerProfile__PurgeDialog dd {
     min-width: 0;
     margin: 0;
     overflow-wrap: anywhere;
 }
 
-.PlayerProfile__UnlinkDialog .Error {
+.PlayerProfile__UnlinkDialog .Error,
+.PlayerProfile__PurgeDialog .Error,
+.PlayerProfile__PurgeDialog .Success {
     padding: .75rem;
 }
 
-.PlayerProfile__UnlinkActions {
+.PlayerProfile__UnlinkActions,
+.PlayerProfile__PurgeActions {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
@@ -260,7 +270,8 @@
     margin-top: 1.5rem;
 }
 
-.PlayerProfile__UnlinkActions button {
+.PlayerProfile__UnlinkActions button,
+.PlayerProfile__PurgeActions button {
     padding: .625rem 1rem;
     border: 1px solid var(--emperor);
     border-radius: .25rem;
@@ -269,12 +280,14 @@
     cursor: pointer;
 }
 
-.PlayerProfile__UnlinkActions button:last-child {
+.PlayerProfile__UnlinkActions button:last-child,
+.PlayerProfile__PurgeActions button:last-child {
     border-color: var(--punch);
     background: var(--punch);
 }
 
-.PlayerProfile__UnlinkActions button:disabled {
+.PlayerProfile__UnlinkActions button:disabled,
+.PlayerProfile__PurgeActions button:disabled {
     opacity: .5;
     cursor: default;
 }
@@ -946,4 +959,38 @@
 .PlayerProfile__LeaveButton:disabled {
     opacity: .5;
     cursor: default;
+}
+
+/* The purge control, at the foot of the ranking card. Set apart from the rating above it by a rule rather than by
+   distance, because it is the one destructive control on the page and must not read as part of the ladder. */
+.PlayerProfile__PurgeZone {
+    padding: .75rem 1rem 1rem;
+    border-top: 1px solid var(--emperor);
+}
+
+.PlayerProfile__PurgeButton {
+    padding: .375rem .875rem;
+    border: 1px solid var(--punch);
+    border-radius: .25rem;
+    color: var(--white-87);
+    background: var(--punch-20);
+    cursor: pointer;
+}
+
+.PlayerProfile__PurgeButton:hover,
+.PlayerProfile__PurgeButton:focus-visible {
+    background: var(--punch);
+}
+
+.PlayerProfile__PurgeWarning {
+    margin: .5rem 0 0;
+}
+
+/* Wider than the unlink dialog's 6rem: these labels head a sentence, not an identifier. */
+.PlayerProfile__PurgeDialog dl div {
+    grid-template-columns: 7rem 1fr;
+}
+
+.PlayerProfile__PurgeDialog .Success {
+    padding: .75rem;
 }

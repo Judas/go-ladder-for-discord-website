@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaCircleInfo } from "react-icons/fa6";
 
 import { useAuth, useIsSelf } from '../auth.js';
@@ -94,6 +94,7 @@ function Profile({player, tiers, period, houses, reload, tooltipHandler}) {
                             <p className={'PlayerProfile__TierName'} >{player.tierName}</p>
                             { playerRating }
                         </div>
+                        <PurgePlayer player={player} />
                     </div>
                 </div>
 
@@ -766,6 +767,183 @@ function UnlinkAccountDialog({player, account, status, onCancel, onConfirm}) {
                         {pending ? 'Déliaison…' : 'Confirmer la déliaison'}
                     </button>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+/**
+ * The purge button, at the foot of the ranking card, and the dialog that guards it.
+ *
+ * Admin-only, read off `profile.admin` exactly as the unlink button is — the server gates the route on the same Discord
+ * roles, so this hides a control the visitor could not use anyway rather than being the protection itself.
+ *
+ * ⚠ It is the one destructive control on the site and there is no undo: it deletes the player's Discord row, their
+ * platform links, their rating, their FGC validity, their house membership and points, and their academy. Hence the
+ * confirmation step — a misclick here cannot be walked back.
+ *
+ * What it does NOT delete is worth saying on screen, because the admin's first question is always whether it hurts the
+ * opponents: the games and the league matches stay, so anyone this player met keeps the points and the renown they
+ * earned against them.
+ */
+function PurgePlayer({player}) {
+    const { profile, refresh } = useAuth();
+    const navigate = useNavigate();
+    const [confirming, setConfirming] = useState(false);
+    const [status, setStatus] = useState('idle');
+    const [report, setReport] = useState(null);
+
+    if (profile?.admin !== true) { return null; }
+
+    const open = () => {
+        setStatus('idle');
+        setReport(null);
+        setConfirming(true);
+    };
+
+    // A purge in flight must not be dismissed: the request is already gone and closing would hide its outcome.
+    const close = () => {
+        if (status !== 'pending') { setConfirming(false); }
+    };
+
+    // The player no longer exists once this returns, so there is nothing to reload — the profile route would 404.
+    // The admin reads the count, then leaves for the roster.
+    const done = () => {
+        setConfirming(false);
+        navigate('/');
+    };
+
+    const purge = async () => {
+        setStatus('pending');
+        try {
+            const response = await fetch('/api/admin/purge', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Gold-Id': ensureUserId(),
+                },
+                body: JSON.stringify({ discordId: player.discordId }),
+            });
+
+            if (response.ok) {
+                // `deleted` is a table -> row count map; the server exposes no total, so it is summed here.
+                const body = await response.json().catch(() => null);
+                setReport(body?.deleted ?? {});
+                setStatus('done');
+                return;
+            }
+
+            const failure = response.status === 401
+                ? 'unauthorized'
+                : response.status === 403
+                    ? 'forbidden'
+                    : response.status === 400
+                        ? 'invalid'
+                        : response.status === 503
+                            ? 'unavailable'
+                            : 'error';
+            setStatus(failure);
+            if (response.status === 403) { await refresh(); }
+        } catch {
+            setStatus('error');
+        }
+    };
+
+    return (
+        <div className={'PlayerProfile__PurgeZone'}>
+            <button type={'button'} className={'PlayerProfile__PurgeButton'} onClick={open}>
+                Purger
+            </button>
+            {confirming && (
+                <PurgePlayerDialog
+                    player={player}
+                    status={status}
+                    report={report}
+                    onCancel={close}
+                    onConfirm={purge}
+                    onDone={done}
+                />
+            )}
+        </div>
+    );
+}
+
+const PURGE_ERRORS = {
+    unauthorized: 'Votre session a expiré. Reconnectez-vous avec Discord.',
+    forbidden: 'Votre accès administrateur a été retiré.',
+    invalid: 'Ce joueur ne peut pas être purgé : identifiant manquant.',
+    unavailable: 'Le service Discord est temporairement indisponible.',
+    error: 'Impossible de purger ce joueur. Réessayez plus tard.',
+};
+
+function PurgePlayerDialog({player, status, report, onCancel, onConfirm, onDone}) {
+    const pending = status === 'pending';
+    const succeeded = status === 'done';
+    const confirmButton = useRef(null);
+
+    useEffect(() => {
+        confirmButton.current?.focus();
+        const closeOnEscape = event => {
+            if (event.key !== 'Escape' || pending) { return; }
+            // Escape on the success panel leaves for the roster, like its button: the player is already gone and
+            // staying on a profile that no longer exists would only show a fetch error.
+            if (succeeded) { onDone(); } else { onCancel(); }
+        };
+        window.addEventListener('keydown', closeOnEscape);
+        return () => window.removeEventListener('keydown', closeOnEscape);
+    }, [onCancel, onDone, pending, succeeded]);
+
+    const removed = report ? Object.values(report).reduce((sum, count) => sum + count, 0) : 0;
+
+    return (
+        <div className={'PlayerProfile__PurgeOverlay'}>
+            <div
+                className={'PlayerProfile__PurgeDialog'}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="purge-player-title">
+                <h3 id="purge-player-title">Purger un joueur</h3>
+                {succeeded ? (
+                    <>
+                        <p className={'Success'} role="status">
+                            <strong>{player.discordName}</strong> a été purgé : {removed} ligne(s) supprimée(s).
+                        </p>
+                        <div className={'PlayerProfile__PurgeActions'}>
+                            <button type="button" onClick={onDone} ref={confirmButton}>
+                                Retour à la liste
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <p>
+                            Purger définitivement <strong>{player.discordName}</strong> du classement ?
+                        </p>
+                        <p className={'PlayerProfile__PurgeWarning'}>
+                            Cette action est <strong>irréversible</strong>.
+                        </p>
+                        <dl>
+                            <div>
+                                <dt>Supprimé</dt>
+                                <dd>Compte Discord, comptes liés, classement, validité FGC, maison et points de
+                                    maison, académie de ligue.</dd>
+                            </div>
+                            <div>
+                                <dt>Conservé</dt>
+                                <dd>Ses parties et ses matchs de ligue : ses adversaires gardent les points et la
+                                    renommée qu&apos;ils ont gagnés contre lui.</dd>
+                            </div>
+                        </dl>
+                        {PURGE_ERRORS[status] && <p className={'Error'} role="alert">{PURGE_ERRORS[status]}</p>}
+                        <div className={'PlayerProfile__PurgeActions'}>
+                            <button type="button" onClick={onCancel} disabled={pending}>Annuler</button>
+                            <button type="button" onClick={onConfirm} disabled={pending} ref={confirmButton}>
+                                {pending ? 'Purge…' : 'Confirmer la purge'}
+                            </button>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

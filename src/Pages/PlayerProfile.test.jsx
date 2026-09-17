@@ -71,6 +71,120 @@ describe('PlayerProfile', () => {
         vi.unstubAllGlobals();
     });
 
+    /**
+     * The purge button at the foot of the ranking card. It is the one destructive control on the site and it has no
+     * undo, so the cases that matter are the two that stop it firing: it is invisible to a non-admin, and a cancel
+     * must not reach the network.
+     */
+    describe('admin player purge', () => {
+        const purged = { discordId: '900000000000000001', deleted: { house_members: 1, house_points: 3, discord_user_info: 1 } };
+
+        it('shows the purge button only to an administrator', async () => {
+            render(withHouseAndLeague);
+            await screen.findByText('Test Boreale');
+            expect(screen.queryByRole('button', { name: 'Purger' })).not.toBeInTheDocument();
+
+            signInAs('999999999999999999');
+            const memberView = render(withHouseAndLeague);
+            await screen.findByText('Test Boreale');
+            expect(screen.queryByRole('button', { name: 'Purger' })).not.toBeInTheDocument();
+            memberView.unmount();
+
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague);
+            expect(await screen.findByRole('button', { name: 'Purger' })).toBeInTheDocument();
+        });
+
+        it('asks for confirmation before purging, naming the player', async () => {
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague);
+            await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+
+            const dialog = screen.getByRole('dialog', { name: 'Purger un joueur' });
+            expect(within(dialog).getByText(/Test Boreale/)).toBeInTheDocument();
+            expect(within(dialog).getByText(/irréversible/)).toBeInTheDocument();
+            // The answer to "does this hurt the opponents?", which is the first thing an admin asks.
+            expect(within(dialog).getByText(/gardent les points et la renommée/)).toBeInTheDocument();
+        });
+
+        it('cancelling closes the dialog without calling the API', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/purge': purged });
+            await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+
+            expect(screen.queryByRole('dialog', { name: 'Purger un joueur' })).not.toBeInTheDocument();
+            expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/admin/purge'))).toBe(false);
+        });
+
+        it('confirming posts the player id with the admin session header', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/purge': purged });
+            await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la purge' }));
+
+            await waitFor(() => {
+                expect(fetchStub.mock.calls.some(([url]) => String(url).includes('/api/admin/purge'))).toBe(true);
+            });
+            const call = fetchStub.mock.calls.find(([url]) => String(url).includes('/api/admin/purge'));
+            expect(call[1].method).toBe('POST');
+            expect(call[1].headers['X-Gold-Id']).toBe('admin-session');
+            expect(JSON.parse(call[1].body)).toEqual({ discordId: '900000000000000001' });
+        });
+
+        it('reports how many rows went, then leaves for the roster', async () => {
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague, { '/api/admin/purge': purged });
+            await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la purge' }));
+
+            // 1 + 3 + 1 — summed on the client, since the server reports the map and no total.
+            expect(await screen.findByText(/5 ligne\(s\) supprimée\(s\)/)).toBeInTheDocument();
+
+            await userEvent.click(screen.getByRole('button', { name: 'Retour à la liste' }));
+            // The profile route no longer matches, so the page it was showing is gone.
+            await waitFor(() => { expect(screen.queryByText('Test Boreale')).not.toBeInTheDocument(); });
+        });
+
+        it.each([
+            [401, /session a expiré/],
+            [403, /accès administrateur a été retiré/],
+            [503, /temporairement indisponible/],
+            [500, /Impossible de purger/],
+        ])('explains a %i without closing the dialog', async (status, message) => {
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague, { '/api/admin/purge': { status } });
+            await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la purge' }));
+
+            expect(await screen.findByText(message)).toBeInTheDocument();
+            expect(screen.getByRole('dialog', { name: 'Purger un joueur' })).toBeInTheDocument();
+        });
+
+        it('refreshes the authenticated profile when the server revokes admin access', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/purge': { status: 403 } });
+            await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+            const before = fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/auth/profile')).length;
+
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer la purge' }));
+
+            await waitFor(() => {
+                const after = fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/auth/profile')).length;
+                expect(after).toBeGreaterThan(before);
+            });
+        });
+
+        it('renders the admin control without console errors', async () => {
+            signInAs('999999999999999999', true);
+            await expectNoConsoleErrors(async () => {
+                render(withHouseAndLeague, { '/api/admin/purge': purged });
+                await userEvent.click(await screen.findByRole('button', { name: 'Purger' }));
+                await screen.findByRole('dialog', { name: 'Purger un joueur' });
+            });
+        });
+    });
+
     describe('admin account unlinking', () => {
         it('shows unlink controls only to an administrator', async () => {
             const regularView = render(withHouseAndLeague);
