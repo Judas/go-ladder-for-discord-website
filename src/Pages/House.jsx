@@ -230,7 +230,7 @@ function Scoring() {
             </ul>
             <p>Les autres tailles de Goban ne sont pas prises en compte.</p>
 
-            <p>Chaque colonnes affiche le détail des points cumulés avant cette division alors que le total de « Points » final est celui après division.</p>
+            <p>Chaque colonne affiche le détail des points cumulés avant cette division alors que le total de « Points » final est celui après division.</p>
         </>
     );
 }

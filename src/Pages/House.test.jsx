@@ -166,9 +166,10 @@ describe('House', () => {
         for (const board of [/19×19/, /13×13/, /9×9/]) {
             expect(within(panel).getByText(board)).toBeInTheDocument();
         }
-        // The sentence the whole panel exists for. Its wording was rewritten in 9b5b1e7 ("fix points explanation")
-        // without the test following, so this matches the shipped copy, not the copy that used to be here.
-        expect(within(panel).getByText(/avant division.*après division/)).toBeInTheDocument();
+        // The sentence the whole panel exists for. Its wording has been rewritten twice without the test following
+        // (9b5b1e7, e3d80a3), so this matches only what the sentence has to say — columns before the division,
+        // Points after it — not its exact phrasing.
+        expect(within(panel).getByText(/avant (cette )?division.*après division/)).toBeInTheDocument();
     });
 
     it('closes the scoring overlay again', async () => {
