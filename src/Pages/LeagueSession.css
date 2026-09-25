@@ -140,6 +140,16 @@
     opacity: .6;
 }
 
+/* A ruled side names its award, under the colour: it is what the renown was counted on. */
+.MatchCard__Award {
+    padding: .125rem .5rem;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    border: 1px solid currentColor;
+    border-radius: 1rem;
+}
+
 .MatchCard__Middle {
     display: grid;
     justify-items: center;

@@ -1,0 +1,145 @@
+/* The admin control sits under the outcome, in the middle of the card, so it belongs to the match and to neither side. */
+.MatchRuling__Open {
+    padding: .25rem .625rem;
+    font-family: var(--default-font);
+    font-size: .75rem;
+    color: var(--white-87);
+    background: none;
+    border: 1px solid var(--emperor);
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.MatchRuling__Open:hover,
+.MatchRuling__Open:focus-visible {
+    border-color: var(--sun);
+    color: var(--sun);
+}
+
+/* Same overlay as the profile's purge and unlink dialogs. */
+.MatchRuling__Overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, .75);
+}
+
+.MatchRuling__Dialog {
+    width: min(100%, 40rem);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding: 1.5rem;
+    color: var(--white-87);
+    border: 2px solid var(--sun);
+    border-radius: .5rem;
+    background: var(--mine-shaft);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .5);
+}
+
+.MatchRuling__Dialog h3 {
+    margin: 0 0 1rem;
+    color: var(--sun);
+    font: 2rem var(--accent-font);
+}
+
+.MatchRuling__Context,
+.MatchRuling__Note {
+    margin: 0 0 1rem;
+}
+
+.MatchRuling__Note {
+    font-size: .8rem;
+    opacity: .8;
+}
+
+.MatchRuling__Dialog .Error {
+    padding: .75rem;
+}
+
+/* Two columns, black on the left as on the card; one column on a phone. */
+.MatchRuling__Sides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.MatchRuling__Side {
+    display: grid;
+    gap: .5rem;
+    min-width: 0;
+    margin: 0;
+    padding: .75rem;
+    border: 1px solid var(--emperor);
+    border-radius: .5rem;
+}
+
+.MatchRuling__Side legend {
+    padding: 0 .25rem;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.MatchRuling__Colour {
+    font-size: .7rem;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    opacity: .6;
+}
+
+.MatchRuling__Choice {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: .5rem;
+    align-items: center;
+    padding: .375rem .5rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.MatchRuling__Choice.selected {
+    border-color: var(--sun);
+    background: var(--sun-20);
+}
+
+.MatchRuling__Choice input {
+    grid-row: span 2;
+    accent-color: var(--sun);
+}
+
+.MatchRuling__Hint {
+    font-size: .75rem;
+    opacity: .7;
+}
+
+.MatchRuling__Actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .75rem;
+}
+
+.MatchRuling__Actions button {
+    padding: .625rem 1rem;
+    color: var(--white-87);
+    border: 1px solid var(--emperor);
+    border-radius: .25rem;
+    background: var(--tundora);
+    cursor: pointer;
+}
+
+.MatchRuling__Actions button.confirm {
+    border-color: var(--sun);
+    color: var(--cod-gray);
+    background: var(--sun);
+}
+
+.MatchRuling__Actions button:disabled {
+    opacity: .5;
+    cursor: default;
+}

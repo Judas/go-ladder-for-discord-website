@@ -1,8 +1,9 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import LeagueSession from './LeagueSession.jsx';
-import { sessionExempted, sessionRunning, sessionSettled, sessionUndrawn } from '../__fixtures__/league.js';
+import { sessionAdjudicated, sessionExempted, sessionRunning, sessionSettled, sessionUndrawn } from '../__fixtures__/league.js';
 import { expectNoConsoleErrors, renderAt, stubApi } from '../testUtils.jsx';
 
 const render = payload => {
@@ -232,5 +233,153 @@ describe('LeagueSession', () => {
         renderAt(<LeagueSession />, { path: '/league/session/1', route: '/league/session/:number' });
 
         expect(await screen.findByText('Erreur lors de la récupération de la session')).toBeInTheDocument();
+    });
+});
+
+describe('LeagueSession — admin ruling', () => {
+    beforeEach(() => {
+        localStorage.clear();
+        vi.unstubAllGlobals();
+    });
+
+    const signInAs = (discordId, admin = false) => {
+        localStorage.setItem('user_profile', JSON.stringify({
+            discordId, name: 'Moi', avatar: '', expirationDate: '2099-01-01T00:00:00Z', admin,
+        }));
+        localStorage.setItem('gold_uuid', JSON.stringify('admin-session'));
+    };
+
+    const renderWith = (payload, overrides = {}) => {
+        const fetchStub = stubApi({ '/api/league/session/': payload, ...overrides });
+        renderAt(<LeagueSession />, { path: `/league/session/${payload.session.number}`, route: '/league/session/:number' });
+        return fetchStub;
+    };
+
+    const rulingCalls = fetchStub => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/admin/league/adjudicate'));
+    const sessionCalls = fetchStub => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/league/session/'));
+
+    it('offers no ruling to a visitor or a member', async () => {
+        renderWith(sessionSettled);
+        await screen.findByRole('heading', { name: `Session ${sessionSettled.session.number}` });
+        expect(screen.queryByRole('button', { name: 'Arbitrer' })).not.toBeInTheDocument();
+    });
+
+    it('offers one ruling per match to an administrator, settled or running', async () => {
+        signInAs('999999999999999999', true);
+        renderWith(sessionRunning);
+        await screen.findByRole('heading', { name: `Session ${sessionRunning.session.number}` });
+        expect(screen.getAllByRole('button', { name: 'Arbitrer' })).toHaveLength(sessionRunning.matches.length);
+    });
+
+    it('asks for both sides before it can be confirmed, and refuses two winners', async () => {
+        signInAs('999999999999999999', true);
+        const fetchStub = renderWith(sessionRunning);
+        const match = sessionRunning.matches[0];
+        const card = (await screen.findByText(match.black.discordName)).closest('article');
+        await userEvent.click(within(card).getByRole('button', { name: 'Arbitrer' }));
+
+        const dialog = screen.getByRole('dialog', { name: 'Arbitrer le match' });
+        const confirm = within(dialog).getByRole('button', { name: "Confirmer l'arbitrage" });
+        // Nothing pre-selected: a verdict nobody chose must not sit under the cursor.
+        expect(within(dialog).queryAllByRole('radio', { checked: true })).toHaveLength(0);
+        expect(confirm).toBeDisabled();
+
+        const [blackGroup, whiteGroup] = within(dialog).getAllByRole('group');
+        await userEvent.click(within(blackGroup).getByRole('radio', { name: /Vainqueur/ }));
+        expect(confirm).toBeDisabled();
+        await userEvent.click(within(whiteGroup).getByRole('radio', { name: /Vainqueur/ }));
+        expect(within(dialog).getByText('Un seul vainqueur par match.')).toBeInTheDocument();
+        expect(confirm).toBeDisabled();
+
+        await userEvent.click(within(dialog).getByRole('button', { name: 'Annuler' }));
+        expect(rulingCalls(fetchStub)).toHaveLength(0);
+    });
+
+    it('posts both awards with the admin header, then reloads the session', async () => {
+        signInAs('999999999999999999', true);
+        const fetchStub = renderWith(sessionRunning, { '/api/admin/league/adjudicate': {} });
+        const match = sessionRunning.matches[0];
+        const card = (await screen.findByText(match.black.discordName)).closest('article');
+        await userEvent.click(within(card).getByRole('button', { name: 'Arbitrer' }));
+
+        const dialog = screen.getByRole('dialog', { name: 'Arbitrer le match' });
+        const [blackGroup, whiteGroup] = within(dialog).getAllByRole('group');
+        await userEvent.click(within(blackGroup).getByRole('radio', { name: /Participant/ }));
+        await userEvent.click(within(whiteGroup).getByRole('radio', { name: /Forfait/ }));
+        const loadsBefore = sessionCalls(fetchStub).length;
+        await userEvent.click(within(dialog).getByRole('button', { name: "Confirmer l'arbitrage" }));
+
+        await waitFor(() => expect(rulingCalls(fetchStub)).toHaveLength(1));
+        const [, init] = rulingCalls(fetchStub)[0];
+        expect(init.headers['X-Gold-Id']).toBe('admin-session');
+        expect(JSON.parse(init.body)).toEqual({
+            session: sessionRunning.session.number,
+            blackDiscordId: match.black.discordId,
+            blackAward: 'PARTICIPANT',
+            whiteAward: 'FORFEIT',
+        });
+        await waitFor(() => expect(sessionCalls(fetchStub).length).toBeGreaterThan(loadsBefore));
+        expect(screen.queryByRole('dialog', { name: 'Arbitrer le match' })).not.toBeInTheDocument();
+    });
+
+    it.each([
+        [400, /un seul vainqueur/],
+        [403, /accès administrateur a été retiré/],
+        [404, /n'existe plus/],
+        [500, /L'arbitrage a échoué/],
+    ])('explains a %i and keeps the dialog open', async (status, message) => {
+        signInAs('999999999999999999', true);
+        renderWith(sessionRunning, { '/api/admin/league/adjudicate': { status } });
+        const card = (await screen.findByText(sessionRunning.matches[0].black.discordName)).closest('article');
+        await userEvent.click(within(card).getByRole('button', { name: 'Arbitrer' }));
+        const dialog = screen.getByRole('dialog', { name: 'Arbitrer le match' });
+        const [blackGroup, whiteGroup] = within(dialog).getAllByRole('group');
+        await userEvent.click(within(blackGroup).getByRole('radio', { name: /Exempté/ }));
+        await userEvent.click(within(whiteGroup).getByRole('radio', { name: /Forfait/ }));
+        await userEvent.click(within(dialog).getByRole('button', { name: "Confirmer l'arbitrage" }));
+
+        expect(await within(dialog).findByText(message)).toBeInTheDocument();
+    });
+
+    it('shows a ruled match as ruled, each side with its award', async () => {
+        renderWith(sessionAdjudicated);
+        const ruled = sessionAdjudicated.matches.find(m => m.result === 'adjudicated');
+        const card = (await screen.findByText(ruled.black.discordName)).closest('article');
+
+        expect(within(card).getByText('Arbitrée')).toBeInTheDocument();
+        expect(within(card).getByText('Vainqueur')).toBeInTheDocument();
+        expect(within(card).getByText('Forfait')).toBeInTheDocument();
+        expect(screen.getAllByText(ruled.black.discordName)
+            .map(n => n.closest('a')).find(a => card.contains(a))).toHaveClass('winner');
+        expect(screen.getAllByText(ruled.white.discordName)
+            .map(n => n.closest('a')).find(a => card.contains(a))).toHaveClass('loser');
+    });
+
+    it('starts from the current ruling, and can withdraw it', async () => {
+        signInAs('999999999999999999', true);
+        const fetchStub = renderWith(sessionAdjudicated, { '/api/admin/league/adjudicate': {} });
+        const ruled = sessionAdjudicated.matches.find(m => m.result === 'adjudicated');
+        const card = (await screen.findByText(ruled.black.discordName)).closest('article');
+        await userEvent.click(within(card).getByRole('button', { name: "Modifier l'arbitrage" }));
+
+        const dialog = screen.getByRole('dialog', { name: 'Arbitrer le match' });
+        const [blackGroup, whiteGroup] = within(dialog).getAllByRole('group');
+        expect(within(blackGroup).getByRole('radio', { name: /Vainqueur/ })).toBeChecked();
+        expect(within(whiteGroup).getByRole('radio', { name: /Forfait/ })).toBeChecked();
+
+        await userEvent.click(within(dialog).getByRole('button', { name: "Retirer l'arbitrage" }));
+        await waitFor(() => expect(rulingCalls(fetchStub)).toHaveLength(1));
+        expect(JSON.parse(rulingCalls(fetchStub)[0][1].body)).toMatchObject({ blackAward: null, whiteAward: null });
+    });
+
+    it('renders the ruling dialog without console errors', async () => {
+        signInAs('999999999999999999', true);
+        await expectNoConsoleErrors(async () => {
+            renderWith(sessionAdjudicated);
+            const ruled = sessionAdjudicated.matches.find(m => m.result === 'adjudicated');
+            const card = (await screen.findByText(ruled.black.discordName)).closest('article');
+            await userEvent.click(within(card).getByRole('button', { name: "Modifier l'arbitrage" }));
+            await screen.findByRole('dialog', { name: 'Arbitrer le match' });
+        });
     });
 });

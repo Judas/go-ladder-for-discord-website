@@ -185,6 +185,71 @@ describe('PlayerProfile', () => {
         });
     });
 
+    /**
+     * Taking a player out of the league. The same write as their own leave, so the cases that matter are who sees it and
+     * what reaches the server.
+     */
+    describe('admin league removal', () => {
+        const removeCalls = fetchStub => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/admin/league/remove'));
+
+        it('shows the removal only to an administrator, and not on their own profile', async () => {
+            signInAs('999999999999999999');
+            const memberView = render(withHouseAndLeague);
+            await screen.findByText('Test Boreale');
+            expect(screen.queryByRole('button', { name: 'Retirer de la ligue' })).not.toBeInTheDocument();
+            memberView.unmount();
+
+            signInAs(withHouseAndLeague.discordId, true);
+            const selfView = render(withHouseAndLeague);
+            await screen.findByRole('button', { name: 'Quitter la ligue' });
+            expect(screen.queryByRole('button', { name: 'Retirer de la ligue' })).not.toBeInTheDocument();
+            selfView.unmount();
+
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague);
+            expect(await screen.findByRole('button', { name: 'Retirer de la ligue' })).toBeInTheDocument();
+        });
+
+        it('asks first, and a cancel sends nothing', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/league/remove': { status: 204 } });
+            await userEvent.click(await screen.findByRole('button', { name: 'Retirer de la ligue' }));
+            expect(screen.getByText(/ne sera plus tiré au sort/)).toBeInTheDocument();
+
+            await userEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+            expect(removeCalls(fetchStub)).toHaveLength(0);
+        });
+
+        it('confirming posts the player id with the admin header, then reloads the profile', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/league/remove': { status: 204 } });
+            await userEvent.click(await screen.findByRole('button', { name: 'Retirer de la ligue' }));
+            const loadsBefore = fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer le retrait' }));
+
+            await waitFor(() => expect(removeCalls(fetchStub)).toHaveLength(1));
+            const [, init] = removeCalls(fetchStub)[0];
+            expect(init.headers['X-Gold-Id']).toBe('admin-session');
+            expect(JSON.parse(init.body)).toEqual({ discordId: withHouseAndLeague.discordId });
+            await waitFor(() => {
+                const loads = fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
+                expect(loads).toBeGreaterThan(loadsBefore);
+            });
+        });
+
+        it.each([
+            [404, /pas membre de la ligue/],
+            [403, /accès administrateur a été retiré/],
+            [500, /Le retrait a échoué/],
+        ])('explains a %i', async (status, message) => {
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague, { '/api/admin/league/remove': { status } });
+            await userEvent.click(await screen.findByRole('button', { name: 'Retirer de la ligue' }));
+            await userEvent.click(screen.getByRole('button', { name: 'Confirmer le retrait' }));
+            expect(await screen.findByText(message)).toBeInTheDocument();
+        });
+    });
+
     describe('admin account unlinking', () => {
         it('shows unlink controls only to an administrator', async () => {
             const regularView = render(withHouseAndLeague);

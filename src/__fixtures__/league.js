@@ -38,3 +38,22 @@ export const sessionSettled = fixtures.session.settled;
 export const sessionExempted = fixtures.session.exempted;
 export const sessionRunning = fixtures.session.running;
 export const sessionUndrawn = fixtures.session.undrawn;
+
+/**
+ * ⚠ **Derived, not captured.** A settled session with one match ruled on by an administrator: the captured session 1
+ * with its `unplayed` match overwritten as fulguro-server 9.10 serves a ruling — `result: "adjudicated"`, an
+ * `adjudication {black, white, date}` block, and `winnerDiscordId` following the ruling (the `WINNER` side). The shape
+ * was read off `ApiLeagueMatch` / `ApiLeagueAdjudication` in fulguro-server, not observed, because the columns it needs
+ * (`doc/migration ligue arbitrage.sql`) were not yet on fg_dev. Recapture once they are.
+ *
+ * The ruling is the case the feature exists for: white refused to play, so white forfeits and black wins.
+ */
+export const sessionAdjudicated = {
+    ...sessionSettled,
+    matches: sessionSettled.matches.map(match => match.result !== 'unplayed' ? match : {
+        ...match,
+        result: 'adjudicated',
+        winnerDiscordId: match.black.discordId,
+        adjudication: { black: 'WINNER', white: 'FORFEIT', date: '2025-10-01T09:30:00+02:00' },
+    }),
+};

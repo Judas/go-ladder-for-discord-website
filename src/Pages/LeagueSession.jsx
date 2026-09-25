@@ -3,13 +3,15 @@ import { Link, useParams } from "react-router-dom";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
 import Loader from "../Components/Loader.jsx";
+import MatchRuling from "../Components/MatchRuling.jsx";
 import useApi from "../hooks/useApi.js";
+import { awardLabel } from "../leagueAwards.js";
 
 import './LeagueSession.css';
 
 export default function LeagueSession() {
     const { number } = useParams();
-    const { status, data, httpStatus } = useApi(`/api/league/session/${number}`);
+    const { status, data, httpStatus, reload } = useApi(`/api/league/session/${number}`);
 
     if (status === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;
@@ -39,7 +41,7 @@ export default function LeagueSession() {
                 <span className={'LeagueSession__Count'}>saison {data.season}</span>
             </p>
 
-            <Matches session={session} matches={matches} />
+            <Matches session={session} matches={matches} onRuled={reload} />
             <Exemptions exemptions={exemptions} />
         </section>
     );
@@ -59,7 +61,7 @@ export default function LeagueSession() {
  * `settled` closes everything: once the session is settled, a match without a result will never be played, so it
  * belongs with the closed ones and not in a list of things to do.
  */
-function Matches({session, matches}) {
+function Matches({session, matches, onRuled}) {
     if (matches.length === 0) {
         return (
             <p className={'LeagueSession__Empty'}>
@@ -75,38 +77,42 @@ function Matches({session, matches}) {
 
     return (
         <>
-            <MatchSection matches={closed} settled={session.settled} />
+            <MatchSection matches={closed} session={session} onRuled={onRuled} />
             {closed.length > 0 && toPlay.length > 0 && <hr className={'LeagueSession__Separator'} />}
-            <MatchSection matches={toPlay} settled={session.settled} />
+            <MatchSection matches={toPlay} session={session} onRuled={onRuled} />
         </>
     );
 }
 
-/** A match is closed once it has a result, and a settled session closes the ones that never got one. */
+/**
+ * A match is closed once it has a result, and a settled session closes the ones that never got one. A ruled match
+ * reads `result: "adjudicated"`, so a ruling closes a match too, even one still open on OGS.
+ */
 function isClosed(match, settled) {
     return match.result != null || settled;
 }
 
-function MatchSection({matches, settled}) {
+function MatchSection({matches, session, onRuled}) {
     if (matches.length === 0) { return null; }
 
     return (
         <ul className={'LeagueSession__Matches NoBulletList'}>
             {matches.map(match => (
                 <li key={`${match.black.discordId}-${match.white.discordId}`}>
-                    <Match match={match} settled={settled} />
+                    <Match match={match} session={session} onRuled={onRuled} />
                 </li>
             ))}
         </ul>
     );
 }
 
-function Match({match, settled}) {
-    const outcome = outcomeOf(match, settled);
+function Match({match, session, onRuled}) {
+    const outcome = outcomeOf(match, session.settled);
 
     return (
         <article className={`MatchCard ${outcome.modifier}`}>
-            <Side player={match.black} colour={'Noir'} edge={'black'} outcome={sideOutcomeOf(match, match.black)} />
+            <Side player={match.black} colour={'Noir'} edge={'black'} outcome={sideOutcomeOf(match, match.black)}
+                  award={match.adjudication?.black} />
             <div className={'MatchCard__Middle'}>
                 <span className={'MatchCard__Outcome'}>{outcome.label}</span>
                 {/*
@@ -119,8 +125,10 @@ function Match({match, settled}) {
                         Voir la partie
                     </a>
                 )}
+                <MatchRuling session={session} match={match} onRuled={onRuled} />
             </div>
-            <Side player={match.white} colour={'Blanc'} edge={'white'} outcome={sideOutcomeOf(match, match.white)} />
+            <Side player={match.white} colour={'Blanc'} edge={'white'} outcome={sideOutcomeOf(match, match.white)}
+                  award={match.adjudication?.white} />
         </article>
     );
 }
@@ -131,9 +139,11 @@ function Match({match, settled}) {
  * `null` while the session runs means the match is still to play. `"unplayed"` means the settlement closed it
  * without it being played, so it will never count. Anything else is a real result, and `winnerDiscordId` — computed
  * by the server, since matching a colour to a player means knowing which side they were on — says who took it, or
- * is null for a draw or an annulled game.
+ * is null for a draw or an annulled game. `"adjudicated"` means an administrator ruled on it, whatever OGS said: the
+ * sides then carry their award rather than a result.
  */
 function outcomeOf(match, settled) {
+    if (match.result === 'adjudicated') { return { label: 'Arbitrée', modifier: 'adjudicated' }; }
     if (match.result === 'unplayed') { return { label: 'Non jouée', modifier: 'unplayed' }; }
     if (match.result == null) { return { label: settled ? 'Sans résultat' : 'À jouer', modifier: 'pending' }; }
     if (match.winnerDiscordId == null) { return { label: 'Nulle', modifier: 'draw' }; }
@@ -146,8 +156,18 @@ function outcomeOf(match, settled) {
  * Only `winnerDiscordId` names a winner, so anything without one — a fixture still to play, a forfeit, a draw, an
  * annulled game — leaves both sides gold. Gold is the absence of a verdict, not a fourth verdict: nothing is being
  * said about either player.
+ *
+ * A ruling says more than a winner: a forfeit is a fault even when nobody was declared winner, so it goes red on its
+ * own. A participant only goes red against a winner — that is a lost game — and an exemption never does.
  */
 function sideOutcomeOf(match, player) {
+    if (match.adjudication) {
+        const own = player.discordId === match.black.discordId ? match.adjudication.black : match.adjudication.white;
+        const other = player.discordId === match.black.discordId ? match.adjudication.white : match.adjudication.black;
+        if (own === 'WINNER') { return 'winner'; }
+        if (own === 'FORFEIT' || (own === 'PARTICIPANT' && other === 'WINNER')) { return 'loser'; }
+        return 'undecided';
+    }
     if (match.winnerDiscordId == null) { return 'undecided'; }
     return match.winnerDiscordId === player.discordId ? 'winner' : 'loser';
 }
@@ -163,7 +183,7 @@ function sideOutcomeOf(match, player) {
  * The small crest, despite the size: it is the simplified drawing, and it is what holds up when a house has to be
  * recognised at a glance rather than studied.
  */
-function Side({player, colour, outcome, edge}) {
+function Side({player, colour, outcome, edge, award}) {
     return (
         <Link to={`/player/${player.discordId}`} className={`MatchCard__Side ${edge} ${outcome}`}>
             {player.house
@@ -174,6 +194,7 @@ function Side({player, colour, outcome, edge}) {
                 <Avatar src={player.discordAvatar} size={48} alt={''} hidden={true} />
                 <span className={'MatchCard__Name'}>{player.discordName ?? player.discordId}</span>
                 <span className={'MatchCard__Colour'}>{colour}</span>
+                {award && <span className={'MatchCard__Award'}>{awardLabel(award)}</span>}
             </span>
         </Link>
     );

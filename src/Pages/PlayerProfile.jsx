@@ -4,6 +4,7 @@ import { FaCircleInfo } from "react-icons/fa6";
 
 import { useAuth, useIsSelf } from '../auth.js';
 import { ensureUserId } from '../AuthProfile.js';
+import { ADMIN_ERRORS, adminFailure, adminPost } from '../adminApi.js';
 import TableElement from "../Components/Table/TableElement.jsx";
 import RowGroupElement from "../Components/Table/RowGroupElement.jsx";
 import RowElement from "../Components/Table/RowElement.jsx";
@@ -213,6 +214,84 @@ function LeaveLeague({player, reload}) {
         </div>
     );
 }
+
+/**
+ * An administrator taking a player out of the league. Admin-only, read off `profile.admin` like the purge button — the
+ * server gates the route on the same Discord roles, so this hides a control rather than protecting one.
+ *
+ * Not offered on one's own profile, where `LeaveLeague` already does the same thing.
+ *
+ * It is the player's own leave, done for them: `active` goes to 0, the renown stays, and nothing stops them from
+ * rejoining. The match already drawn for them stays too — to be played, closed as unplayed, or ruled on from the session
+ * page. That is what the confirmation says, because it is what the admin needs to know before clicking.
+ */
+function RemoveFromLeague({player, reload}) {
+    const { profile, refresh } = useAuth();
+    const [state, setState] = useState('idle');
+
+    if (profile?.admin !== true) { return null; }
+
+    const remove = async () => {
+        setState('pending');
+        try {
+            const { ok, status } = await adminPost('/api/admin/league/remove', { discordId: player.discordId });
+            if (ok) {
+                setState('idle');
+                reload();
+                return;
+            }
+            setState(adminFailure(status));
+            if (status === 403) { await refresh(); }
+        } catch {
+            setState('error');
+        }
+    };
+
+    const error = REMOVE_ERRORS[state];
+
+    if (state !== 'confirming' && state !== 'pending') {
+        return (
+            <div className={'PlayerProfile__Leave'}>
+                <button type={'button'} className={'PlayerProfile__LeaveButton'} onClick={() => setState('confirming')}>
+                    Retirer de la ligue
+                </button>
+                {error && <p className={'Error'} role={'alert'}>{error}</p>}
+            </div>
+        );
+    }
+
+    return (
+        <div className={'PlayerProfile__Leave'}>
+            <p className={'PlayerProfile__LeaveWarning'}>
+                <strong>{player.discordName}</strong> ne sera plus tiré au sort. Sa renommée reste acquise et il pourra
+                revenir. Un match déjà tiré reste à jouer : il peut être arbitré depuis la page de la session.
+            </p>
+            <div className={'PlayerProfile__LeaveActions'}>
+                <button
+                    type={'button'}
+                    className={'PlayerProfile__LeaveButton confirm'}
+                    disabled={state === 'pending'}
+                    onClick={remove}>
+                    {state === 'pending' ? 'En cours…' : 'Confirmer le retrait'}
+                </button>
+                <button
+                    type={'button'}
+                    className={'PlayerProfile__LeaveButton'}
+                    disabled={state === 'pending'}
+                    onClick={() => setState('idle')}>
+                    Annuler
+                </button>
+            </div>
+        </div>
+    );
+}
+
+const REMOVE_ERRORS = {
+    ...ADMIN_ERRORS,
+    notFound: "Ce joueur n'est pas membre de la ligue cette saison.",
+    invalid: 'Ce joueur ne peut pas être retiré : identifiant manquant.',
+    error: 'Le retrait a échoué. Réessayez plus tard.',
+};
 
 /**
  * What the member wants for next season. Only during the break, and only on one's own profile.
@@ -480,6 +559,7 @@ function LeagueSection({player, period, reload}) {
                         reload={reload} />
                 )}
                 {league.active && isSelf && <LeaveLeague player={player} reload={reload} />}
+                {league.active && !isSelf && <RemoveFromLeague player={player} reload={reload} />}
             </div>
         );
     }

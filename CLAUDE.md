@@ -77,7 +77,7 @@ So local development against real data requires the GOLD backend running on port
 - The proxy is selected with `pathFilter: '/api'`, **not** mounted as `app.use('/api', proxy)`. Since http-proxy-middleware 3, mounting strips the prefix before the middleware sees the URL, so the `^/api` → `/gold/api` rewrite silently stops matching and every call reaches the backend as `/api/...` → 404 on everything, with a server that starts fine.
 - The SPA fallback is `app.get('/*splat')`. Express 5 (path-to-regexp 8) throws at startup on a bare `'/*'`.
 
-Endpoints in use: `/api/players`, `/api/player/:discordId`, `/api/tiers`, `/api/games`, `/api/game/:goldId`, `/api/accounts`, `/api/link` (POST), `/api/auth` (POST), `/api/auth/profile?goldId=`.
+Endpoints in use: `/api/players`, `/api/player/:discordId`, `/api/tiers`, `/api/games`, `/api/game/:goldId`, `/api/accounts`, `/api/link` (POST), `/api/auth` (POST), `/api/auth/profile?goldId=`. Admin-only, all POST with the `X-Gold-Id` header through `src/adminApi.js` (purge still inlines its own fetch): `/api/admin/purge`, `/api/admin/unlink`, `/api/admin/league/remove` (profile, league section) and `/api/admin/league/adjudicate` (session page, `Components/MatchRuling.jsx` — one ruling per match covering both sides, since the server refuses a one-sided one).
 
 A 404 on one of these usually means the proxy rewrite, not a missing route — compare against `ApiModule.kt`.
 
