@@ -588,7 +588,9 @@
 
 .PlayerProfile__Figures {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* As many equal columns as figures: the house block adds a third when the player has a bonus. */
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
     gap: 1rem;
     margin: 0;
     text-align: center;

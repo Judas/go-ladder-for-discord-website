@@ -250,6 +250,120 @@ describe('PlayerProfile', () => {
         });
     });
 
+    /**
+     * The house points adjustment in the house block. The POST answer is not read — success reloads the profile — so
+     * the stubs carry a status only and no invented body.
+     */
+    describe('admin house points adjustment', () => {
+        const adjustCalls = fetchStub => fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/admin/house/points'));
+        const open = async () => {
+            await userEvent.click(await screen.findByRole('button', { name: 'Ajuster les points' }));
+            return screen.getByRole('dialog', { name: 'Ajuster les points de maison' });
+        };
+        const fill = async (dialog, { direction = 'Retirer', amount = '3', reason = 'Abandon répété' } = {}) => {
+            await userEvent.click(within(dialog).getByRole('radio', { name: direction }));
+            await userEvent.type(within(dialog).getByRole('spinbutton', { name: 'Points' }), amount);
+            await userEvent.type(within(dialog).getByRole('textbox', { name: /Raison/ }), reason);
+        };
+
+        it('shows the control only to an administrator, and only for a player in a house', async () => {
+            signInAs('999999999999999999');
+            const memberView = render(withHouseAndLeague);
+            await screen.findByText('Test Boreale');
+            expect(screen.queryByRole('button', { name: 'Ajuster les points' })).not.toBeInTheDocument();
+            memberView.unmount();
+
+            signInAs('999999999999999999', true);
+            const noHouseView = render(withoutHouse);
+            await screen.findByText(withoutHouse.discordName);
+            expect(screen.queryByRole('button', { name: 'Ajuster les points' })).not.toBeInTheDocument();
+            noHouseView.unmount();
+
+            render(withHouseAndLeague);
+            expect(await screen.findByRole('button', { name: 'Ajuster les points' })).toBeInTheDocument();
+        });
+
+        it('keeps the confirmation disabled until direction, amount and reason are all set', async () => {
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague);
+            const dialog = await open();
+            const confirm = within(dialog).getByRole('button', { name: "Confirmer l'ajustement" });
+
+            expect(confirm).toBeDisabled();
+            await userEvent.type(within(dialog).getByRole('spinbutton', { name: 'Points' }), '5');
+            await userEvent.type(within(dialog).getByRole('textbox', { name: /Raison/ }), 'Tournoi');
+            expect(confirm).toBeDisabled();  // no direction: a penalty is never a default
+
+            await userEvent.click(within(dialog).getByRole('radio', { name: 'Ajouter' }));
+            expect(confirm).toBeEnabled();
+
+            await userEvent.clear(within(dialog).getByRole('spinbutton', { name: 'Points' }));
+            await userEvent.type(within(dialog).getByRole('spinbutton', { name: 'Points' }), '101');
+            expect(confirm).toBeDisabled();
+        });
+
+        it('cancelling sends nothing', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/house/points': { status: 200 } });
+            const dialog = await open();
+            await fill(dialog);
+            await userEvent.click(within(dialog).getByRole('button', { name: 'Annuler' }));
+
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+            expect(adjustCalls(fetchStub)).toHaveLength(0);
+        });
+
+        it('posts a signed amount and the trimmed reason with the admin header, then reloads the profile', async () => {
+            signInAs('999999999999999999', true);
+            const fetchStub = render(withHouseAndLeague, { '/api/admin/house/points': { status: 200 } });
+            const dialog = await open();
+            await fill(dialog, { reason: '  Abandon répété ' });
+            expect(within(dialog).getByRole('status')).toHaveTextContent('−3 points');
+
+            const loadsBefore = fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
+            await userEvent.click(within(dialog).getByRole('button', { name: "Confirmer l'ajustement" }));
+
+            await waitFor(() => expect(adjustCalls(fetchStub)).toHaveLength(1));
+            const [, init] = adjustCalls(fetchStub)[0];
+            expect(init.headers['X-Gold-Id']).toBe('admin-session');
+            expect(JSON.parse(init.body)).toEqual({
+                discordId: withHouseAndLeague.discordId,
+                points: -3,
+                reason: 'Abandon répété',
+            });
+            await waitFor(() => {
+                const loads = fetchStub.mock.calls.filter(([url]) => String(url).includes('/api/player/')).length;
+                expect(loads).toBeGreaterThan(loadsBefore);
+            });
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        });
+
+        it.each([
+            [404, /dans aucune maison/],
+            [409, /Hors saison/],
+            [403, /accès administrateur a été retiré/],
+            [500, /L'ajustement a échoué/],
+        ])('explains a %i', async (status, message) => {
+            signInAs('999999999999999999', true);
+            render(withHouseAndLeague, { '/api/admin/house/points': { status } });
+            const dialog = await open();
+            await fill(dialog);
+            await userEvent.click(within(dialog).getByRole('button', { name: "Confirmer l'ajustement" }));
+            expect(await within(dialog).findByText(message)).toBeInTheDocument();
+        });
+
+        it('shows a bonus already inside the total, without adding it again', async () => {
+            const adjusted = {
+                ...withHouseAndLeague,
+                house: { ...withHouseAndLeague.house, points: { ...withHouseAndLeague.house.points, adjustment: 4 } },
+            };
+            render(adjusted);
+            const bonus = await screen.findByText('Dont bonus');
+            expect(bonus.nextSibling).toHaveTextContent('+4');
+            expect(screen.getByText('Points').nextSibling).toHaveTextContent(String(withHouseAndLeague.house.points.total));
+        });
+    });
+
     describe('admin account unlinking', () => {
         it('shows unlink controls only to an administrator', async () => {
             const regularView = render(withHouseAndLeague);

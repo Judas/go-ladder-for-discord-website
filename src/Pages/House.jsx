@@ -35,6 +35,17 @@ const SCORING = [
 ];
 
 /**
+ * The eighth column: what administrators added or took away by hand this season (`points.adjustment`), signed.
+ *
+ * Kept out of SCORING because it is worth nothing fixed — an event, a tournament, a penalty, each with its own amount
+ * and announced on Discord with its reason. Like the seven, it is already inside `total` and is printed, never added.
+ */
+const ADJUSTMENT = { emoji: '✨', label: 'Bonus ou pénalité attribués par un administrateur' };
+
+/** A signed figure: a bonus reads +5, a penalty −3, nothing 0. */
+const signed = value => (value > 0 ? `+${value}` : value < 0 ? `−${-value}` : '0');
+
+/**
  * What the board does to the total, once the seven columns are added up.
  *
  * A legend, like SCORING, and for a sharper reason than usual: this is the only thing on the site that explains why a
@@ -144,6 +155,9 @@ function Ranking({members, memberCount}) {
                                     <span className={'ReaderOnly'}>{column.label}</span>{column.emoji}
                                 </ColHeaderElement>
                             ))}
+                            <ColHeaderElement className={'House__Point House__Adjustment'} title={ADJUSTMENT.label}>
+                                <span className={'ReaderOnly'}>{ADJUSTMENT.label}</span>{ADJUSTMENT.emoji}
+                            </ColHeaderElement>
                             <ColHeaderElement className={'House__Total'}>Points</ColHeaderElement>
                         </RowElement>
                     </RowGroupElement>
@@ -186,7 +200,10 @@ function MemberRow({member}) {
                     {member.points[column.key]}
                 </CellElement>
             ))}
-            <CellElement colIndex={11} className={'House__Total'}>{member.points.total}</CellElement>
+            <CellElement colIndex={11} className={'House__Point House__Adjustment'}>
+                {signed(member.points.adjustment ?? 0)}
+            </CellElement>
+            <CellElement colIndex={12} className={'House__Total'}>{member.points.total}</CellElement>
             <Link to={`/player/${member.discordId}`} />
         </RowElement>
     );
@@ -231,6 +248,17 @@ function Scoring() {
             <p>Les autres tailles de Goban ne sont pas prises en compte.</p>
 
             <p>Chaque colonne affiche le détail des points cumulés avant cette division alors que le total de « Points » final est celui après division.</p>
+
+            <ul className={'House__ScoringList NoBulletList'}>
+                <li>
+                    <span className={'House__ScoringEmoji'} aria-hidden={true}>{ADJUSTMENT.emoji}</span>
+                    <span className={'House__ScoringWorth'}>±</span>
+                    <span className={'House__ScoringLabel'}>{ADJUSTMENT.label}</span>
+                </li>
+            </ul>
+            <p>Un administrateur peut aussi donner ou retirer des points, pour un événement ou une pénalité ; chaque
+                ajustement est annoncé sur Discord avec sa raison. Ces points ne dépendent d'aucune partie : ils sont
+                ajoutés tels quels au total « Points ».</p>
         </>
     );
 }

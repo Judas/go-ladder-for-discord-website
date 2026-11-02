@@ -13,6 +13,7 @@ import CellElement from "../Components/Table/CellElement.jsx";
 import Loader from "../Components/Loader.jsx";
 import Avatar from "../Components/Avatar.jsx";
 import Crest from "../Components/Crest.jsx";
+import HousePointsAdjustment from "../Components/HousePointsAdjustment.jsx";
 import HouseQuiz from "../Components/HouseQuiz.jsx";
 import Modal from "../Components/Modal.jsx";
 import useApi from "../hooks/useApi.js";
@@ -152,7 +153,16 @@ function HouseSection({player, period, houses, reload}) {
                     <dt>Points</dt>
                     <dd>{house.points.total}</dd>
                 </div>
+                {/* Already inside the total above, so it is shown as detail and never added to it. */}
+                {(house.points.adjustment ?? 0) !== 0 && (
+                    <div>
+                        <dt>Dont bonus</dt>
+                        <dd>{house.points.adjustment > 0 ? '+' : ''}{house.points.adjustment}</dd>
+                    </div>
+                )}
             </dl>
+
+            <HousePointsAdjustment player={player} onAdjusted={reload} />
 
             {period === 'VACATION' && isSelf && <HouseChoice player={player} houses={houses} reload={reload} />}
         </div>

@@ -76,7 +76,8 @@ describe('House', () => {
         await screen.findByRole('heading', { name: FILS.house.name });
 
         for (const label of ['Partie jouée', 'Adversaire GOLD', 'Adversaire dans une maison rivale',
-                             'Partie longue', 'Victoire', 'Partie à égalité', 'Partie classée']) {
+                             'Partie longue', 'Victoire', 'Partie à égalité', 'Partie classée',
+                             'Bonus ou pénalité attribués par un administrateur']) {
             expect(screen.getByRole('columnheader', { name: new RegExp(label) })).toBeInTheDocument();
         }
     });
@@ -88,14 +89,33 @@ describe('House', () => {
         const leader = FILS.members[0];
         const cells = within(rowOf(leader.discordName)).getAllByRole('gridcell');
 
-        // rank, avatar, name, then the seven columns, then the total: one line, eleven cells.
-        expect(cells).toHaveLength(11);
+        // rank, avatar, name, then the seven columns, the adjustment, then the total: one line, twelve cells.
+        expect(cells).toHaveLength(12);
         const served = ['played', 'goldOpponent', 'rivalHouse', 'longGame', 'victory', 'evenGame', 'ranked']
             .map(key => String(leader.points[key]));
         expect(cells.slice(3, 10).map(cell => cell.textContent)).toEqual(served);
 
         // The total is the server's, never a sum recomputed here.
-        expect(cells[10]).toHaveTextContent(String(leader.points.total));
+        expect(cells[11]).toHaveTextContent(String(leader.points.total));
+    });
+
+    /**
+     * An administrator's bonus or penalty, which the server has already folded into `total`. Derived from the captured
+     * leader rather than captured: the dev seed holds no adjustment, and the case is fully stated by the figures below.
+     */
+    it.each([
+        [5, '+5'],
+        [-3, '−3'],
+    ])('prints an adjustment of %i signed, and the served total untouched', async (adjustment, printed) => {
+        const [leader, ...rest] = FILS.members;
+        const total = leader.points.total + adjustment;
+        const adjusted = { ...leader, points: { ...leader.points, adjustment, total } };
+        render('FILS_DU_FROID', { ...FILS, members: [adjusted, ...rest] });
+        await screen.findByRole('heading', { name: FILS.house.name });
+
+        const cells = within(rowOf(leader.discordName)).getAllByRole('gridcell');
+        expect(cells[10]).toHaveTextContent(printed);
+        expect(cells[11]).toHaveTextContent(String(total));
     });
 
     /**
@@ -122,8 +142,8 @@ describe('House', () => {
         await screen.findByRole('heading', { name: FILS.house.name });
 
         const cells = within(rowOf(leader.discordName)).getAllByRole('gridcell');
-        expect(cells[10]).toHaveTextContent(String(halved));
-        expect(cells[10]).not.toHaveTextContent(String(sum));
+        expect(cells[11]).toHaveTextContent(String(halved));
+        expect(cells[11]).not.toHaveTextContent(String(sum));
     });
 
     /**

@@ -1,0 +1,152 @@
+/* The admin control under the house figures. Dressed like the ruling button on a match card, its sibling. */
+.HousePointsAdjustment__Open {
+    justify-self: center;
+    padding: .25rem .625rem;
+    font-family: var(--default-font);
+    font-size: .75rem;
+    color: var(--white-87);
+    background: none;
+    border: 1px solid var(--emperor);
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.HousePointsAdjustment__Open:hover,
+.HousePointsAdjustment__Open:focus-visible {
+    border-color: var(--sun);
+    color: var(--sun);
+}
+
+/* Same overlay as the match ruling and the profile's purge dialog. */
+.HousePointsAdjustment__Overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, .75);
+}
+
+.HousePointsAdjustment__Dialog {
+    display: grid;
+    gap: 1rem;
+    width: min(100%, 32rem);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding: 1.5rem;
+    color: var(--white-87);
+    border: 2px solid var(--sun);
+    border-radius: .5rem;
+    background: var(--mine-shaft);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .5);
+}
+
+.HousePointsAdjustment__Dialog h3 {
+    margin: 0;
+    color: var(--sun);
+    font: 2rem var(--accent-font);
+}
+
+.HousePointsAdjustment__Context,
+.HousePointsAdjustment__Summary {
+    margin: 0;
+}
+
+.HousePointsAdjustment__Summary {
+    padding: .75rem;
+    border-left: 3px solid var(--sun);
+    background: var(--sun-20);
+    overflow-wrap: anywhere;
+}
+
+.HousePointsAdjustment__Dialog .Error {
+    margin: 0;
+    padding: .75rem;
+}
+
+.HousePointsAdjustment__Direction {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 0;
+    padding: .75rem;
+    border: 1px solid var(--emperor);
+    border-radius: .5rem;
+}
+
+.HousePointsAdjustment__Direction label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .375rem .75rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.HousePointsAdjustment__Direction label.selected {
+    border-color: var(--sun);
+    background: var(--sun-20);
+}
+
+.HousePointsAdjustment__Direction input {
+    accent-color: var(--sun);
+}
+
+.HousePointsAdjustment__Field {
+    display: grid;
+    gap: .375rem;
+}
+
+.HousePointsAdjustment__Field input,
+.HousePointsAdjustment__Field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: .5rem;
+    font: inherit;
+    color: var(--white-87);
+    border: 1px solid var(--emperor);
+    border-radius: .25rem;
+    background: var(--cod-gray);
+}
+
+.HousePointsAdjustment__Field input {
+    max-width: 8rem;
+}
+
+.HousePointsAdjustment__Field textarea {
+    resize: vertical;
+}
+
+.HousePointsAdjustment__Counter {
+    justify-self: end;
+    opacity: .6;
+}
+
+.HousePointsAdjustment__Actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .75rem;
+}
+
+.HousePointsAdjustment__Actions button {
+    padding: .625rem 1rem;
+    color: var(--white-87);
+    border: 1px solid var(--emperor);
+    border-radius: .25rem;
+    background: var(--tundora);
+    cursor: pointer;
+}
+
+.HousePointsAdjustment__Actions button.confirm {
+    border-color: var(--sun);
+    color: var(--cod-gray);
+    background: var(--sun);
+}
+
+.HousePointsAdjustment__Actions button:disabled {
+    opacity: .5;
+    cursor: default;
+}
