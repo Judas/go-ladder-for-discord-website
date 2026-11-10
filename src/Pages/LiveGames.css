@@ -1,0 +1,259 @@
+.LiveGames__Summary {
+    margin: -.5rem auto 2rem;
+    text-align: center;
+    color: var(--white-87);
+    font-size: .875rem;
+    font-style: italic;
+}
+
+.LiveGames__Empty {
+    width: min(40rem, calc(100% - 2rem));
+    margin: 0 auto;
+}
+
+/* Same grid as the recent games, so the two pages of the section feel like one. */
+.LiveGames__List {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 2rem;
+    width: min(80rem, 100%);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.LiveGameCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--tundora);
+    border-radius: .5rem;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px var(--sun);
+    transition: transform .15s, box-shadow .15s;
+}
+
+.LiveGameCard:hover,
+.LiveGameCard:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 3px var(--sun);
+}
+
+/* The whole card is the link, as on the recent games: the anchor is stretched over it. */
+.LiveGameCard > a {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.LiveGameCard__Band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem .75rem;
+    background: var(--mine-shaft);
+}
+
+.LiveGameCard__Live {
+    display: inline-flex;
+    align-items: center;
+    gap: .5ch;
+    color: var(--white-87);
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.LiveGameCard__Live::before {
+    content: '';
+    width: .5rem;
+    height: .5rem;
+    border-radius: 50%;
+    background: var(--punch);
+    animation: LiveGameCard__Pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes LiveGameCard__Pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .LiveGameCard,
+    .LiveGameCard__Live::before {
+        animation: none;
+        transition: none;
+    }
+}
+
+.LiveGameCard__Gold {
+    padding: .1rem .5rem 0;
+    border-radius: .25em;
+    background: var(--sun);
+    color: var(--mine-shaft);
+    font-family: var(--accent-font);
+    font-size: 1rem;
+    letter-spacing: .05em;
+}
+
+.LiveGameCard__Players {
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    align-items: start;
+    gap: .5rem;
+    padding: 1rem .75rem .5rem;
+}
+
+.LiveGameCard__Vs {
+    align-self: center;
+    margin-bottom: 1.5rem;
+    color: var(--white-87);
+    font-family: var(--accent-font);
+    font-size: 1.25rem;
+}
+
+.LiveGameCard__Player {
+    display: grid;
+    justify-items: center;
+    gap: .25rem;
+    min-width: 0;
+    text-align: center;
+    color: var(--white-87);
+}
+
+/* The avatar carries a stone in its corner, so the colour of each side reads without a legend. */
+.LiveGameCard__Stone {
+    position: relative;
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin-bottom: .25rem;
+}
+
+.LiveGameCard__Stone::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    bottom: -3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--tundora);
+}
+
+.LiveGameCard__Stone.black::after {
+    background: black;
+}
+
+/* Mirrored: white sits on the right of the card, so its stone goes on the inner side too, facing the "vs". */
+.LiveGameCard__Stone.white::after {
+    right: auto;
+    left: -3px;
+    background: white;
+}
+
+.LiveGameCard__Avatar,
+.LiveGameCard__Stone .Avatar__Empty {
+    display: block;
+    border-radius: 50%;
+}
+
+.LiveGameCard__Silhouette {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px dashed var(--emperor);
+    background: var(--mine-shaft);
+    color: var(--emperor);
+}
+
+.LiveGameCard__Silhouette svg {
+    width: 20px;
+    height: 20px;
+}
+
+.LiveGameCard__PlayerName {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.LiveGameCard__Rank {
+    min-height: 1.25rem;
+    font-family: var(--accent-font);
+    font-size: 1.1rem;
+    line-height: 1.25rem;
+    color: var(--sun);
+}
+
+/* An outsider is there for context: same layout, quieter. */
+.LiveGameCard__Player.outsider .LiveGameCard__PlayerName {
+    font-style: italic;
+    opacity: .75;
+}
+
+.LiveGameCard__Player.outsider .LiveGameCard__Rank {
+    color: var(--white-87);
+    opacity: .6;
+}
+
+.LiveGameCard__Outsider {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    opacity: .5;
+}
+
+.LiveGameCard__Name {
+    margin: 0 .75rem .5rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    color: var(--white-87);
+    font-size: .8rem;
+    opacity: .6;
+}
+
+.LiveGameCard__Footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-top: auto;
+    padding: .5rem .75rem;
+    background: var(--mine-shaft);
+}
+
+.LiveGameCard__Details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem;
+    margin: 0;
+    padding: 0;
+}
+
+.LiveGameCard__Details li {
+    padding: .1rem .4rem;
+    border-radius: .25em;
+    background: var(--tundora);
+    color: var(--white-87);
+    font-size: .75rem;
+}
+
+.LiveGameCard__Ogs {
+    display: inline-flex;
+    align-items: center;
+    gap: .4ch;
+    flex-shrink: 0;
+    color: var(--sun);
+    font-size: .8rem;
+}
+
+.LiveGameCard__Ogs svg {
+    width: .7rem;
+    height: .7rem;
+}

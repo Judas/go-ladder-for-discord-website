@@ -12,6 +12,7 @@ import Health from './Pages/Health.jsx';
 import House from './Pages/House.jsx';
 import Houses from './Pages/Houses.jsx';
 import League from './Pages/League.jsx';
+import LiveGames from './Pages/LiveGames.jsx';
 import LeagueSession from './Pages/LeagueSession.jsx';
 import PlayerList from './Pages/PlayerList.jsx';
 import PlayerProfile from './Pages/PlayerProfile.jsx';
@@ -27,6 +28,7 @@ export default function App() {
             <main>
                 <Routes>
                     <Route path="/" element={<PlayerList/>}/>
+                    <Route path="/live-games" element={<LiveGames/>}/>
                     <Route path="/recent-games" element={<RecentGames/>}/>
                     <Route path="/about" element={<About/>}/>
                     <Route path="/player/:playerId" element={<PlayerProfile/>}/>

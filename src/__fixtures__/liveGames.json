@@ -1,0 +1,213 @@
+{
+  "populated": {
+    "secondsSinceUpdate": 7,
+    "games": [
+      {
+        "goldId": "OGS_2006",
+        "ogsId": 2006,
+        "link": "https://online-go.com/game/2006",
+        "name": "Partie amicale",
+        "size": 19,
+        "handicap": 0,
+        "ranked": true,
+        "moveNumber": 87,
+        "gold": true,
+        "black": {
+          "ogsId": 1001,
+          "ogsName": "synth_noir",
+          "ogsRank": "2k",
+          "member": {
+            "ogsId": 1001,
+            "discordId": "900000000000000001",
+            "discordName": "Membre Noir",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+            "rating": 1425,
+            "tierRank": 3,
+            "tierName": "Bronze"
+          }
+        },
+        "white": {
+          "ogsId": 1002,
+          "ogsName": "synth_blanc",
+          "ogsRank": "1d",
+          "member": {
+            "ogsId": 1002,
+            "discordId": "900000000000000002",
+            "discordName": "Membre Blanc",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
+            "rating": 1450,
+            "tierRank": 4,
+            "tierName": "Argent"
+          }
+        }
+      },
+      {
+        "goldId": "OGS_2005",
+        "ogsId": 2005,
+        "link": "https://online-go.com/game/2005",
+        "name": null,
+        "size": 9,
+        "handicap": 2,
+        "ranked": false,
+        "moveNumber": null,
+        "gold": false,
+        "black": {
+          "ogsId": 5555,
+          "ogsName": "inconnu_ogs",
+          "ogsRank": "5k",
+          "member": null
+        },
+        "white": {
+          "ogsId": 1003,
+          "ogsName": "synth_trois",
+          "ogsRank": null,
+          "member": {
+            "ogsId": 1003,
+            "discordId": "900000000000000003",
+            "discordName": "Membre Trois",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/3.png",
+            "rating": null,
+            "tierRank": null,
+            "tierName": null
+          }
+        }
+      },
+      {
+        "goldId": "OGS_2004",
+        "ogsId": 2004,
+        "link": "https://online-go.com/game/2004",
+        "name": "Tournoi du dimanche — ronde 3, table 12 avec un nom très long",
+        "size": 13,
+        "handicap": 0,
+        "ranked": true,
+        "moveNumber": 142,
+        "gold": false,
+        "black": {
+          "ogsId": 1004,
+          "ogsName": "synth_quatre",
+          "ogsRank": "3d",
+          "member": {
+            "ogsId": 1004,
+            "discordId": "900000000000000004",
+            "discordName": "Membre Avec Un Pseudo Très Long",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/4.png",
+            "rating": 1500,
+            "tierRank": 5,
+            "tierName": "Or"
+          }
+        },
+        "white": {
+          "ogsId": 6666,
+          "ogsName": "un_adversaire_au_pseudo_interminable",
+          "ogsRank": "12k",
+          "member": null
+        }
+      },
+      {
+        "goldId": "OGS_2003",
+        "ogsId": 2003,
+        "link": "https://online-go.com/game/2003",
+        "name": "Revanche",
+        "size": 19,
+        "handicap": 4,
+        "ranked": true,
+        "moveNumber": 3,
+        "gold": false,
+        "black": {
+          "ogsId": 7777,
+          "ogsName": null,
+          "ogsRank": null,
+          "member": null
+        },
+        "white": {
+          "ogsId": 1005,
+          "ogsName": "synth_cinq",
+          "ogsRank": "8k",
+          "member": {
+            "ogsId": 1005,
+            "discordId": "900000000000000005",
+            "discordName": "Membre Cinq",
+            "discordAvatar": "",
+            "rating": 1525,
+            "tierRank": 1,
+            "tierName": "Fer"
+          }
+        }
+      },
+      {
+        "goldId": "OGS_2002",
+        "ogsId": 2002,
+        "link": "https://online-go.com/game/2002",
+        "name": null,
+        "size": 19,
+        "handicap": null,
+        "ranked": null,
+        "moveNumber": null,
+        "gold": false,
+        "black": {
+          "ogsId": 1006,
+          "ogsName": "synth_six",
+          "ogsRank": "15k",
+          "member": {
+            "ogsId": 1006,
+            "discordId": "900000000000000006",
+            "discordName": "Membre Six",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
+            "rating": 1550,
+            "tierRank": 2,
+            "tierName": "Cuivre"
+          }
+        },
+        "white": {
+          "ogsId": 8888,
+          "ogsName": "visiteur",
+          "ogsRank": "25k",
+          "member": null
+        }
+      },
+      {
+        "goldId": "OGS_2001",
+        "ogsId": 2001,
+        "link": "https://online-go.com/game/2001",
+        "name": "Partie lente",
+        "size": 19,
+        "handicap": 0,
+        "ranked": false,
+        "moveNumber": 211,
+        "gold": true,
+        "black": {
+          "ogsId": 1007,
+          "ogsName": "synth_sept",
+          "ogsRank": "4k",
+          "member": {
+            "ogsId": 1007,
+            "discordId": "900000000000000007",
+            "discordName": "Membre Sept",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
+            "rating": 1575,
+            "tierRank": 3,
+            "tierName": "Bronze"
+          }
+        },
+        "white": {
+          "ogsId": 1008,
+          "ogsName": "synth_huit",
+          "ogsRank": "4k",
+          "member": {
+            "ogsId": 1008,
+            "discordId": "900000000000000008",
+            "discordName": "Membre Huit",
+            "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
+            "rating": 1600,
+            "tierRank": 3,
+            "tierName": "Bronze"
+          }
+        }
+      }
+    ]
+  },
+  "empty": {
+    "secondsSinceUpdate": 4,
+    "games": []
+  }
+}

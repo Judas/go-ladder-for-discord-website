@@ -9,15 +9,3 @@
 .Footer a {
     color: var(--sun);
 }
-
-/* An operations page, not a destination: linked from here rather than from the main navigation. */
-.Footer__Health {
-    font-size: .8rem;
-    font-style: italic;
-}
-
-/* Outranks `.Footer a` above on specificity, so no !important is needed to override its colour. */
-.Footer .Footer__Health a {
-    color: white;
-    text-decoration: none;
-}

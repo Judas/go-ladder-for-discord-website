@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
 import AuthProvider from './AuthProvider.jsx';
@@ -23,11 +24,35 @@ describe('App', () => {
         render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
 
         expect(screen.getByRole('navigation')).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'Joueurs' })).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'Parties' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Communauté' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Aurak' })).toBeInTheDocument();
         expect(screen.getByRole('link', { name: 'À propos' })).toBeInTheDocument();
         expect(screen.getByRole('heading', { name: 'Liste des joueurs' })).toBeInTheDocument();
         expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    });
+
+    it('opens a section on click, and closes it when a link is followed', async () => {
+        const user = userEvent.setup();
+        render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
+
+        // A section is not a page: closed, its links are not there to follow.
+        expect(screen.queryByRole('link', { name: 'Parties live' })).not.toBeInTheDocument();
+
+        const community = screen.getByRole('button', { name: 'Communauté' });
+        await user.click(community);
+        expect(community).toHaveAttribute('aria-expanded', 'true');
+        expect(screen.getByRole('link', { name: 'Joueurs' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Parties récentes' })).toBeInTheDocument();
+
+        await user.click(screen.getByRole('link', { name: 'Parties live' }));
+        expect(community).toHaveAttribute('aria-expanded', 'false');
+        expect(await screen.findByRole('heading', { name: 'Parties live' })).toBeInTheDocument();
+    });
+
+    it('no longer links the services page from the footer', () => {
+        render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
+
+        expect(screen.queryByRole('link', { name: 'État des services' })).not.toBeInTheDocument();
     });
 
     it('offers Discord sign-in when no profile is stored', () => {

@@ -48,6 +48,101 @@
     }    
 }
 
+/*
+ * A section is a <button>, styled like the links beside it. It has no page: it opens its menu, laid under it.
+ */
+.NavGroup {
+    position: relative;
+}
+
+/* A <button> gets neither the corners Common.css gives every link nor its transparent background: both set here. */
+.Header .NavGroup__Toggle {
+    background: transparent;
+    font: inherit;
+    border-radius: .25em;
+    cursor: pointer;
+}
+
+/* Outranks the reset above, which would otherwise turn the active section grey instead of gold. */
+.Header .NavGroup__Toggle.active {
+    background: var(--sun);
+}
+
+.Header .NavGroup__Toggle:hover,
+.Header .NavGroup__Toggle.open {
+    background: var(--sun-20);
+    border: 1px solid var(--sun);
+}
+
+.NavGroup__Toggle.active.open .NavButton svg,
+.NavGroup__Toggle.active.open .NavButton .NavButtonText {
+    color: var(--sun);
+}
+
+.NavGroup__Menu {
+    position: absolute;
+    top: calc(100% + .5rem);
+    left: 1rem;
+    min-width: 14rem;
+    margin: 0;
+    padding: .25rem;
+    background: var(--mine-shaft);
+    /*
+     * Lighter than the toggles' 1px of plain --sun. Going below 1px would be the obvious way, but it vanishes or
+     * rounds back up to 1px depending on the screen's pixel density; a half-transparent gold reads as finer everywhere.
+     */
+    border: 1px solid rgb(252 163 17 / .5);
+    border-radius: .25em;
+    z-index: 101;
+}
+
+.NavGroup__Menu[hidden] {
+    display: none;
+}
+
+.NavGroup__Link {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    color: var(--sun);
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.NavGroup__Link svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.NavGroup__Link:hover {
+    background: var(--sun-20);
+}
+
+.NavGroup__Link.active {
+    background: var(--sun);
+    color: var(--mine-shaft);
+}
+
+/*
+ * On a phone the toggles are icons alone and sit anywhere in the row, so a menu hung under one can run off either
+ * edge. It spans the screen under the header instead — the header is sticky at the top and 96px tall at every width.
+ */
+@media only screen and (max-width: 980px) {
+    .NavGroup {
+        margin: auto;
+    }
+
+    .NavGroup__Menu {
+        position: fixed;
+        top: 96px;
+        left: 0;
+        right: 0;
+        min-width: 0;
+    }
+}
+
 .NavButton {
     margin-left: 0.5rem;
     margin-right: 0.5rem;

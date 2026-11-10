@@ -125,7 +125,7 @@ describe('pages', () => {
             stubApi();
             await expectNoConsoleErrors(async () => {
                 renderAt(<RecentGames />);
-                await screen.findByRole('heading', { name: 'Parties' });
+                await screen.findByRole('heading', { name: 'Parties récentes' });
             });
 
             const list = screen.getByRole('list');

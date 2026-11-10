@@ -1,6 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import userEvent from '@testing-library/user-event';
 import Header from '../Components/Header.jsx';
 import { expectNoConsoleErrors, renderAt, stubApi } from '../testUtils.jsx';
 import AdminLogs from './AdminLogs.jsx';
@@ -112,17 +113,19 @@ describe('AdminLogs', () => {
 describe('admin navigation', () => {
     beforeEach(() => localStorage.clear());
 
-    it('shows the admin link only to an authorised profile', () => {
+    it('shows the admin section only to an authorised profile, with the logs and the services', async () => {
         signIn();
         stubApi({ '/api/auth/profile': PROFILE });
         renderAt(<Header />);
-        expect(screen.getByRole('link', { name: 'Admin' })).toBeInTheDocument();
+        await userEvent.click(screen.getByRole('button', { name: 'Admin' }));
+        expect(screen.getByRole('link', { name: 'Logs' })).toHaveAttribute('href', '/admin');
+        expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '/health');
     });
 
-    it('hides the admin link from a regular profile', () => {
+    it('hides the admin section from a regular profile', () => {
         signIn({ ...PROFILE, admin: false });
         stubApi({ '/api/auth/profile': { ...PROFILE, admin: false } });
         renderAt(<Header />);
-        expect(screen.queryByRole('link', { name: 'Admin' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Admin' })).not.toBeInTheDocument();
     });
 });
