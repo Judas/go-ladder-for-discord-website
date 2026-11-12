@@ -51,7 +51,7 @@ function LiveGamesBody({ status, data, httpStatus }) {
             </p>
 
             {games.length === 0
-                ? <p className={'Info LiveGames__Empty'}>Aucun joueur de la communauté ne joue sur OGS en ce moment.</p>
+                ? <p className={'Info LiveGames__Empty'}>Aucun membre de la communauté ne joue sur OGS en ce moment.</p>
                 : <ul className={'LiveGames__List NoBulletList'}>
                     {games.map(game => <li key={game.goldId}><LiveGameCard game={game}/></li>)}
                 </ul>}
