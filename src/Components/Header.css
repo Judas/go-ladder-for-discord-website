@@ -224,3 +224,21 @@
         height: 36px;
     }
 }
+
+/* The logo leads home. The link hugs the round image, so its focus ring is round too. */
+.Header__Home {
+    display: flex;
+    margin: 0 1rem;
+    border-radius: 50%;
+}
+
+.Header .Header__Home img {
+    display: block;
+    margin: 0;
+}
+
+@media only screen and (max-width: 560px) {
+    .Header__Home {
+        margin: 0 .25rem;
+    }
+}

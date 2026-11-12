@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy, FaUserShield, FaPeopleGroup, FaTowerBroadcast, FaScroll, FaHeartPulse } from 'react-icons/fa6';
+import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy, FaUserShield, FaPeopleGroup, FaScroll, FaHeartPulse } from 'react-icons/fa6';
 import { GiCastle } from 'react-icons/gi';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { TbGoGame } from 'react-icons/tb';
@@ -18,11 +18,10 @@ import './Header.css';
 const COMMUNITY = {
     label: 'Communauté',
     icon: <FaPeopleGroup />,
-    matches: path => path === '/' || /^\/(player|game|live-games|recent-games)(\/|$)/.test(path),
+    matches: path => path === '/' || /^\/(players?|game)(\/|$)/.test(path),
     links: [
-        { to: '/', label: 'Joueurs', icon: <FaUsers />, end: true },
-        { to: '/live-games', label: 'Parties live', icon: <FaTowerBroadcast /> },
-        { to: '/recent-games', label: 'Parties récentes', icon: <TbGoGame /> },
+        { to: '/', label: 'Parties', icon: <TbGoGame />, end: true },
+        { to: '/players', label: 'Joueurs', icon: <FaUsers /> },
     ],
 };
 
@@ -69,11 +68,13 @@ export default function Header() {
 
     return (
         <nav className={'Header'}>
-            <img
-                src='https://cdn.discordapp.com/app-icons/772833152434831381/39981f8231efcd7aebf265764ce80b7c.png'
-                width={48}
-                height={48}
-                alt='FulguroGo' />
+            <Link to={'/'} className={'Header__Home'} aria-label={'Accueil'}>
+                <img
+                    src='https://cdn.discordapp.com/app-icons/772833152434831381/39981f8231efcd7aebf265764ce80b7c.png'
+                    width={48}
+                    height={48}
+                    alt='FulguroGo' />
+            </Link>
 
                 <NavGroup group={COMMUNITY} />
                 <NavGroup group={AURAK} />

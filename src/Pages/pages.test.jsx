@@ -125,9 +125,10 @@ describe('pages', () => {
             stubApi();
             await expectNoConsoleErrors(async () => {
                 renderAt(<RecentGames />);
-                await screen.findByRole('heading', { name: 'Parties récentes' });
+                await screen.findByRole('list');
             });
 
+            expect(screen.getByRole('region', { name: 'Parties récentes' })).toBeInTheDocument();
             const list = screen.getByRole('list');
             expect(within(list).getAllByRole('listitem')).toHaveLength(fixtures.games.length);
         });

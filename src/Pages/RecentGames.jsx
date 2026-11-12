@@ -7,24 +7,29 @@ import useApi from "../hooks/useApi.js";
 
 import './RecentGames.css';
 
+/** The last games played between ladder members, from `/api/games`. A section of the games page, under the live games. */
 export default function RecentGames() {
-    const { status: gameFetchStatus, data } = useApi("/api/games");
-    const games = data ?? [];
+    const { status, data } = useApi("/api/games");
 
-    switch(gameFetchStatus) {
+    return (
+        <section className={'RecentGames'} aria-label={'Parties récentes'}>
+            <RecentGamesBody status={status} games={data ?? []} />
+        </section>
+    );
+}
+
+function RecentGamesBody({ status, games }) {
+    switch (status) {
         case 'success': return (
-            <div className={'RecentGames'}>
-                <h2 className={'PageTitle'}>Parties récentes</h2>
-                <ul className={'RecentGames__list NoBulletList'}>
-                    {games.map(game => (
-                        <li key={game.goldId}><GameCard game={game}/></li>
-                    ))}
-                </ul>
-            </div>
+            <ul className={'RecentGames__list NoBulletList'}>
+                {games.map(game => (
+                    <li key={game.goldId}><GameCard game={game}/></li>
+                ))}
+            </ul>
         );
-        case 'pending': return <div className={'FlexContainer'}><Loader/></div>;;
+        case 'pending': return <div className={'FlexContainer'}><Loader/></div>;
         case 'error':
-        default :
+        default:
             return <p className={'Error'}>Erreur lors de la récupération des parties</p>;
     }
 }

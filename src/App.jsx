@@ -8,15 +8,14 @@ import AccountLink from './Pages/AccountLink.jsx';
 import AdminLogs from './Pages/AdminLogs.jsx';
 import DiscordAuth from './Pages/DiscordAuth.jsx';
 import Game from "./Pages/Game";
+import Games from './Pages/Games.jsx';
 import Health from './Pages/Health.jsx';
 import House from './Pages/House.jsx';
 import Houses from './Pages/Houses.jsx';
 import League from './Pages/League.jsx';
-import LiveGames from './Pages/LiveGames.jsx';
 import LeagueSession from './Pages/LeagueSession.jsx';
 import PlayerList from './Pages/PlayerList.jsx';
 import PlayerProfile from './Pages/PlayerProfile.jsx';
-import RecentGames from "./Pages/RecentGames.jsx";
 
 import './App.css';
 import './Common.css';
@@ -27,24 +26,25 @@ export default function App() {
             <Header />
             <main>
                 <Routes>
-                    <Route path="/" element={<PlayerList/>}/>
-                    <Route path="/live-games" element={<LiveGames/>}/>
-                    <Route path="/recent-games" element={<RecentGames/>}/>
-                    <Route path="/about" element={<About/>}/>
-                    <Route path="/player/:playerId" element={<PlayerProfile/>}/>
+                    <Route path="/" element={<Games/>}/>
                     <Route path="/game/:gameId" element={<Game/>}/>
+
+                    <Route path="/players" element={<PlayerList/>}/>
+                    <Route path="/player/:playerId" element={<PlayerProfile/>}/>
+
                     <Route path="/auth/discord" element={<DiscordAuth/>}/>
                     <Route path="/link" element={<AccountLink/>}/>
-                    <Route path="/admin" element={<AdminLogs/>}/>
-                    <Route path="/health" element={<Health/>}/>
-                    {/* /houses is imposed by the server: HouseNotifier.HOUSES_PATH, and Discord announcements
-                        already link to it. */}
+
                     <Route path="/houses" element={<Houses/>}/>
-                    {/* Mirrors the API's /gold/api/house/{slug}; the cards on /houses link here. */}
                     <Route path="/house/:slug" element={<House/>}/>
-                    {/* /league is imposed by the server too: LeagueNotifier.LEAGUE_PATH, already in Discord posts. */}
+
                     <Route path="/league" element={<League/>}/>
                     <Route path="/league/session/:number" element={<LeagueSession/>}/>
+
+                    <Route path="/admin" element={<AdminLogs/>}/>
+                    <Route path="/health" element={<Health/>}/>
+
+                    <Route path="/about" element={<About/>}/>
                 </Routes>
             </main>
             <Footer />

@@ -14,7 +14,7 @@ describe('LiveGames', () => {
     it('renders one card per game, each leading to OGS in a new tab', async () => {
         stubApi({ '/api/games/live': LIVE });
         await expectNoConsoleErrors(async () => {
-            renderAt(<LiveGames />, { path: '/live-games' });
+            renderAt(<LiveGames />);
             await screen.findByText(/6 parties en cours/);
         });
 
@@ -29,7 +29,7 @@ describe('LiveGames', () => {
 
     it('flags a game between two members, and details the game', async () => {
         stubApi({ '/api/games/live': LIVE });
-        renderAt(<LiveGames />, { path: '/live-games' });
+        renderAt(<LiveGames />);
         const [gold, open] = await screen.findAllByRole('article');
 
         expect(within(gold).getByText('GOLD')).toBeInTheDocument();
@@ -40,13 +40,13 @@ describe('LiveGames', () => {
 
         expect(within(open).queryByText('GOLD')).not.toBeInTheDocument();
         expect(within(open).getByText('9×9')).toBeInTheDocument();
-        expect(within(open).getByText('Libre')).toBeInTheDocument();
+        expect(within(open).getByText('Amicale')).toBeInTheDocument();
         expect(within(open).getByText('Handicap 2')).toBeInTheDocument();
     });
 
     it('shows an outsider by their OGS name and rank', async () => {
         stubApi({ '/api/games/live': LIVE });
-        renderAt(<LiveGames />, { path: '/live-games' });
+        renderAt(<LiveGames />);
         const open = (await screen.findAllByRole('article'))[1];
 
         expect(within(open).getByText('inconnu_ogs')).toBeInTheDocument();
@@ -58,13 +58,13 @@ describe('LiveGames', () => {
 
     it('says when nobody is playing', async () => {
         stubApi({ '/api/games/live': liveGamesEmpty });
-        renderAt(<LiveGames />, { path: '/live-games' });
+        renderAt(<LiveGames />);
         expect(await screen.findByText('Aucun joueur de la communauté ne joue sur OGS en ce moment.')).toBeInTheDocument();
     });
 
     it('tells a stale list (503) apart from a failure', async () => {
         stubApi({ '/api/games/live': { status: 503 } });
-        renderAt(<LiveGames />, { path: '/live-games' });
+        renderAt(<LiveGames />);
         expect(await screen.findByText('La liste des parties en cours est momentanément indisponible.')).toBeInTheDocument();
     });
 });

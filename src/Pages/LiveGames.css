@@ -1,5 +1,5 @@
 .LiveGames__Summary {
-    margin: -.5rem auto 2rem;
+    margin: 0 auto 2rem;
     text-align: center;
     color: var(--white-87);
     font-size: .875rem;
@@ -11,7 +11,7 @@
     margin: 0 auto;
 }
 
-/* Same grid as the recent games, so the two pages of the section feel like one. */
+/* Same grid as the recent games below it, so the two halves of the page read as one. */
 .LiveGames__List {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));

@@ -10,7 +10,8 @@ import './LiveGames.css';
 const REFRESH_MS = 15000;
 
 /**
- * The OGS games in progress with at least one ladder member, from `/api/games/live`.
+ * The OGS games in progress with at least one ladder member, from `/api/games/live`. A section of the games page, above
+ * the recent games.
  *
  * Unlike the recent games, a side may be an outsider: `member` is null for an OGS player who is not on the ladder, so
  * there is no Discord name, avatar or tier to show — only what OGS says (`ogsName`, `ogsRank`, both nullable too).
@@ -19,19 +20,24 @@ const REFRESH_MS = 15000;
 export default function LiveGames() {
     const { status, data, httpStatus } = useApi('/api/games/live', { refreshMs: REFRESH_MS });
 
+    return (
+        <section className={'LiveGames'} aria-label={'Parties live'}>
+            <LiveGamesBody status={status} data={data} httpStatus={httpStatus} />
+        </section>
+    );
+}
+
+function LiveGamesBody({ status, data, httpStatus }) {
     if (status === 'pending') {
         return <div className={'FlexContainer'}><Loader/></div>;
     }
 
     if (status === 'error') {
+        // 503 means the server's list is missing or too old, not that nobody is playing: say so.
         return (
-            <section className={'LiveGames'}>
-                <h2 className={'PageTitle'}>Parties live</h2>
-                {/* 503 means the server's list is missing or too old, not that nobody is playing: say so. */}
-                <p className={'Error'}>{httpStatus === 503
-                    ? 'La liste des parties en cours est momentanément indisponible.'
-                    : 'Erreur lors de la récupération des parties en cours'}</p>
-            </section>
+            <p className={'Error LiveGames__Empty'}>{httpStatus === 503
+                ? 'La liste des parties en cours est momentanément indisponible.'
+                : 'Erreur lors de la récupération des parties en cours'}</p>
         );
     }
 
@@ -39,8 +45,7 @@ export default function LiveGames() {
     const plural = games.length > 1 ? 's' : '';
 
     return (
-        <section className={'LiveGames'}>
-            <h2 className={'PageTitle'}>Parties live</h2>
+        <>
             <p className={'LiveGames__Summary'}>
                 {games.length} partie{plural} en cours sur OGS · mise à jour il y a {data.secondsSinceUpdate} s
             </p>
@@ -50,14 +55,14 @@ export default function LiveGames() {
                 : <ul className={'LiveGames__List NoBulletList'}>
                     {games.map(game => <li key={game.goldId}><LiveGameCard game={game}/></li>)}
                 </ul>}
-        </section>
+        </>
     );
 }
 
 function LiveGameCard({ game }) {
     const details = [
         `${game.size}×${game.size}`,
-        game.ranked == null ? null : (game.ranked ? 'Classée' : 'Libre'),
+        game.ranked == null ? null : (game.ranked ? 'Classée' : 'Amicale'),
         game.handicap > 0 ? `Handicap ${game.handicap}` : null,
         game.moveNumber == null ? null : `Coup ${game.moveNumber}`,
     ].filter(Boolean);
