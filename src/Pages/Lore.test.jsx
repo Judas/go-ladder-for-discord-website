@@ -20,5 +20,12 @@ describe('Lore', () => {
         expect(screen.getByText(/Partie des Ruptures/)).toBeInTheDocument();
         // The closing paragraphs come from the component /league shares, so this page must still show them.
         expect(screen.getByText(/la guerre des âmes qui se poursuit/)).toBeInTheDocument();
+        // Each house's crest sits beside the line that sends it away, in the order the story tells it.
+        expect(screen.getAllByRole('img').map(img => img.getAttribute('src'))).toEqual([
+            '/crests/FILS_DU_FROID.svg',
+            '/crests/NEXUS_ALPHA.svg',
+            '/crests/SABRE_SILENCIEUX.svg',
+            '/crests/LUNAIRES_AETHER.svg',
+        ]);
     });
 });

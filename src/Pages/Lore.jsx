@@ -1,6 +1,40 @@
+import Crest from "../Components/Crest.jsx";
 import LoreEpilogue from "../Components/LoreEpilogue.jsx";
 
 import './Lore.css';
+
+/**
+ * Where the four houses went after the Partie des Ruptures, each line beside its crest, the crests alternating left
+ * and right.
+ *
+ * The names are the ones the story itself uses, not the ones /api/houses serves: this page fetches nothing, and they
+ * only serve as alt text beside prose that already spells them out.
+ */
+const EXILES = [
+    {
+        slug: 'FILS_DU_FROID',
+        name: 'Fils du Froid',
+        text: "Et ainsi, les Fils du Froid s'exilèrent vers le nord, jurant de vaincre par la force et la prise.",
+    },
+    {
+        slug: 'NEXUS_ALPHA',
+        name: 'Nexus Alpha',
+        text: "Le Nexus Alpha descendit dans les souterrains de quartz, y érigeant des calculateurs d'obsidienne pour "
+            + "décrypter l'univers.",
+    },
+    {
+        slug: 'SABRE_SILENCIEUX',
+        name: 'Sabre Silencieux',
+        text: "Le Sabre Silencieux partit vers les forêts de brume, méditant sur l'honneur dans la solitude des pierres "
+            + "moussues.",
+    },
+    {
+        slug: 'LUNAIRES_AETHER',
+        name: "Lunaires d'Æther",
+        text: "Et les Lunaires d'Æther, errants et insaisissables, s'élancèrent vers les îles célestes, là où les "
+            + "constellations prennent forme.",
+    },
+];
 
 /**
  * "La chute de l'Harmonie", the story behind the four houses and the league.
@@ -54,15 +88,14 @@ export default function Lore() {
                     car à l'instant même où la dernière pierre fut posée, le plateau se fendit en quatre, comme frappé
                     par un éclair invisible. Chacun recula, chacun accusa, chacun jura de ne jamais oublier.
                 </p>
-                <p>
-                    Et ainsi, les Fils du Froid s'exilèrent vers le nord, jurant de vaincre par la force et la prise.<br/>
-                    Le Nexus Alpha descendit dans les souterrains de quartz, y érigeant des calculateurs d'obsidienne
-                    pour décrypter l'univers.<br/>
-                    Le Sabre Silencieux partit vers les forêts de brume, méditant sur l'honneur dans la solitude des
-                    pierres moussues.<br/>
-                    Et les Lunaires d'Æther, errants et insaisissables, s'élancèrent vers les îles célestes, là où les
-                    constellations prennent forme.
-                </p>
+                <ul className={'Lore__Exiles'}>
+                    {EXILES.map(({slug, name, text}, i) => (
+                        <li key={slug} className={i % 2 ? 'Lore__Exile Lore__Exile--Right' : 'Lore__Exile'}>
+                            <Crest slug={slug} name={name} size={120} />
+                            <p>{text}</p>
+                        </li>
+                    ))}
+                </ul>
                 {/* The last two paragraphs are shared with /league, where they open the page — same war, same words. */}
                 <LoreEpilogue />
             </article>

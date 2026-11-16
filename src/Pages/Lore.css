@@ -19,3 +19,38 @@
     color: var(--sun);
     opacity: .9;
 }
+
+.Lore__Exiles {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.Lore__Exile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.Lore__Exile--Right {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.Lore__Exile img {
+    flex-shrink: 0;
+}
+
+.Lore__Exile p {
+    margin: 0;
+}
+
+@media only screen and (max-width: 560px) {
+    .Lore__Exile img {
+        width: 80px;
+        height: 80px;
+    }
+}
