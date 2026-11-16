@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy, FaUserShield, FaPeopleGroup, FaScroll, FaHeartPulse } from 'react-icons/fa6';
+import { FaUsers, FaDiscord, FaShieldHalved, FaTrophy, FaUserShield, FaPeopleGroup, FaScroll, FaBookOpen, FaHeartPulse } from 'react-icons/fa6';
 import { GiCastle } from 'react-icons/gi';
 import { IoMdInformationCircleOutline} from 'react-icons/io';
 import { TbGoGame } from 'react-icons/tb';
@@ -28,8 +28,9 @@ const COMMUNITY = {
 const AURAK = {
     label: 'Aurak',
     icon: <GiCastle />,
-    matches: path => /^\/(houses?|league)(\/|$)/.test(path),
+    matches: path => /^\/(lore|houses?|league)(\/|$)/.test(path),
     links: [
+        { to: '/lore', label: 'Lore', icon: <FaBookOpen /> },
         { to: '/houses', label: 'Maisons', icon: <FaShieldHalved /> },
         { to: '/league', label: 'Ligue', icon: <FaTrophy /> },
     ],

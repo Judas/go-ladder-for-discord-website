@@ -46,3 +46,17 @@
     font-size: 1.1rem;
     font-family: var(--accent-font);
 }
+
+.About__credits {
+    padding: 2rem;
+    font-size: 1rem;
+}
+
+.About__credits p {
+    color: var(--white-87);
+    text-align: center;
+}
+
+.About__credits a {
+    color: var(--sun);
+}

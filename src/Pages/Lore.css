@@ -1,0 +1,21 @@
+.Lore__Story {
+    max-width: 42rem;
+    margin: 0 auto;
+    line-height: 1.7;
+    color: var(--white-87);
+}
+
+.Lore__Story h3 {
+    font-family: var(--accent-font);
+    color: var(--sun);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.Lore__Break {
+    text-align: center;
+    font-style: italic;
+    color: var(--sun);
+    opacity: .9;
+}

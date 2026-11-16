@@ -159,14 +159,12 @@ describe('Houses', () => {
         expect(await screen.findByText('Saison 2026-2027')).toBeInTheDocument();
     });
 
-    it('carries the framing lore, which lives here and not in the database', async () => {
+    it('no longer carries the lore, which has its own page', async () => {
         stubApi({ '/api/houses': housesEmpty });
         renderAt(<Houses />, { path: '/houses' });
 
-        expect(await screen.findByRole('heading', { name: "La chute de l'Harmonie" })).toBeInTheDocument();
-        expect(screen.getByText(/Partie des Ruptures/)).toBeInTheDocument();
-        // The closing paragraphs come from the component /league shares, so this page must still show them.
-        expect(screen.getByText(/la guerre des âmes qui se poursuit/)).toBeInTheDocument();
+        await screen.findByAltText('Fils du Froid');
+        expect(screen.queryByRole('heading', { name: "La chute de l'Harmonie" })).not.toBeInTheDocument();
     });
 
     it('shows an error when the route fails', async () => {

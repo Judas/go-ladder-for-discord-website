@@ -136,24 +136,3 @@
     font-family: var(--accent-font);
     font-size: 1.25rem;
 }
-
-.Houses__Lore {
-    max-width: 42rem;
-    margin: 0 auto;
-    line-height: 1.7;
-}
-
-.Houses__Lore h3 {
-    font-family: var(--accent-font);
-    color: var(--sun);
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.Houses__LoreBreak {
-    text-align: center;
-    font-style: italic;
-    color: var(--sun);
-    opacity: .9;
-}

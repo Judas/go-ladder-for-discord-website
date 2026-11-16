@@ -20,7 +20,7 @@ describe('App', () => {
         localStorage.clear();
     });
 
-    it('renders the navigation and the footer on the home route, which is the games page', () => {
+    it('renders the navigation on the home route, without the credits footer, which is the games page', () => {
         render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
 
         expect(screen.getByRole('navigation')).toBeInTheDocument();
@@ -30,7 +30,7 @@ describe('App', () => {
         expect(screen.getByRole('heading', { name: 'Parties' })).toBeInTheDocument();
         expect(screen.getByRole('region', { name: 'Parties live' })).toBeInTheDocument();
         expect(screen.getByRole('region', { name: 'Parties récentes' })).toBeInTheDocument();
-        expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: 'Judas' })).not.toBeInTheDocument();
     });
 
     it('opens a section on click, and closes it when a link is followed', async () => {
@@ -51,6 +51,20 @@ describe('App', () => {
         await user.click(screen.getByRole('link', { name: 'Joueurs' }));
         expect(community).toHaveAttribute('aria-expanded', 'false');
         expect(await screen.findByRole('heading', { name: 'Liste des joueurs' })).toBeInTheDocument();
+    });
+
+    it('opens the Aurak section on the lore, then the houses and the league', async () => {
+        const user = userEvent.setup();
+        render(<MemoryRouter initialEntries={['/']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
+
+        await user.click(screen.getByRole('button', { name: 'Aurak' }));
+        const menu = document.getElementById('NavGroup-Aurak');
+        const links = within(menu).getAllByRole('link').map(link => link.textContent);
+        expect(links).toEqual(['Lore', 'Maisons', 'Ligue']);
+
+        await user.click(screen.getByRole('link', { name: 'Lore' }));
+        expect(await screen.findByRole('heading', { name: "La chute de l'Harmonie" })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Aurak' })).toHaveClass('active');
     });
 
     it('leads home from the logo', async () => {
@@ -78,5 +92,6 @@ describe('App', () => {
         render(<MemoryRouter initialEntries={['/about']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
 
         expect(await screen.findByRole('heading', { name: 'À propos' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Judas' })).toBeInTheDocument();
     });
 });

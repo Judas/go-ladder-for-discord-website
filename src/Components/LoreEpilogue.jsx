@@ -1,7 +1,7 @@
 /**
  * The closing of "La chute de l'Harmonie", shared by the two pages that carry the war it describes.
  *
- * It ends the story on /houses and opens the league on /league — the same words in both places, because the league
+ * It ends the story on /lore and opens the league on /league — the same words in both places, because the league
  * *is* that war: four houses still settling it on a goban. Written once so the two cannot drift apart, which is the
  * only real risk with a paragraph of prose living in two files.
  *

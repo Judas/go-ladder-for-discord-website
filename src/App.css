@@ -1,6 +1,7 @@
 .App {
     display: grid;
     min-height:100vh;
+    grid-template-rows: auto 1fr;
 }
 
 /* Grid items default to their content's minimum width. A long unbroken log line must not widen the whole page. */
@@ -13,17 +14,4 @@
     .App {
         justify-content: center;
     }
-}
-
-
-.Footer {
-    padding: 2rem;
-}
-
-.Footer p {
-    color: var(--white-87);
-    text-align: center;
-}
-.Footer a {
-    color: var(--sun);
 }

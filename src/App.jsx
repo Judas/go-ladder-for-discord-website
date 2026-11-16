@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
 import Header from './Components/Header.jsx';
-import Footer from './Components/Footer.jsx';
 
 import About from './Pages/About.jsx';
 import AccountLink from './Pages/AccountLink.jsx';
@@ -13,6 +12,7 @@ import Health from './Pages/Health.jsx';
 import House from './Pages/House.jsx';
 import Houses from './Pages/Houses.jsx';
 import League from './Pages/League.jsx';
+import Lore from './Pages/Lore.jsx';
 import LeagueSession from './Pages/LeagueSession.jsx';
 import PlayerList from './Pages/PlayerList.jsx';
 import PlayerProfile from './Pages/PlayerProfile.jsx';
@@ -35,6 +35,7 @@ export default function App() {
                     <Route path="/auth/discord" element={<DiscordAuth/>}/>
                     <Route path="/link" element={<AccountLink/>}/>
 
+                    <Route path="/lore" element={<Lore/>}/>
                     <Route path="/houses" element={<Houses/>}/>
                     <Route path="/house/:slug" element={<House/>}/>
 
@@ -47,7 +48,6 @@ export default function App() {
                     <Route path="/about" element={<About/>}/>
                 </Routes>
             </main>
-            <Footer />
         </div>
     );
 }
