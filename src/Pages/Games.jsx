@@ -10,7 +10,7 @@ import './Games.css';
 export default function Games() {
     return (
         <div className={'Games'}>
-            <h2 className={'PageTitle PageTitle--standalone'}>Parties</h2>
+            <h2 className={'PageTitle'}>Parties</h2>
             <LiveGames />
             <RecentGames />
         </div>
