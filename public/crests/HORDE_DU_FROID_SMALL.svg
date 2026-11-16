@@ -7,11 +7,11 @@
       <feComposite operator="in" in2="blur"/>
       <feComposite in="SourceGraphic"/>
     </filter>
-    <clipPath id="clip-Fils_du_Froid_emoji">
+    <clipPath id="clip-Horde_du_Froid_emoji">
       <rect width="200" height="200"/>
     </clipPath>
   </defs>
-  <g id="Fils_du_Froid_emoji" data-name="Fils du Froid – emoji" clip-path="url(#clip-Fils_du_Froid_emoji)">
+  <g id="Horde_du_Froid_emoji" data-name="Horde du Froid – emoji" clip-path="url(#clip-Horde_du_Froid_emoji)">
     <circle id="Ellipse_1" data-name="Ellipse 1" cx="100" cy="100" r="100" fill="#aa0001"/>
     <path id="Tracé_64" data-name="Tracé 64" d="M269.849,194.155l-3.6,18.923L272.38,225.6l11.911,13.43,8.476,2.658s-.6,4.393,0,14.729,1.44,12.27,2.007,12.648,29.2,13.839,29.2,13.839l6.812,7.191s9.462,5.109,10.029,5.109,10.408-13.057,11.922-12.3,33.489-20.629,33.489-20.629,2.465-7.567,2.844-7.567-1.2-11.731-.819-12.109l13.565-9.007,10.336-15.676,1.9-16.572s-14.469,9.312-24.142,13.091l-.322.122c-9.368,3.5-14.04,0-14.04,0l-9.3-9.893s-18.527-12.446-27.657-11.5S316.168,203.5,316.168,203.5s-5.686,9.8-14.682,11.931-19.744-3.462-19.744-3.462Z" transform="translate(-240 -140)" fill="#12110f"/>
     <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Tracé_60)">

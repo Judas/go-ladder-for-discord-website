@@ -23,7 +23,7 @@
 -- has just ended, which is what /gold/api/houses counts points over.
 --
 -- Shapes exercised, one per case the page has to get right:
---   * FILS_DU_FROID    3 members, a clear leader, and one member on zero points who must still appear
+--   * HORDE_DU_FROID    3 members, a clear leader, and one member on zero points who must still appear
 --   * NEXUS_ALPHA      2 members tied on 20 -> competition ranks 1, 1 inside the house
 --   * LUNAIRES_AETHER  2 members, house total tied with Nexus Alpha at 40 -> no numbered podium is possible
 --   * SABRE_SILENCIEUX points in the register but NO member: a player who has since left. Total > 0, leader null.
@@ -57,7 +57,7 @@ INSERT INTO house_members (discord_id, house_id, joined, pending_action) VALUES
 -- played, gold_opponent, rival_house, long_game, victory, even_game, ranked
 INSERT INTO house_points
   (gold_id, discord_id, house_id, season, played, gold_opponent, rival_house, long_game, victory, even_game, ranked, scored_at) VALUES
-  -- Fils du Froid: Boreale 27, Givre 12, Frimas absent from the register entirely
+  -- Horde du Froid: Boreale 27, Givre 12, Frimas absent from the register entirely
   ('TEST_H_001', '900000000000000001', 1, '2025-2026', 1, 2, 2, 2, 2, 1, 1, '2025-11-02 12:00:00'),
   ('TEST_H_002', '900000000000000001', 1, '2025-2026', 1, 2, 2, 2, 2, 1, 1, '2025-11-09 12:00:00'),
   ('TEST_H_003', '900000000000000001', 1, '2025-2026', 1, 0, 2, 0, 0, 0, 0, '2025-11-16 12:00:00'),

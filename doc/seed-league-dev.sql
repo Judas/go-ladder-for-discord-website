@@ -69,7 +69,7 @@ INSERT INTO league_sessions (season, session, drawn, notified, settled) VALUES
   ('2025-2026', 3, '2025-10-15 07:30:00', '2025-10-15 07:35:00', '2025-11-01 07:30:00'),
   ('2025-2026', 4, '2025-11-01 07:30:00', '2025-11-01 07:35:00', NULL);
 
--- houses: 1 Fils du Froid, 2 Nexus Alpha, 3 Sabre Silencieux, 4 Lunaires d'Aether.
+-- houses: 1 Horde du Froid, 2 Nexus Alpha, 3 Sabre Silencieux, 4 Lunaires d'Aether.
 INSERT INTO league_matches
   (season, session, black_discord_id, white_discord_id, black_house_id, white_house_id, pairing_score,
    league_match_id, ogs_match_id, spectator_link, ogs_game_id, gold_id, result, created) VALUES

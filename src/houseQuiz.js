@@ -26,7 +26,7 @@
  */
 
 /** Les quatre maisons, dans l'ordre où le décompte les parcourt — donc l'ordre d'égalité, avant tirage. */
-export const HOUSE_SLUGS = ['FILS_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX', 'LUNAIRES_AETHER'];
+export const HOUSE_SLUGS = ['HORDE_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX', 'LUNAIRES_AETHER'];
 
 /** Le nombre de questions posées, tirées du vivier ci-dessous. */
 export const QUIZ_LENGTH = 10;
@@ -44,7 +44,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'idole',
         question: 'Ton idole parmi ces 4 joueurs professionnels :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Mi Yuting, le créateur du flying-knife joseki' },
+            { house: 'HORDE_DU_FROID', label: 'Mi Yuting, le créateur du flying-knife joseki' },
             { house: 'NEXUS_ALPHA', label: 'Shin Jinseo, « Artificial Shintelligence »' },
             { house: 'SABRE_SILENCIEUX', label: 'Otake Hideo, l’esthète du Go' },
             { house: 'LUNAIRES_AETHER', label: 'Go Seigen, à l’origine du Shinfuseki' },
@@ -54,7 +54,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'angle-vide',
         question: 'Tu accepterais de jouer un angle vide ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Si c’est le point vital pour tuer, bien sûr' },
+            { house: 'HORDE_DU_FROID', label: 'Si c’est le point vital pour tuer, bien sûr' },
             { house: 'NEXUS_ALPHA', label: 'Si c’est le meilleur coup, bien sûr' },
             { house: 'SABRE_SILENCIEUX', label: 'Jamais, plutôt mourir !' },
             { house: 'LUNAIRES_AETHER', label: 'Je le fais souvent, quel est le problème ?' },
@@ -64,7 +64,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'ouverture',
         question: 'Ton ouverture fétiche ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Hoshi-hoshi, en support au futur combat' },
+            { house: 'HORDE_DU_FROID', label: 'Hoshi-hoshi, en support au futur combat' },
             { house: 'NEXUS_ALPHA', label: 'Hoshi-komoku, ce sont les « blue moves » sur mon Katago' },
             { house: 'SABRE_SILENCIEUX', label: 'Komoku-komoku, façon Shusaku' },
             { house: 'LUNAIRES_AETHER', label: 'Tengen, takamoku, mokuhazushi… ça dépend des jours' },
@@ -74,7 +74,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'gestion-temps',
         question: 'Ta gestion du temps, ça ressemble à quoi ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Je blitz le fuseki pour avoir du temps au chuban' },
+            { house: 'HORDE_DU_FROID', label: 'Je blitz le fuseki pour avoir du temps au chuban' },
             { house: 'NEXUS_ALPHA', label: 'Je perds tout mon temps sur quelques moments où il faut tout calculer' },
             {
                 house: 'SABRE_SILENCIEUX',
@@ -88,7 +88,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'victoires',
         question: 'Comment gagnes-tu la plupart de tes parties sérieuses ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: '« Slay the dragon ! »' },
+            { house: 'HORDE_DU_FROID', label: '« Slay the dragon ! »' },
             { house: 'NEXUS_ALPHA', label: 'Je prends l’avantage, puis je le maintiens prudemment avec un comptage minutieux' },
             {
                 house: 'SABRE_SILENCIEUX',
@@ -104,7 +104,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'defaites',
         question: 'Comment perds-tu la plupart de tes parties sérieuses ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Mon all-in pour le kill a échoué' },
+            { house: 'HORDE_DU_FROID', label: 'Mon all-in pour le kill a échoué' },
             { house: 'NEXUS_ALPHA', label: 'Perte au temps en train d’overthinker une séquence de 25 coups' },
             {
                 house: 'SABRE_SILENCIEUX',
@@ -121,7 +121,7 @@ export const HOUSE_QUIZ_POOL = [
         question: 'Ton répertoire de joseki ?',
         answers: [
             {
-                house: 'FILS_DU_FROID',
+                house: 'HORDE_DU_FROID',
                 label: 'Dans chaque partie, j’essaie de jouer un flying knife ou une pince basse de 2 intersections, tmtc',
             },
             { house: 'NEXUS_ALPHA', label: 'Invasion san-san, ce n’est jamais mauvais' },
@@ -136,7 +136,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'plaisir',
         question: 'Comment prends-tu du plaisir au Go ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Le frisson du combat, l’adrénaline quand un groupe oscille entre la vie et la mort' },
+            { house: 'HORDE_DU_FROID', label: 'Le frisson du combat, l’adrénaline quand un groupe oscille entre la vie et la mort' },
             { house: 'NEXUS_ALPHA', label: 'La compréhension du jeu et la progression de mon rang' },
             { house: 'SABRE_SILENCIEUX', label: 'L’admiration de la beauté éternelle des pierres qui dansent sur le goban' },
             { house: 'LUNAIRES_AETHER', label: 'L’ivresse de se perdre dans l’infinité du jeu et l’exploration de ses profondeurs' },
@@ -146,7 +146,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'serveur',
         question: 'Ton serveur de Go préféré ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Fox, ça joue vite et beaucoup' },
+            { house: 'HORDE_DU_FROID', label: 'Fox, ça joue vite et beaucoup' },
             { house: 'NEXUS_ALPHA', label: 'OGS, c’est là que tout se passe dans le monde occidental' },
             { house: 'SABRE_SILENCIEUX', label: 'KGS, pour son côté épuré et le son des pierres' },
             { house: 'LUNAIRES_AETHER', label: 'Je les teste tous : IGS, DGS, GoQuest, Tygem, WBaduk…' },
@@ -156,7 +156,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'kibitz',
         question: 'Le kibitz (commenter une partie en cours) pour toi, c’est :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'D’aucun intérêt, j’aime autant jouer moi-même' },
+            { house: 'HORDE_DU_FROID', label: 'D’aucun intérêt, j’aime autant jouer moi-même' },
             { house: 'NEXUS_ALPHA', label: 'Poser 26 variations « là, il fallait plutôt jouer ça », assisté en direct par l’IA' },
             { house: 'SABRE_SILENCIEUX', label: '« HIIIII UN TRAVERSE KEIMA !!! »' },
             { house: 'LUNAIRES_AETHER', label: 'De longs débats endiablés sur de possibles variations avec d’autres kibitzeurs' },
@@ -166,7 +166,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'hobbies',
         question: 'D’autres hobbies que le Go ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Smash Bros, GTA, CS…' },
+            { house: 'HORDE_DU_FROID', label: 'Smash Bros, GTA, CS…' },
             { house: 'NEXUS_ALPHA', label: 'Echecs, Rubik’s Cube, Shogi…' },
             { house: 'SABRE_SILENCIEUX', label: 'Peinture, Musique, Théâtre, Lecture…' },
             { house: 'LUNAIRES_AETHER', label: 'Curling, Spéléologie, Quidditch' },
@@ -176,7 +176,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'go-cosmique',
         question: 'Une opinion sur le Go cosmique ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Parfait pour moi : on laisse les points et puis on tue' },
+            { house: 'HORDE_DU_FROID', label: 'Parfait pour moi : on laisse les points et puis on tue' },
             { house: 'NEXUS_ALPHA', label: 'Sortir du fuseki avec 5 points de retard, très peu pour moi' },
             {
                 house: 'SABRE_SILENCIEUX',
@@ -189,7 +189,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'cles-perdues',
         question: 'Tu arrives chez toi mais tu as perdu tes clés. Que fais-tu ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Je défonce la porte, c’est chez moi ici' },
+            { house: 'HORDE_DU_FROID', label: 'Je défonce la porte, c’est chez moi ici' },
             { house: 'NEXUS_ALPHA', label: 'Je cherche la clé sous le paillasson ou le pot de fleurs' },
             { house: 'SABRE_SILENCIEUX', label: 'J’appelle mon voisin à qui j’ai laissé une clé de rechange' },
             { house: 'LUNAIRES_AETHER', label: 'J’essaie de crocheter la serrure' },
@@ -199,7 +199,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'element',
         question: 'Quel élément te correspond le plus ?',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Feu' },
+            { house: 'HORDE_DU_FROID', label: 'Feu' },
             { house: 'NEXUS_ALPHA', label: 'Eau' },
             { house: 'SABRE_SILENCIEUX', label: 'Terre' },
             { house: 'LUNAIRES_AETHER', label: 'Vent' },
@@ -209,7 +209,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'message-ambigu',
         question: 'Tu reçois un message ambigu d’un proche. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Réponds tout de suite, sur le vif' },
+            { house: 'HORDE_DU_FROID', label: 'Réponds tout de suite, sur le vif' },
             { house: 'NEXUS_ALPHA', label: 'Relis plusieurs fois avant de formuler ta réponse' },
             { house: 'SABRE_SILENCIEUX', label: 'Attends que l’émotion retombe pour répondre plus tard' },
             { house: 'LUNAIRES_AETHER', label: 'Profites de l’ambiguïté pour lancer une conversation inattendue' },
@@ -219,7 +219,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'restaurant',
         question: 'Dans un restaurant, le plat n’est pas à ton goût. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Le fais remarquer immédiatement au serveur, fermement' },
+            { house: 'HORDE_DU_FROID', label: 'Le fais remarquer immédiatement au serveur, fermement' },
             { house: 'NEXUS_ALPHA', label: 'Cherches précisément le problème pour expliquer au cuisinier ce qu’il a raté' },
             { house: 'SABRE_SILENCIEUX', label: 'Ne dis rien, tu termines tranquillement' },
             { house: 'LUNAIRES_AETHER', label: 'Remercies le chef pour cette nouveauté' },
@@ -229,7 +229,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'ami-annule',
         question: 'Un ami annule au dernier moment. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'L’appelles pour le sermonner' },
+            { house: 'HORDE_DU_FROID', label: 'L’appelles pour le sermonner' },
             { house: 'NEXUS_ALPHA', label: 'Réorganises tout ton emploi du temps' },
             { house: 'SABRE_SILENCIEUX', label: 'Acceptes avec sérénité, c’est le cours normal des choses' },
             { house: 'LUNAIRES_AETHER', label: 'Saisis l’occasion pour faire quelque chose d’imprévu' },
@@ -239,7 +239,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'chemin-perdu',
         question: 'En voyage, tu perds ton chemin. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Avances, tu finiras bien par tomber sur quelque chose' },
+            { house: 'HORDE_DU_FROID', label: 'Avances, tu finiras bien par tomber sur quelque chose' },
             { house: 'NEXUS_ALPHA', label: 'Consultes cartes et applis, et calcules le meilleur itinéraire' },
             { house: 'SABRE_SILENCIEUX', label: 'Retournes à un point de repère connu et sûr' },
             { house: 'LUNAIRES_AETHER', label: 'Suis une piste intrigante, même si elle t’éloigne du but' },
@@ -249,7 +249,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'aspirateur',
         question: 'Ton aspirateur tombe en panne. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'T’énerves et tentes une réparation immédiate, quitte à le casser plus' },
+            { house: 'HORDE_DU_FROID', label: 'T’énerves et tentes une réparation immédiate, quitte à le casser plus' },
             { house: 'NEXUS_ALPHA', label: 'Cherches la cause exacte du problème et la solution la plus efficace' },
             { house: 'SABRE_SILENCIEUX', label: 'Vis avec la panne tant que c’est gérable' },
             { house: 'LUNAIRES_AETHER', label: 'Le transformes en didgeridoo' },
@@ -259,7 +259,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'critique-publique',
         question: 'Un inconnu te critique publiquement. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'L’insultes en retour, du tac au tac' },
+            { house: 'HORDE_DU_FROID', label: 'L’insultes en retour, du tac au tac' },
             { house: 'NEXUS_ALPHA', label: 'Réfléchis à une réplique cinglante, qui arrive 2 jours après' },
             { house: 'SABRE_SILENCIEUX', label: 'Gardes ton calme et l’ignores' },
             { house: 'LUNAIRES_AETHER', label: 'Lui déclares ta flamme' },
@@ -269,7 +269,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'cadeau',
         question: 'Tu dois choisir un cadeau pour quelqu’un de proche. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Achètes quelque chose d’impactant, « qui marque »' },
+            { house: 'HORDE_DU_FROID', label: 'Achètes quelque chose d’impactant, « qui marque »' },
             { house: 'NEXUS_ALPHA', label: 'Cherches l’objet le plus utile et adapté à ses besoins' },
             { house: 'SABRE_SILENCIEUX', label: 'Optes pour un classique, intemporel, qui ne déçoit jamais' },
             { house: 'LUNAIRES_AETHER', label: 'Trouves un objet original, peu commun, qui raconte une histoire' },
@@ -279,7 +279,7 @@ export const HOUSE_QUIZ_POOL = [
         id: 'sujet-sensible',
         question: 'On te demande ton avis sur un sujet sensible. Tu :',
         answers: [
-            { house: 'FILS_DU_FROID', label: 'Donnes ton opinion franchement, sans filtre' },
+            { house: 'HORDE_DU_FROID', label: 'Donnes ton opinion franchement, sans filtre' },
             { house: 'NEXUS_ALPHA', label: 'Argumentes avec des faits précis et documentés' },
             { house: 'SABRE_SILENCIEUX', label: 'Restes mesuré(e), tu évites les extrêmes' },
             { house: 'LUNAIRES_AETHER', label: 'Introduis un angle original qui déplace la question' },

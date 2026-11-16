@@ -106,8 +106,8 @@ describe('tirage du questionnaire', () => {
 
 describe('dépouillement', () => {
     it('compte les quatre maisons, celles à zéro comprises', () => {
-        expect(tally(['NEXUS_ALPHA', 'NEXUS_ALPHA', 'FILS_DU_FROID'])).toEqual({
-            FILS_DU_FROID: 1,
+        expect(tally(['NEXUS_ALPHA', 'NEXUS_ALPHA', 'HORDE_DU_FROID'])).toEqual({
+            HORDE_DU_FROID: 1,
             NEXUS_ALPHA: 2,
             SABRE_SILENCIEUX: 0,
             LUNAIRES_AETHER: 0,
@@ -115,7 +115,7 @@ describe('dépouillement', () => {
     });
 
     it('nomme la maison la plus citée', () => {
-        expect(leaders(['NEXUS_ALPHA', 'FILS_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX'])).toEqual(['NEXUS_ALPHA']);
+        expect(leaders(['NEXUS_ALPHA', 'HORDE_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX'])).toEqual(['NEXUS_ALPHA']);
     });
 
     /**
@@ -123,8 +123,8 @@ describe('dépouillement', () => {
      * tirage au sort ici déciderait à sa place, ce que le questionnaire ne fait plus.
      */
     it('rend toutes les maisons à égalité au sommet, sans en tirer une', () => {
-        const answers = ['FILS_DU_FROID', 'LUNAIRES_AETHER', 'NEXUS_ALPHA'];
-        expect(leaders(answers)).toEqual(['FILS_DU_FROID', 'NEXUS_ALPHA', 'LUNAIRES_AETHER']);
+        const answers = ['HORDE_DU_FROID', 'LUNAIRES_AETHER', 'NEXUS_ALPHA'];
+        expect(leaders(answers)).toEqual(['HORDE_DU_FROID', 'NEXUS_ALPHA', 'LUNAIRES_AETHER']);
     });
 
     it('ne désigne rien sans réponse', () => {
@@ -136,9 +136,9 @@ describe('bilan d’affinités', () => {
     /** Les quatre maisons sont proposées, y compris celles que le joueur n'a jamais citées : le bilan est un classement,
      * pas une sélection. */
     it('classe les quatre maisons, de la plus proche à la plus lointaine', () => {
-        expect(affinities(['NEXUS_ALPHA', 'FILS_DU_FROID', 'NEXUS_ALPHA', 'NEXUS_ALPHA'])).toEqual([
+        expect(affinities(['NEXUS_ALPHA', 'HORDE_DU_FROID', 'NEXUS_ALPHA', 'NEXUS_ALPHA'])).toEqual([
             { slug: 'NEXUS_ALPHA', score: 3, percent: 75 },
-            { slug: 'FILS_DU_FROID', score: 1, percent: 25 },
+            { slug: 'HORDE_DU_FROID', score: 1, percent: 25 },
             { slug: 'SABRE_SILENCIEUX', score: 0, percent: 0 },
             { slug: 'LUNAIRES_AETHER', score: 0, percent: 0 },
         ]);
@@ -148,7 +148,7 @@ describe('bilan d’affinités', () => {
      * joueur au moindre rendu — l'ordre est celui de `HOUSE_SLUGS`, pas celui des clics. */
     it('ordonne les ex æquo comme HOUSE_SLUGS, quel que soit l’ordre des réponses', () => {
         const ordered = affinities(['LUNAIRES_AETHER', 'NEXUS_ALPHA']).map(affinity => affinity.slug);
-        expect(ordered).toEqual(['NEXUS_ALPHA', 'LUNAIRES_AETHER', 'FILS_DU_FROID', 'SABRE_SILENCIEUX']);
+        expect(ordered).toEqual(['NEXUS_ALPHA', 'LUNAIRES_AETHER', 'HORDE_DU_FROID', 'SABRE_SILENCIEUX']);
         expect(affinities(['NEXUS_ALPHA', 'LUNAIRES_AETHER']).map(affinity => affinity.slug)).toEqual(ordered);
     });
 

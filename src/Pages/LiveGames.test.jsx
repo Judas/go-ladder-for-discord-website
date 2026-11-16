@@ -59,7 +59,7 @@ describe('LiveGames', () => {
     it('says when nobody is playing', async () => {
         stubApi({ '/api/games/live': liveGamesEmpty });
         renderAt(<LiveGames />);
-        expect(await screen.findByText('Aucun joueur de la communauté ne joue sur OGS en ce moment.')).toBeInTheDocument();
+        expect(await screen.findByText('Aucun membre de la communauté ne joue sur OGS en ce moment.')).toBeInTheDocument();
     });
 
     it('tells a stale list (503) apart from a failure', async () => {

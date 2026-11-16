@@ -865,7 +865,7 @@ describe('PlayerProfile', () => {
             await expectNoConsoleErrors(async () => {
                 render(withoutHouse, { period: 'SEASON' });
                 await screen.findByText(withoutHouse.tierName);
-                await answerEverythingFor('FILS_DU_FROID');
+                await answerEverythingFor('HORDE_DU_FROID');
             });
         });
     });

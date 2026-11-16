@@ -15,7 +15,7 @@ import './Houses.css';
  * move between visits read better than a podium that reshuffles. Nothing is lost — each card carries its total, so
  * who leads is still on the page, just not in the layout.
  */
-const DISPLAY_ORDER = ['FILS_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX', 'LUNAIRES_AETHER'];
+const DISPLAY_ORDER = ['HORDE_DU_FROID', 'NEXUS_ALPHA', 'SABRE_SILENCIEUX', 'LUNAIRES_AETHER'];
 
 /**
  * A slug this list does not know keeps its position from the API, after the four known ones — sort is stable, so

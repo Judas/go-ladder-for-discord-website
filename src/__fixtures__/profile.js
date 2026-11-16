@@ -7,7 +7,7 @@ import fixtures from './profile.json';
  * The player is synthetic (`900000000000000001`), so no real member data reaches this repository — fg_dev is a
  * snapshot of production and is not anonymised.
  *
- * Captured as served: the `house` block (rank 1 of Fils du Froid, 25 points broken down over the seven columns) and
+ * Captured as served: the `house` block (rank 1 of Horde du Froid, 25 points broken down over the seven columns) and
  * the `league` block (rank 1, four matches, renown 18, and one of those matches `unplayed`).
  *
  * ⚠ Two things are **derived**, because the capture cannot hold them:

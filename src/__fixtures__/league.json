@@ -140,8 +140,8 @@
         "discordName": "Test Boreale",
         "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
         "house": {
-          "slug": "FILS_DU_FROID",
-          "name": "Fils du Froid",
+          "slug": "HORDE_DU_FROID",
+          "name": "Horde du Froid",
           "color": "#aa0001"
         },
         "active": true,
@@ -184,8 +184,8 @@
         "discordName": "Test Givre",
         "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
         "house": {
-          "slug": "FILS_DU_FROID",
-          "name": "Fils du Froid",
+          "slug": "HORDE_DU_FROID",
+          "name": "Horde du Froid",
           "color": "#aa0001"
         },
         "active": true,
@@ -272,8 +272,8 @@
         "discordName": "Test Frimas",
         "discordAvatar": "https://cdn.discordapp.com/embed/avatars/2.png",
         "house": {
-          "slug": "FILS_DU_FROID",
-          "name": "Fils du Froid",
+          "slug": "HORDE_DU_FROID",
+          "name": "Horde du Froid",
           "color": "#aa0001"
         },
         "active": false,
@@ -311,8 +311,8 @@
             "discordName": "Test Boreale",
             "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
             "house": {
-              "slug": "FILS_DU_FROID",
-              "name": "Fils du Froid",
+              "slug": "HORDE_DU_FROID",
+              "name": "Horde du Froid",
               "color": "#aa0001"
             },
             "active": true
@@ -338,8 +338,8 @@
             "discordName": "Test Givre",
             "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
             "house": {
-              "slug": "FILS_DU_FROID",
-              "name": "Fils du Froid",
+              "slug": "HORDE_DU_FROID",
+              "name": "Horde du Froid",
               "color": "#aa0001"
             },
             "active": true
@@ -408,8 +408,8 @@
             "discordName": "Test Boreale",
             "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
             "house": {
-              "slug": "FILS_DU_FROID",
-              "name": "Fils du Froid",
+              "slug": "HORDE_DU_FROID",
+              "name": "Horde du Froid",
               "color": "#aa0001"
             },
             "active": true
@@ -446,8 +446,8 @@
             "discordName": "Test Givre",
             "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
             "house": {
-              "slug": "FILS_DU_FROID",
-              "name": "Fils du Froid",
+              "slug": "HORDE_DU_FROID",
+              "name": "Horde du Froid",
               "color": "#aa0001"
             },
             "active": true
@@ -490,8 +490,8 @@
             "discordName": "Test Givre",
             "discordAvatar": "https://cdn.discordapp.com/embed/avatars/1.png",
             "house": {
-              "slug": "FILS_DU_FROID",
-              "name": "Fils du Froid",
+              "slug": "HORDE_DU_FROID",
+              "name": "Horde du Froid",
               "color": "#aa0001"
             },
             "active": true
@@ -528,8 +528,8 @@
             "discordName": "Test Boreale",
             "discordAvatar": "https://cdn.discordapp.com/embed/avatars/0.png",
             "house": {
-              "slug": "FILS_DU_FROID",
-              "name": "Fils du Froid",
+              "slug": "HORDE_DU_FROID",
+              "name": "Horde du Froid",
               "color": "#aa0001"
             },
             "active": true

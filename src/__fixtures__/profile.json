@@ -21,8 +21,8 @@
     "house": {
       "period": "VACATION",
       "season": "2025-2026",
-      "slug": "FILS_DU_FROID",
-      "name": "Fils du Froid",
+      "slug": "HORDE_DU_FROID",
+      "name": "Horde du Froid",
       "tagline": "Le meilleur coup est celui qui brise.",
       "color": "#aa0001",
       "points": {
@@ -152,8 +152,8 @@
     "house": {
       "period": "VACATION",
       "season": "2025-2026",
-      "slug": "FILS_DU_FROID",
-      "name": "Fils du Froid",
+      "slug": "HORDE_DU_FROID",
+      "name": "Horde du Froid",
       "tagline": "Le meilleur coup est celui qui brise.",
       "color": "#aa0001",
       "points": {
@@ -215,8 +215,8 @@
     "house": {
       "period": "VACATION",
       "season": "2025-2026",
-      "slug": "FILS_DU_FROID",
-      "name": "Fils du Froid",
+      "slug": "HORDE_DU_FROID",
+      "name": "Horde du Froid",
       "tagline": "Le meilleur coup est celui qui brise.",
       "color": "#aa0001",
       "points": {

@@ -12,9 +12,9 @@ import './Lore.css';
  */
 const EXILES = [
     {
-        slug: 'FILS_DU_FROID',
-        name: 'Fils du Froid',
-        text: "Et ainsi, les Fils du Froid s'exilèrent vers le nord, jurant de vaincre par la force et la prise.",
+        slug: 'HORDE_DU_FROID',
+        name: 'Horde du Froid',
+        text: "Et ainsi, la Horde du Froid s'exila vers le nord, jurant de vaincre par la force et la prise.",
     },
     {
         slug: 'NEXUS_ALPHA',

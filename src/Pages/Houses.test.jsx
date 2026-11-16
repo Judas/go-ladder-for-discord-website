@@ -30,7 +30,7 @@ describe('Houses', () => {
         stubApi({ '/api/houses': housesEmpty });
         await expectNoConsoleErrors(async () => {
             renderAt(<Houses />, { path: '/houses' });
-            await screen.findByAltText('Fils du Froid');
+            await screen.findByAltText('Horde du Froid');
         });
 
         for (const house of housesEmpty.houses) {
@@ -44,7 +44,7 @@ describe('Houses', () => {
         stubApi({ '/api/houses': housesPopulated });
         await expectNoConsoleErrors(async () => {
             renderAt(<Houses />, { path: '/houses' });
-            await screen.findByAltText('Fils du Froid');
+            await screen.findByAltText('Horde du Froid');
         });
 
         for (const house of housesPopulated.houses.filter(h => h.leader)) {
@@ -59,12 +59,12 @@ describe('Houses', () => {
      * re-capture ever happened to match the display order, the reordering would no longer be under test.
      */
     it('always shows the houses in the same order, whatever the server sends', async () => {
-        const expected = ['Fils du Froid', 'Nexus Alpha', 'Sabre Silencieux', 'Lunaires d’Æther'];
+        const expected = ['Horde du Froid', 'Nexus Alpha', 'Sabre Silencieux', 'Lunaires d’Æther'];
         expect(housesPopulated.houses.map(h => h.name)).not.toEqual(expected);
 
         stubApi({ '/api/houses': housesPopulated });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByAltText('Fils du Froid');
+        await screen.findByAltText('Horde du Froid');
 
         expect(renderedOrder()).toEqual(expected);
     });
@@ -72,9 +72,9 @@ describe('Houses', () => {
     it('shows the same order when the season is empty', async () => {
         stubApi({ '/api/houses': housesEmpty });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByAltText('Fils du Froid');
+        await screen.findByAltText('Horde du Froid');
 
-        expect(renderedOrder()).toEqual(['Fils du Froid', 'Nexus Alpha', 'Sabre Silencieux', 'Lunaires d’Æther']);
+        expect(renderedOrder()).toEqual(['Horde du Froid', 'Nexus Alpha', 'Sabre Silencieux', 'Lunaires d’Æther']);
     });
 
     /** A house the display order does not know must still appear, rather than being dropped. */
@@ -92,7 +92,7 @@ describe('Houses', () => {
     it('numbers nothing: a fixed position says nothing about standing', async () => {
         stubApi({ '/api/houses': housesPopulated });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByAltText('Fils du Froid');
+        await screen.findByAltText('Horde du Froid');
 
         for (const card of screen.getAllByRole('listitem')) {
             expect(within(card).queryByText(/^[1-4](er|e|ème)$/)).not.toBeInTheDocument();
@@ -127,7 +127,7 @@ describe('Houses', () => {
         ));
         stubApi({ '/api/houses': { ...housesPopulated, houses } });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByAltText('Fils du Froid');
+        await screen.findByAltText('Horde du Froid');
 
         const leader = houses.find(h => h.leader).leader;
         expect(screen.getByText(leader.discordId)).toBeInTheDocument();
@@ -136,7 +136,7 @@ describe('Houses', () => {
     it('links each house to its own page and each leader to their profile', async () => {
         stubApi({ '/api/houses': housesPopulated });
         renderAt(<Houses />, { path: '/houses' });
-        await screen.findByAltText('Fils du Froid');
+        await screen.findByAltText('Horde du Froid');
 
         const house = housesPopulated.houses.find(h => h.leader);
         expect(screen.getByRole('link', { name: new RegExp(house.name) })).toHaveAttribute('href', `/house/${house.slug}`);
@@ -163,7 +163,7 @@ describe('Houses', () => {
         stubApi({ '/api/houses': housesEmpty });
         renderAt(<Houses />, { path: '/houses' });
 
-        await screen.findByAltText('Fils du Froid');
+        await screen.findByAltText('Horde du Froid');
         expect(screen.queryByRole('heading', { name: "La chute de l'Harmonie" })).not.toBeInTheDocument();
     });
 

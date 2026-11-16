@@ -4,11 +4,11 @@
     "season": "2025-2026",
     "houses": [
       {
-        "slug": "FILS_DU_FROID",
-        "name": "Fils du Froid",
+        "slug": "HORDE_DU_FROID",
+        "name": "Horde du Froid",
         "tagline": "Le meilleur coup est celui qui brise.",
         "color": "#aa0001",
-        "description": "Nés sous les vents du nord, les membres des Fils du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
+        "description": "Nés sous les vents du nord, les membres de la Horde du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
         "memberCount": 3,
         "totalPoints": 37,
         "leader": {
@@ -91,15 +91,15 @@
     ]
   },
   "detail": {
-    "FILS_DU_FROID": {
+    "HORDE_DU_FROID": {
       "period": "VACATION",
       "season": "2025-2026",
       "house": {
-        "slug": "FILS_DU_FROID",
-        "name": "Fils du Froid",
+        "slug": "HORDE_DU_FROID",
+        "name": "Horde du Froid",
         "tagline": "Le meilleur coup est celui qui brise.",
         "color": "#aa0001",
-        "description": "Nés sous les vents du nord, les membres des Fils du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
+        "description": "Nés sous les vents du nord, les membres de la Horde du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
         "memberCount": 3,
         "totalPoints": 37,
         "leader": {
@@ -317,11 +317,11 @@
     "season": "2025-2026",
     "houses": [
       {
-        "slug": "FILS_DU_FROID",
-        "name": "Fils du Froid",
+        "slug": "HORDE_DU_FROID",
+        "name": "Horde du Froid",
         "tagline": "Le meilleur coup est celui qui brise.",
         "color": "#aa0001",
-        "description": "Nés sous les vents du nord, les membres des Fils du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
+        "description": "Nés sous les vents du nord, les membres de la Horde du Froid embrassent le feu du combat. Chaque pierre posée est une déclaration de guerre. Pour eux, le plateau est un champ de bataille, et la victoire ne s’offre qu’aux plus audacieux. Aucun territoire n’est défendu s’il peut être conquis. Leur style est impétueux, leur esprit, indomptable.",
         "memberCount": 0,
         "totalPoints": 0,
         "leader": null

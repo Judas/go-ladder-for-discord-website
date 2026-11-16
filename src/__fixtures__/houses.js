@@ -2,7 +2,7 @@ import fixtures from './houses.json';
 
 /**
  * House fixtures, captured from a local fulguro-server. Last refreshed 16 August 2026, after the house colours
- * changed in the database — Fils du Froid to #aa0001 and Nexus Alpha to the near-white #7dfffc, both now matching
+ * changed in the database — Horde du Froid to #aa0001 and Nexus Alpha to the near-white #7dfffc, both now matching
  * the crests in `public/crests/`.
  *
  * Getting a populated response meant seeding fg_dev, which is a snapshot of production and is **not anonymised**. So

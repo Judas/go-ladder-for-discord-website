@@ -29,7 +29,7 @@ Branche de travail : `feat/update-2026`. `master` part en prod à chaque push (R
 
 La convention de nommage des **blasons** à partir du `slug`. Le plan maisons la laisse explicitement au dépôt du
 site. **Retenu : `public/crests/{SLUG}.svg`**, en miroir de `public/shields/shield-{rank}.svg`. Les 4 fichiers sont
-`FILS_DU_FROID.svg`, `NEXUS_ALPHA.svg`, `SABRE_SILENCIEUX.svg`, `LUNAIRES_AETHER.svg`, servis par le composant
+`HORDE_DU_FROID.svg`, `NEXUS_ALPHA.svg`, `SABRE_SILENCIEUX.svg`, `LUNAIRES_AETHER.svg`, servis par le composant
 `Components/Crest.jsx`.
 
 ⚠ **Les 4 fichiers livrés sont des placeholders** — écusson géométrique dans la couleur de la maison, dessinés faute
